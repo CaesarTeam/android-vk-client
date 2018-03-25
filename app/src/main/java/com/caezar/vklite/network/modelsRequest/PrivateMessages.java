@@ -14,4 +14,8 @@ public class PrivateMessages {
     public void setSomeFields(String someFields) {
         this.someFields = someFields;
     }
+
+    public PrivateMessages() {
+
+    }
 }

@@ -5,4 +5,7 @@ package com.caezar.vklite.network.modelsResponse;
  */
 
 public class Item {
+    public Item() {
+
+    }
 }

@@ -47,10 +47,6 @@ public class Dialogs {
      */
     private boolean unanswered = false;
 
-    public Dialogs() {
-
-    }
-
     public int getOffset() {
         return offset;
     }
@@ -106,4 +102,9 @@ public class Dialogs {
     public void setUnanswered(boolean unanswered) {
         this.unanswered = unanswered;
     }
+
+    public Dialogs() {
+
+    }
+
 }
