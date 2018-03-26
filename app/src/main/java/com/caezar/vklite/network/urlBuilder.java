@@ -7,19 +7,19 @@ import com.caezar.vklite.network.modelsRequest.*;
  */
 
 public class urlBuilder {
-    private final String version = "5.73";
-    private final String APIServiceAddressHost = "https://api.vk.com/method/";
+    private final static String version = "5.73";
+    private final static String APIServiceAddressHost = "https://api.vk.com/method/";
 
-    public String constructGetDialogs(Dialogs dialogs) {
-        return constructUrl(Method.MESSAGES_GET_DIALOGS);
+    public static String constructGetDialogs(Dialogs dialogs) {
+        return constructUrl(Method.MESSAGES_GET_DIALOGS, dialogs.toString());
     }
 
-    public String constructGetPrivateMessages(PrivateMessages privateMessages) {
+    public static String constructGetPrivateMessages(PrivateMessages privateMessages) {
         return "заглушка";
     }
 
-    public String constructUrl(Method method, String... query) {
-        final String url = APIServiceAddressHost + method.getMethod() + "?" + query + "&access_token=" + "ACCESS_TOKEN" + "&v=" + version;
+    public static String constructUrl(Method method, String query) {
+        final String url = APIServiceAddressHost + method.getMethod() + "?" + query + "&access_token=" + Token.getToken() + "&v=" + version;
         return url;
     }
 

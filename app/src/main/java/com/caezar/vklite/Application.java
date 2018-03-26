@@ -1,5 +1,6 @@
 package com.caezar.vklite;
 
+import com.caezar.vklite.network.Token;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
 import com.vk.sdk.VKSdk;
@@ -15,6 +16,8 @@ public class Application extends android.app.Application {
         public void onVKAccessTokenChanged(VKAccessToken oldToken, VKAccessToken newToken) {
             if (newToken == null) {
                 // VKAccessToken is invalid
+            } else {
+                Token.setToken(newToken.accessToken);
             }
         }
     };
@@ -22,6 +25,7 @@ public class Application extends android.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        System.out.println("App");
         vkAccessTokenTracker.startTracking();
         VKSdk.initialize(this);
     }

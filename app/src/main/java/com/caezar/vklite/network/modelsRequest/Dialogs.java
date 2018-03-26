@@ -35,17 +35,17 @@ public class Dialogs {
     /**
      *  true — вернуть только диалоги, в которых есть непрочитанные входящие сообщения
      */
-    private boolean unread = false;
+    private boolean unread;
 
     /**
      *  true — вернуть диалоги с пометкой «Важные» (для сообщений сообществ).
      */
-    private boolean important = false;
+    private boolean important;
 
     /**
      *  true — вернуть диалоги с пометкой «Неотвеченные» (для сообщений сообществ).
      */
-    private boolean unanswered = false;
+    private boolean unanswered;
 
     public int getOffset() {
         return offset;
@@ -107,4 +107,14 @@ public class Dialogs {
 
     }
 
+    @Override
+    public String toString() {
+        return  "offset=" + offset +
+                "& count=" + count +
+                "& start_message_id=" + start_message_id +
+                "& preview_length=" + preview_length +
+                "& unread=" + unread +
+                "& important=" + important +
+                "& unanswered=" + unanswered;
+    }
 }

@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.caezar.vklite.R;
+import com.caezar.vklite.network.Token;
+import com.caezar.vklite.network.modelsRequest.Dialogs;
+import com.caezar.vklite.network.urlBuilder;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKScope;
@@ -17,12 +20,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("MainActivity");
         setContentView(R.layout.activity_main);
 
-        final TextView textView = findViewById(R.id.text123);
-        textView.setText("Hello Vera");
-
         VKSdk.login(this, scope);
+
+        Dialogs dialogs = new Dialogs();
+        final String url = urlBuilder.constructGetDialogs(dialogs);
+
+        final TextView textView = findViewById(R.id.text123);
+        textView.setText(url);
+
     }
 
     @Override
@@ -30,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         if (!VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
             @Override
             public void onResult(VKAccessToken res) {
-                System.out.println(res.accessToken);
+                Token.setToken(res.accessToken);
                     // Пользователь успешно авторизовался
             }
             @Override
