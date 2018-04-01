@@ -1,6 +1,7 @@
 package com.caezar.vklite.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +22,8 @@ import com.vk.sdk.api.VKError;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String PREFS_NAME = "Vk";
+
     private final NetworkManager.OnRequestCompleteListener listener =
             new NetworkManager.OnRequestCompleteListener() {
                 @Override
@@ -29,40 +32,40 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             MainActivity.this.body.setText(body);
-                            progress.setVisibility(View.INVISIBLE);
                         }
                     });
                 }
             };
 
     private TextView body;
-    private ProgressBar progress;
 
-    final String[] scope = new String[] {VKScope.MESSAGES};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        VKSdk.login(this, scope);
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        final String token = settings.getString("token", null);
 
-        Dialogs dialogs = new Dialogs();
-        final String url = urlBuilder.constructGetDialogs(dialogs);
-        Log.d("url", url);
+        if (token == null) {
+            final String[] scope = new String[] {VKScope.MESSAGES, VKScope.OFFLINE};
+            VKSdk.login(this, scope);
+        } else {
+            Token.setToken(token);
+        }
+
 
         body = findViewById(R.id.body);
-        progress = findViewById(R.id.progress);
 
         findViewById(R.id.user_agent).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
                 body.setText("");
-                progress.setVisibility(View.VISIBLE);
+                Dialogs dialogs = new Dialogs();
+                final String url = urlBuilder.constructGetDialogs(dialogs);
                 NetworkManager.getInstance().get(url, listener);
             }
         });
-
-
     }
 
     @Override
@@ -70,12 +73,15 @@ public class MainActivity extends AppCompatActivity {
         if (!VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
             @Override
             public void onResult(VKAccessToken res) {
+                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString("token", res.accessToken);
+                editor.apply();
+
                 Token.setToken(res.accessToken);
-                    // Пользователь успешно авторизовался
             }
             @Override
             public void onError(VKError error) {
-                    // Произошла ошибка авторизации (например, пользователь запретил авторизацию)
             }
         })) {
             super.onActivityResult(requestCode, resultCode, data);
