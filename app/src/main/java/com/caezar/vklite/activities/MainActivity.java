@@ -23,6 +23,7 @@ import com.vk.sdk.api.VKError;
 public class MainActivity extends AppCompatActivity {
 
     public static final String PREFS_NAME = "Vk";
+    public static final String TOKEN = "token";
 
     private final NetworkManager.OnRequestCompleteListener listener =
             new NetworkManager.OnRequestCompleteListener() {
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        final String token = settings.getString("token", null);
+        final String token = settings.getString(TOKEN, null);
 
         if (token == null) {
             final String[] scope = new String[] {VKScope.MESSAGES, VKScope.OFFLINE};
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResult(VKAccessToken res) {
                 SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString("token", res.accessToken);
+                editor.putString(TOKEN, res.accessToken);
                 editor.apply();
 
                 Token.setToken(res.accessToken);
