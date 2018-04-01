@@ -1,5 +1,8 @@
 package com.caezar.vklite.network;
 
+import android.util.Log;
+
+import com.caezar.vklite.network.models.DialogsRequest;
 import com.caezar.vklite.network.modelsRequest.*;
 
 /**
@@ -10,7 +13,7 @@ public class urlBuilder {
     private final static String version = "5.73";
     private final static String APIServiceAddressHost = "https://api.vk.com/method/";
 
-    public static String constructGetDialogs(Dialogs dialogs) {
+    public static String constructGetDialogs(DialogsRequest dialogs) {
         return constructUrl(Method.MESSAGES_GET_DIALOGS, dialogs.toString());
     }
 
@@ -20,6 +23,7 @@ public class urlBuilder {
 
     public static String constructUrl(Method method, String query) {
         final String url = APIServiceAddressHost + method.getMethod() + "?" + query + "&access_token=" + Token.getToken() + "&v=" + version;
+        Log.d("constructUrl", url);
         return url;
     }
 

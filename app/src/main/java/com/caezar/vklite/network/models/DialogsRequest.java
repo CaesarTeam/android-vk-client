@@ -1,11 +1,11 @@
-package com.caezar.vklite.network.modelsRequest;
+package com.caezar.vklite.network.models;
 
 /**
  * Created by seva on 25.03.18 in 18:15.
  */
 // todo: annotation unsigned, max, min
 
-public class Dialogs {
+public class DialogsRequest {
     /**
      * смещение, необходимое для выборки определенного подмножества диалогов
      * целое
@@ -103,18 +103,18 @@ public class Dialogs {
         this.unanswered = unanswered;
     }
 
-    public Dialogs() {
+    public DialogsRequest() {
 
     }
 
     @Override
     public String toString() {
         return  "offset=" + offset +
-                "& count=" + count +
-                "& start_message_id=" + start_message_id +
-                "& preview_length=" + preview_length +
-                "& unread=" + unread +
-                "& important=" + important +
-                "& unanswered=" + unanswered;
+                "&count=" + count +
+                "&start_message_id=" + start_message_id +
+                "&preview_length=" + preview_length +
+                "&unread=" + (unread ? 1 : 0) +
+                "&important=" + (important ? 1 : 0) +
+                "&unanswered=" + (unanswered ? 1 : 0);
     }
 }
