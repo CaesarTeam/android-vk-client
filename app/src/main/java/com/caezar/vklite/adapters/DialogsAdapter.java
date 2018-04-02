@@ -29,6 +29,11 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public static final String TAG = "DialogsAdapter";
     static final int ITEM_DIALOGS = R.layout.dialog;
 
+     public void swap(List<DialogItem> list) {
+            items = list;
+            notifyDataSetChanged();
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d(TAG, "onCreateViewHolder: " + (viewType == ITEM_DIALOGS ? "ITEM_DIALOGS" : "ITEM_DIALOGS???"));
