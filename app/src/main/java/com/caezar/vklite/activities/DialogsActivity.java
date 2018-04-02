@@ -1,6 +1,8 @@
 package com.caezar.vklite.activities;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -72,6 +74,18 @@ public class DialogsActivity extends AppCompatActivity {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
+        final SwipeRefreshLayout mSwipeRefreshLayout = findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mSwipeRefreshLayout.setRefreshing(false);
+                final DialogsRequest dialogsRequest = new DialogsRequest();
+                final String url = urlBuilder.constructGetDialogs(dialogsRequest);
+                NetworkManager.getInstance().get(url, listenerDialogs);
+            }
+        });
+
     }
 
     @Override
