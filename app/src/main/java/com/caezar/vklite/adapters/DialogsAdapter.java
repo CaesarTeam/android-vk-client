@@ -36,7 +36,6 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d(TAG, "onCreateViewHolder: " + (viewType == ITEM_DIALOGS ? "ITEM_DIALOGS" : "ITEM_DIALOGS???"));
         Context context = parent.getContext();
         switch (viewType) {
             case ITEM_DIALOGS:
@@ -60,8 +59,6 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 String title = item.getMessage().getTitle();
                 String message = item.getMessage().getBody();
                 String imageUrl = item.getMessage().getPhoto_100();
-
-                Log.v(TAG,title + " " + message);
 
                 if(imageUrl != null) {
                     Glide.with(context).load(imageUrl).into(dialogViewHolder.avatar);
@@ -121,7 +118,6 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 Log.d(TAG, "dialog open");
 
                 // todo: open dialog
-//                notifyItemChanged(position);
             }
         }
     }

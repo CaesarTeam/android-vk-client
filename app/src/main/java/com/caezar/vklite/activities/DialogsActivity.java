@@ -79,6 +79,7 @@ public class DialogsActivity extends AppCompatActivity {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                Log.d("onRefresh", "onRefresh");
                 mSwipeRefreshLayout.setRefreshing(false);
                 final DialogsRequest dialogsRequest = new DialogsRequest();
                 final String url = urlBuilder.constructGetDialogs(dialogsRequest);
@@ -119,15 +120,12 @@ public class DialogsActivity extends AppCompatActivity {
     }
 
     public void buildItemList(String body) {
-        Log.d("buildItemList", body);
-
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         TypeReference<DialogsResponse> mapType = new TypeReference<DialogsResponse>() {};
         try {
             DialogsResponse dialogsResponse = mapper.readValue(body, mapType);
-            Log.d("DialogsResponse", dialogsResponse.toString());
             items = Arrays.asList(dialogsResponse.getResponse().getItems());
         } catch (IOException e) {
             e.printStackTrace();
@@ -135,8 +133,6 @@ public class DialogsActivity extends AppCompatActivity {
     }
 
     public List<DialogItem> addInfoAboutUsersToItemList(String body) {
-        Log.d("buildItemList", body);
-
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
@@ -144,7 +140,6 @@ public class DialogsActivity extends AppCompatActivity {
         UsersByIdResponse usersByIdResponse = new UsersByIdResponse();
         try {
             usersByIdResponse = mapper.readValue(body, mapType);
-            Log.d("DialogsResponse", usersByIdResponse.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }

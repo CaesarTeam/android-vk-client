@@ -41,8 +41,6 @@ public class MainActivity extends AppCompatActivity {
         if (!VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
             @Override
             public void onResult(VKAccessToken res) {
-                Log.d("onResult", res.accessToken);
-
                 SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString(TOKEN, res.accessToken);
@@ -54,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void onError(VKError error) {
-                Log.d("MainActivity", error.toString());
             }
         })) {
             super.onActivityResult(requestCode, resultCode, data);
