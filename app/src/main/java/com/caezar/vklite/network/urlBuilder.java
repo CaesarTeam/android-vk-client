@@ -2,9 +2,9 @@ package com.caezar.vklite.network;
 
 import android.util.Log;
 
+import com.caezar.vklite.network.models.ChatRequest;
 import com.caezar.vklite.network.models.DialogsRequest;
 import com.caezar.vklite.network.models.UsersByIdRequest;
-import com.caezar.vklite.network.modelsRequest.*;
 
 /**
  * Created by seva on 25.03.18 in 18:11.
@@ -22,8 +22,8 @@ public class urlBuilder {
         return constructUrl(Method.USERS_GET, usersByid.toString());
     }
 
-    public static String constructGetPrivateMessages(PrivateMessages privateMessages) {
-        return "заглушка";
+    public static String constructGetChat(ChatRequest chatRequest) {
+        return constructUrl(Method.MESSAGES_GET_HISTORY, chatRequest.toString());
     }
 
     public static String constructUrl(Method method, String query) {
@@ -33,8 +33,9 @@ public class urlBuilder {
     }
 
     private enum Method {
-        MESSAGES_GET_DIALOGS("messages.getDialogs"), // Возвращает список диалогов текущего пользователя или сообщества.
-        USERS_GET("users.get"); // Возвращает расширенную информацию о пользователях.
+        MESSAGES_GET_HISTORY("messages.getHistory"),
+        MESSAGES_GET_DIALOGS("messages.getDialogs"),
+        USERS_GET("users.get");
 
         private String method;
 

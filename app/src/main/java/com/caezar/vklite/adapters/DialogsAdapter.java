@@ -1,6 +1,8 @@
 package com.caezar.vklite.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +13,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.caezar.vklite.R;
+import com.caezar.vklite.activities.ChatActivity;
+import com.caezar.vklite.activities.DialogsActivity;
 import com.caezar.vklite.network.models.DialogsResponse.Response.DialogItem;
 
 import java.util.List;
@@ -28,11 +32,6 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public static final String TAG = "DialogsAdapter";
     static final int ITEM_DIALOGS = R.layout.dialog;
-
-     public void swap(List<DialogItem> list) {
-            items = list;
-            notifyDataSetChanged();
-    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -115,7 +114,26 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public void onClick(View v) {
             int position = holder.getLayoutPosition();
             if (position != RecyclerView.NO_POSITION) {
-                Log.d(TAG, "dialog open");
+                DialogItem  item = items.get(position);
+                Log.d(TAG, items.get(position).getMessage().getTitle());
+
+                int peer_id;
+                if (item.getMessage().getChat_id() == 0) {
+                    peer_id = item.getMessage().getUser_id();
+
+                } else {
+                    peer_id = 2000000000 + item.getMessage().getChat_id();
+                }
+
+                Context context = holder.itemView.getContext();
+
+                Intent intent = new Intent(context, ChatActivity.class);
+                Bundle b = new Bundle();
+                b.putInt("peer_id", peer_id);
+                b.putString("title", item.getMessage().getTitle());
+                intent.putExtras(b);
+                context.startActivity(intent);
+
 
                 // todo: open dialog
             }

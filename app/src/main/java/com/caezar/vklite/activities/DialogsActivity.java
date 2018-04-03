@@ -120,6 +120,8 @@ public class DialogsActivity extends AppCompatActivity {
     }
 
     public void buildItemList(String body) {
+        Log.d("Response", body);
+
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
@@ -133,6 +135,8 @@ public class DialogsActivity extends AppCompatActivity {
     }
 
     public List<DialogItem> addInfoAboutUsersToItemList(String body) {
+        Log.d("Response", body);
+
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
