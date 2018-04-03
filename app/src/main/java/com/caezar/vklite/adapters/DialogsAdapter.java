@@ -114,8 +114,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public void onClick(View v) {
             int position = holder.getLayoutPosition();
             if (position != RecyclerView.NO_POSITION) {
-                DialogItem  item = items.get(position);
-                Log.d(TAG, items.get(position).getMessage().getTitle());
+                DialogItem item = items.get(position);
 
                 int peer_id;
                 if (item.getMessage().getChat_id() == 0) {
@@ -133,9 +132,6 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 b.putString("title", item.getMessage().getTitle());
                 intent.putExtras(b);
                 context.startActivity(intent);
-
-
-                // todo: open dialog
             }
         }
     }

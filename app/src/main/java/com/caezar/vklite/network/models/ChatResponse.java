@@ -1,8 +1,5 @@
 package com.caezar.vklite.network.models;
 
-import com.caezar.vklite.network.modelsResponse.DialogMessage;
-import com.caezar.vklite.network.modelsResponse.Message;
-
 /**
  * Created by seva on 25.03.18 in 18:41.
  */

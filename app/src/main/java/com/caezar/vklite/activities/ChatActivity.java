@@ -1,24 +1,23 @@
 package com.caezar.vklite.activities;
 
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.ChatAdapter;
-import com.caezar.vklite.adapters.DialogsAdapter;
 import com.caezar.vklite.network.NetworkManager;
 import com.caezar.vklite.network.models.ChatRequest;
 import com.caezar.vklite.network.models.ChatResponse;
-import com.caezar.vklite.network.models.DialogsRequest;
-import com.caezar.vklite.network.models.DialogsResponse;
-import com.caezar.vklite.network.models.UsersByIdRequest;
-import com.caezar.vklite.network.models.UsersByIdResponse;
-import com.caezar.vklite.network.modelsResponse.DialogMessage;
+import com.caezar.vklite.network.models.DialogMessage;
+import com.caezar.vklite.network.models.SendMessageResponse;
 import com.caezar.vklite.network.urlBuilder;
 
 import org.codehaus.jackson.map.DeserializationConfig;
@@ -45,8 +44,22 @@ public class ChatActivity extends AppCompatActivity {
                         public void run() {
                             List<DialogMessage> items = buildItemList(body);
                             if (items != null) {
-                                adapter.addData(items);
+                                adapter.addDataToTop(items);
                             }
+                        }
+                    });
+                }
+            };
+
+    private final NetworkManager.OnRequestCompleteListener listenerSend =
+            new NetworkManager.OnRequestCompleteListener() {
+                @Override
+                public void onRequestComplete(final String body) {
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run() {
+                            Log.d("Response", body);
                         }
                     });
                 }
@@ -56,6 +69,8 @@ public class ChatActivity extends AppCompatActivity {
     private String title;
     private ChatAdapter adapter;
     private RecyclerView recyclerView;
+    private TextInputEditText textInputEditText;
+    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +85,23 @@ public class ChatActivity extends AppCompatActivity {
 
         TextView textView = findViewById(R.id.messageTitle);
         textView.setText(title);
+
+        textInputEditText = findViewById(R.id.EditTextName);
+        button = findViewById(R.id.sendMessage);
+
+        button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                String message = textInputEditText.getText().toString();
+                textInputEditText.getText().clear();
+                sendMessage(message);
+                DialogMessage dialogMessage = new DialogMessage();
+                dialogMessage.setUser_id(105532261);
+                dialogMessage.setBody(message);
+                adapter.addDataToEnd(dialogMessage);
+            }
+        });
+
 
         recyclerView = findViewById(R.id.recyclerView2);
         adapter = new ChatAdapter();
@@ -107,6 +139,14 @@ public class ChatActivity extends AppCompatActivity {
         chatRequest.setPeer_id(peer_id);
         final String url = urlBuilder.constructGetChat(chatRequest);
         NetworkManager.getInstance().get(url, listenerChats);
+    }
+
+    private void sendMessage(String message) {
+        final SendMessageResponse sendMessageResponse = new SendMessageResponse();
+        sendMessageResponse.setMessage(message);
+        sendMessageResponse.setPeer_id(peer_id);
+        final String url = urlBuilder.constructGetSend(sendMessageResponse);
+        NetworkManager.getInstance().get(url, listenerSend);
     }
 
     public List<DialogMessage> buildItemList(String body) {

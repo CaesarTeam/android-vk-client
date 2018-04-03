@@ -1,16 +1,8 @@
 package com.caezar.vklite.network.models;
 
-import android.util.Log;
-
-import com.caezar.vklite.network.modelsResponse.DialogMessage;
 import com.caezar.vklite.network.modelsResponse.Item;
-import com.caezar.vklite.network.modelsResponse.Message;
 
-import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.annotate.JsonSetter;
-import org.codehaus.jackson.annotate.JsonValue;
 
 import java.util.Arrays;
 

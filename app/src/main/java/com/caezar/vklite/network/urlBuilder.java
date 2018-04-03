@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.caezar.vklite.network.models.ChatRequest;
 import com.caezar.vklite.network.models.DialogsRequest;
+import com.caezar.vklite.network.models.SendMessageResponse;
 import com.caezar.vklite.network.models.UsersByIdRequest;
 
 /**
@@ -26,6 +27,10 @@ public class urlBuilder {
         return constructUrl(Method.MESSAGES_GET_HISTORY, chatRequest.toString());
     }
 
+    public static String constructGetSend(SendMessageResponse sendMessageResponse) {
+        return constructUrl(Method.MESSAGES_SEND, sendMessageResponse.toString());
+    }
+
     public static String constructUrl(Method method, String query) {
         final String url = APIServiceAddressHost + method.getMethod() + "?" + query + "&access_token=" + Token.getToken() + "&v=" + version;
         Log.d("constructUrl", url);
@@ -33,6 +38,7 @@ public class urlBuilder {
     }
 
     private enum Method {
+        MESSAGES_SEND("messages.send"),
         MESSAGES_GET_HISTORY("messages.getHistory"),
         MESSAGES_GET_DIALOGS("messages.getDialogs"),
         USERS_GET("users.get");

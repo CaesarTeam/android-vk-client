@@ -1,4 +1,6 @@
-package com.caezar.vklite.network.modelsResponse;
+package com.caezar.vklite.network.models;
+
+import com.caezar.vklite.network.modelsResponse.Message;
 
 import java.util.Arrays;
 

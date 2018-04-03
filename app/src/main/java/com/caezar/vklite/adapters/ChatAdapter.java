@@ -2,17 +2,13 @@ package com.caezar.vklite.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.caezar.vklite.R;
-import com.caezar.vklite.network.models.DialogsResponse;
-import com.caezar.vklite.network.modelsResponse.DialogMessage;
+import com.caezar.vklite.network.models.DialogMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +33,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     static final int LEFT_MESSAGE = 1;
     static final int RIGHT_MESSAGE = 2;
 
-    public void addData(List<DialogMessage> itemList) {
+    public void addDataToTop(List<DialogMessage> itemList) {
         items.addAll(0, itemList);
 //        notifyItemInserted(0); почему это не работает? появляются дубликаты
+        notifyDataSetChanged();
+    }
+
+    public void addDataToEnd(DialogMessage dialogMessage) {
+        items.add(dialogMessage);
         notifyDataSetChanged();
     }
 
