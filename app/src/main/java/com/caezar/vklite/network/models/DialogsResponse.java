@@ -29,74 +29,23 @@ public class DialogsResponse {
         private DialogItem[] items;
 
         public static class DialogItem extends Item {
-            /**
-             * количество непрочитанных сообщений (если все сообщения прочитаны, поле не возвращается)
-             */
             private int  unread;
-
-            /**
-             * идентификатор последнего сообщения, прочитанного текущим пользователем
-             */
             private int  in_read;
-
-            /**
-             * идентификатор последнего сообщения, прочитанного собеседником
-             */
             private int  out_read;
 
             private DialogMessage message;
 
             public static class DialogMessage extends Message {
-                /**
-                 * идентификатор беседы
-                 */
                 private int chat_id;
-
-                /**
-                 * идентификаторы авторов последних сообщений беседы
-                 */
                 private int[] chat_active;
-
-                /**
-                 * количество участников беседы
-                 */
                 private int users_count;
-
-                /**
-                 * идентификатор создателя беседы
-                 */
                 private int admin_id;
 
                 // todo: enum
-                /**
-                 * тип действия (если это служебное сообщение)
-                 */
                 private String action;
-
-                /**
-                 * идентификатор пользователя (если > 0) или email (если < 0),
-                 * которого пригласили или исключили
-                 * (для служебных сообщений с action = chat_invite_user, chat_invite_user_by_link или chat_kick_user).
-                 * Идентификатор пользователя, который закрепил/открепил сообщение
-                 * для action = chat_pin_message или chat_unpin_message
-                 */
                 private int action_mid;
-
-                /**
-                 * email, который пригласили или исключили
-                 * (для служебных сообщений с action = chat_invite_user или chat_kick_user и отрицательным action_mid)
-                 */
                 private String action_email;
-
-                /**
-                 * название беседы (для служебных сообщений с action = chat_create или chat_title_update).
-                 * Текст закрепленного сообщения для action = chat_pin_message
-                 */
                 private String action_text;
-
-                /**
-                 * URL копии фотографии беседы шириной 50 px
-                 */
                 private String photo_50;
                 private String photo_100;
                 private String photo_200;
