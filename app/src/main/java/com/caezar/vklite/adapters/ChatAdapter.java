@@ -14,6 +14,7 @@ import com.caezar.vklite.R;
 import com.caezar.vklite.network.models.DialogsResponse;
 import com.caezar.vklite.network.modelsResponse.DialogMessage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.view.View.TEXT_ALIGNMENT_VIEW_START;
@@ -26,8 +27,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<DialogMessage> items;
     private final int myId = 105532261;
 
-    public ChatAdapter(List<DialogMessage> itemList) {
-        items = itemList;
+    public ChatAdapter() {
+        items = new ArrayList<DialogMessage>();
     }
 
     public static final String TAG = "ChatAdapter";
@@ -35,6 +36,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     static final int MESSAGE = R.layout.message;
     static final int LEFT_MESSAGE = 1;
     static final int RIGHT_MESSAGE = 2;
+
+    public void addData(List<DialogMessage> itemList) {
+        items.addAll(0, itemList);
+//        notifyItemInserted(0); почему это не работает? появляются дубликаты
+        notifyDataSetChanged();
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -84,9 +91,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        if (items == null) {
-            return 0;
-        }
         return items.size();
     }
 

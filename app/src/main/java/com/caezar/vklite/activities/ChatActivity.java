@@ -44,8 +44,9 @@ public class ChatActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             List<DialogMessage> items = buildItemList(body);
-                            adapter = new ChatAdapter(items);
-                            recyclerView.setAdapter(adapter);
+                            if (items != null) {
+                                adapter.addData(items);
+                            }
                         }
                     });
                 }
@@ -65,24 +66,24 @@ public class ChatActivity extends AppCompatActivity {
         if(b != null) {
             peer_id = b.getInt("peer_id");
             title = b.getString("title");
-
         }
 
-        recyclerView = findViewById(R.id.recyclerView2);
         TextView textView = findViewById(R.id.messageTitle);
         textView.setText(title);
 
+        recyclerView = findViewById(R.id.recyclerView2);
+        adapter = new ChatAdapter();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
 
         final SwipeRefreshLayout mSwipeRefreshLayout = findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.d("onRefresh", "message");
                 mSwipeRefreshLayout.setRefreshing(false);
-
-                requestChat(0);
+                int currentCountOfMessage = adapter.getItemCount();
+                requestChat(currentCountOfMessage);
             }
         });
 
@@ -121,6 +122,7 @@ public class ChatActivity extends AppCompatActivity {
             ChatResponse chatResponse = mapper.readValue(body, mapType);
             Collections.reverse(Arrays.asList(chatResponse.getResponse().getItems()));
             items = Arrays.asList(chatResponse.getResponse().getItems());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
