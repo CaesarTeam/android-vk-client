@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.caezar.vklite.R;
 import com.caezar.vklite.activities.ChatActivity;
-import com.caezar.vklite.activities.DialogsActivity;
 import com.caezar.vklite.network.models.DialogsResponse.Response.DialogItem;
 
 import java.util.List;
@@ -26,11 +24,10 @@ import java.util.List;
 public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<DialogItem> items;
 
-    public DialogsAdapter(List<DialogItem> itemList) {
-        items = itemList;
+    public DialogsAdapter(List<DialogItem> dialogItems) {
+        items = dialogItems;
     }
 
-    public static final String TAG = "DialogsAdapter";
     static final int ITEM_DIALOGS = R.layout.dialog;
 
     public void changeItems(List<DialogItem> dialogItems) {

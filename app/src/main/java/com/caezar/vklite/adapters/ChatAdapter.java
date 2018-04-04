@@ -5,8 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.caezar.vklite.R;
 import com.caezar.vklite.network.MetaInfo;
 import com.caezar.vklite.network.models.DialogMessage;
@@ -31,7 +33,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     static final int MESSAGE = R.layout.message;
     static final int LEFT_MESSAGE = 1;
-    static final int RIGHT_MESSAGE = 2;
+    static final int LEFT_IMAGE = 2;
+    static final int RIGHT_MESSAGE = 3;
+    static final int RIGHT_IMAGE = 4;
 
     public void addDataToTop(List<DialogMessage> itemList) {
         items.addAll(0, itemList);
@@ -50,6 +54,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         switch (viewType) {
             case LEFT_MESSAGE:
             case RIGHT_MESSAGE:
+            case LEFT_IMAGE:
+            case RIGHT_IMAGE:
                 View messageView = LayoutInflater.from(context).inflate(MESSAGE, parent, false);
                 return new MessageViewHolder(messageView);
 
@@ -62,18 +68,29 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         DialogMessage item = items.get(position);
         MessageViewHolder messageViewHolder = ((MessageViewHolder) holder);
+
         String message = item.getBody();
         messageViewHolder.message.setText(message);
+        Context context = holder.itemView.getContext();
 
         switch (getItemViewType(position)) {
             case LEFT_MESSAGE:
-
 
                 messageViewHolder.message.setTextAlignment(TEXT_ALIGNMENT_VIEW_START);
                 break;
             case RIGHT_MESSAGE:
 
                 messageViewHolder.message.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
+                break;
+            case RIGHT_IMAGE:
+                messageViewHolder.imageView.setVisibility(View.VISIBLE);
+                Glide.with(context).load(item.getAttachments()[0].getPhoto().getPhoto_130()).into(messageViewHolder.imageView);
+                messageViewHolder.imageView.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
+                break;
+            case LEFT_IMAGE:
+                messageViewHolder.imageView.setVisibility(View.VISIBLE);
+                Glide.with(context).load(item.getAttachments()[0].getPhoto().getPhoto_130()).into(messageViewHolder.imageView);
+                messageViewHolder.imageView.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
                 break;
             default:
                 throw new IllegalArgumentException("invalid view type");
@@ -83,7 +100,20 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         DialogMessage item = items.get(position);
-        if (item.getFrom_id() == MetaInfo.getMyselfId()) {
+        boolean side = item.getFrom_id() == MetaInfo.getMyselfId();
+
+        if (item.getAttachments() != null) {
+            // todo: switch
+            if (item.getAttachments()[0].getType().equals("photo")) {
+                if (side) {
+                    return RIGHT_IMAGE;
+                }
+
+                return LEFT_IMAGE;
+            }
+        }
+
+        if (side) {
             return RIGHT_MESSAGE;
         }
 
@@ -98,10 +128,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     class MessageViewHolder extends RecyclerView.ViewHolder {
 
         TextView message;
+        ImageView imageView;
 
         MessageViewHolder(final View itemView) {
             super(itemView);
+
             message = itemView.findViewById(R.id.message);
+            imageView = itemView.findViewById(R.id.messageImage);
         }
     }
 

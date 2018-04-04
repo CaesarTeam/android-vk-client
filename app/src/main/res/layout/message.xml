@@ -11,4 +11,11 @@
         android:text="message"
         android:layout_marginBottom="5dp"
         />
+
+    <ImageView
+        android:id="@+id/messageImage"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:visibility="gone"
+        />
 </android.support.constraint.ConstraintLayout>
