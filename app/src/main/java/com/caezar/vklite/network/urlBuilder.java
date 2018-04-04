@@ -31,8 +31,12 @@ public class urlBuilder {
         return constructUrl(Method.MESSAGES_SEND, sendMessageResponse.toString());
     }
 
+    public static String constructGetMyselfId() {
+        return constructUrl(Method.USERS_GET, "");
+    }
+
     public static String constructUrl(Method method, String query) {
-        final String url = APIServiceAddressHost + method.getMethod() + "?" + query + "&access_token=" + Token.getToken() + "&v=" + version;
+        final String url = APIServiceAddressHost + method.getMethod() + "?" + query + "&access_token=" + MetaInfo.getToken() + "&v=" + version;
         Log.d("constructUrl", url);
         return url;
     }

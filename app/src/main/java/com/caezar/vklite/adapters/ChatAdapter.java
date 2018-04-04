@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.caezar.vklite.R;
+import com.caezar.vklite.network.MetaInfo;
 import com.caezar.vklite.network.models.DialogMessage;
 
 import java.util.ArrayList;
@@ -21,7 +22,6 @@ import static android.view.View.TEXT_ALIGNMENT_VIEW_START;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<DialogMessage> items;
-    private final int myId = 105532261;
 
     public ChatAdapter() {
         items = new ArrayList<DialogMessage>();
@@ -83,7 +83,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         DialogMessage item = items.get(position);
-        if (item.getFrom_id() == myId) {
+        if (item.getFrom_id() == MetaInfo.getMyselfId()) {
             return RIGHT_MESSAGE;
         }
 

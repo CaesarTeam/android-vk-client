@@ -1,9 +1,8 @@
 package com.caezar.vklite;
 
 import android.content.SharedPreferences;
-import android.util.Log;
 
-import com.caezar.vklite.network.Token;
+import com.caezar.vklite.network.MetaInfo;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
 import com.vk.sdk.VKSdk;
@@ -28,7 +27,7 @@ public class Application extends android.app.Application {
                 editor.putString(TOKEN, newToken.accessToken);
                 editor.apply();
 
-                Token.setToken(newToken.accessToken);
+                MetaInfo.setToken(newToken.accessToken);
             }
         }
     };

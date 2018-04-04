@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.ChatAdapter;
+import com.caezar.vklite.network.MetaInfo;
 import com.caezar.vklite.network.NetworkManager;
 import com.caezar.vklite.network.models.ChatRequest;
 import com.caezar.vklite.network.models.ChatResponse;
@@ -96,7 +97,7 @@ public class ChatActivity extends AppCompatActivity {
                 textInputEditText.getText().clear();
                 sendMessage(message);
                 DialogMessage dialogMessage = new DialogMessage();
-                dialogMessage.setUser_id(105532261);
+                dialogMessage.setUser_id(MetaInfo.getMyselfId());
                 dialogMessage.setBody(message);
                 adapter.addDataToEnd(dialogMessage);
             }
