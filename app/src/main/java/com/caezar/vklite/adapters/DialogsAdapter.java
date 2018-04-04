@@ -33,6 +33,11 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public static final String TAG = "DialogsAdapter";
     static final int ITEM_DIALOGS = R.layout.dialog;
 
+    public void changeItems(List<DialogItem> dialogItems) {
+        items = dialogItems;
+        notifyDataSetChanged();
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();

@@ -37,7 +37,7 @@ public class urlBuilder {
 
     public static String constructUrl(Method method, String query) {
         final String url = APIServiceAddressHost + method.getMethod() + "?" + query + "&access_token=" + MetaInfo.getToken() + "&v=" + version;
-        Log.d("constructUrl", url);
+        Log.d("request", url);
         return url;
     }
 

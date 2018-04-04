@@ -1,7 +1,6 @@
 package com.caezar.vklite.activities;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,41 +28,12 @@ import com.caezar.vklite.network.models.DialogsResponse.Response.DialogItem;
 /**
  * Created by seva on 01.04.18 in 17:56.
  */
+
 public class DialogsActivity extends AppCompatActivity {
-    List<DialogItem> items = null;
-
-    private final NetworkManager.OnRequestCompleteListener listenerDialogs =
-            new NetworkManager.OnRequestCompleteListener() {
-                @Override
-                public void onRequestComplete(final String body) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            buildItemList(body);
-                            getUsersNameAndAvatar();
-                        }
-                    });
-                }
-            };
-
-    private final NetworkManager.OnRequestCompleteListener listenerUsers =
-            new NetworkManager.OnRequestCompleteListener() {
-                @Override
-                public void onRequestComplete(final String body) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            List<DialogItem> items = addInfoAboutUsersToItemList(body);
-                            adapter = new DialogsAdapter(items);
-                            recyclerView.setAdapter(adapter);
-                        }
-                    });
-                }
-            };
-
     private DialogsAdapter adapter;
     private RecyclerView recyclerView;
-
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private List<DialogItem> items = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,31 +41,25 @@ public class DialogsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dialogs);
 
         recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new DialogsAdapter(items);
+        recyclerView.setAdapter(adapter);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-
-        final SwipeRefreshLayout mSwipeRefreshLayout = findViewById(R.id.swipe_container);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                Log.d("onRefresh", "onRefresh");
-                mSwipeRefreshLayout.setRefreshing(false);
-                final DialogsRequest dialogsRequest = new DialogsRequest();
-                final String url = urlBuilder.constructGetDialogs(dialogsRequest);
-                NetworkManager.getInstance().get(url, listenerDialogs);
-            }
-        });
-
+        swipeRefreshLayout = findViewById(R.id.swipe_container);
+        swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        final DialogsRequest dialogsRequest = new DialogsRequest();
-        final String url = urlBuilder.constructGetDialogs(dialogsRequest);
-        NetworkManager.getInstance().get(url, listenerDialogs);
+        getDialogs();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
     }
 
     @Override
@@ -103,76 +67,114 @@ public class DialogsActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    private void getUsersNameAndAvatar() {
-        int[] userIds = new int[items.size()];
-        int index = 0;
-        for (DialogItem item : items) {
-            if (item.getMessage().getTitle().equals("")) {
-                userIds[index] = item.getMessage().getUser_id();
-                index++;
+    private void getDialogs() {
+        final DialogsRequest dialogsRequest = new DialogsRequest();
+        final String url = urlBuilder.constructGetDialogs(dialogsRequest);
+        NetworkManager.getInstance().get(url, new OnGetFirstDialogsComplete());
+    }
+
+    SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            swipeRefreshLayout.setRefreshing(false);
+            getDialogs();
+        }
+    };
+
+    private class OnGetFirstDialogsComplete implements NetworkManager.OnRequestCompleteListener {
+        private boolean dialogsComplete = false;
+
+        public OnGetFirstDialogsComplete() {
+        }
+
+        @Override
+        public void onRequestComplete(final String body) {
+            Log.d("Response", body);
+
+            if (!dialogsComplete) {
+                buildDialogsList(body);
+                dialogsComplete = true;
+                final int[] userIds = getUsersIdFromPrivateDialogs();
+                requestGetInfoAboutUsers(userIds);
+
+                return;
+            }
+
+            addInfoAboutUsersToList(body);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.changeItems(items);
+                }
+            });
+
+        }
+
+        private void buildDialogsList(final String body) {
+            // todo: one mapper with right setting and import them from all project
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+            TypeReference<DialogsResponse> mapType = new TypeReference<DialogsResponse>() {};
+            try {
+                DialogsResponse dialogsResponse = mapper.readValue(body, mapType);
+                items = Arrays.asList(dialogsResponse.getResponse().getItems());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
-        final UsersByIdRequest usersByid = new UsersByIdRequest();
-        usersByid.setUser_ids(userIds);
-        final String url = urlBuilder.constructGetUsersInfo(usersByid);
-        NetworkManager.getInstance().get(url, listenerUsers);
-    }
+        private int[] getUsersIdFromPrivateDialogs() {
+            int[] userIds = new int[items.size()];
+            int i = 0;
+            for (DialogItem item : items) {
+                if (item.getMessage().getTitle().equals("")) {
+                    userIds[i] = item.getMessage().getUser_id();
+                    i++;
+                }
+            }
 
-    public void buildItemList(String body) {
-        Log.d("Response", body);
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        TypeReference<DialogsResponse> mapType = new TypeReference<DialogsResponse>() {};
-        try {
-            DialogsResponse dialogsResponse = mapper.readValue(body, mapType);
-            items = Arrays.asList(dialogsResponse.getResponse().getItems());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public List<DialogItem> addInfoAboutUsersToItemList(String body) {
-        Log.d("Response", body);
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        TypeReference<UsersByIdResponse> mapType = new TypeReference<UsersByIdResponse>() {};
-        UsersByIdResponse usersByIdResponse = new UsersByIdResponse();
-        try {
-            usersByIdResponse = mapper.readValue(body, mapType);
-        } catch (IOException e) {
-            e.printStackTrace();
+            return userIds;
         }
 
-        for (DialogItem item : items) {
-            if (item.getMessage().getTitle().equals("")) {
-                int userId = item.getMessage().getUser_id();
-                UsersByIdResponse.Response response = new UsersByIdResponse.Response();
+        private void requestGetInfoAboutUsers(int[] userIds){
+            final UsersByIdRequest usersByIdRequest = new UsersByIdRequest();
+            usersByIdRequest.setUser_ids(userIds);
 
-                for (UsersByIdResponse.Response r : usersByIdResponse.getResponse()) {
-                    if (r.getId() == userId) {
-                        response = r;
-                        break;
+            final String url = urlBuilder.constructGetUsersInfo(usersByIdRequest);
+            NetworkManager.getInstance().get(url, this);
+        }
+
+        private void addInfoAboutUsersToList(final String body) {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+            TypeReference<UsersByIdResponse> mapType = new TypeReference<UsersByIdResponse>() {};
+            UsersByIdResponse usersByIdResponse = new UsersByIdResponse();
+            try {
+                usersByIdResponse = mapper.readValue(body, mapType);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            for (DialogItem item : items) {
+                if (item.getMessage().getTitle().equals("")) {
+                    int userId = item.getMessage().getUser_id();
+                    UsersByIdResponse.Response response = new UsersByIdResponse.Response();
+
+                    for (UsersByIdResponse.Response user : usersByIdResponse.getResponse()) {
+                        if (user.getId() == userId) {
+                            item.getMessage().setTitle(user.getFirst_name() + " " + user.getLast_name());
+                            item.getMessage().setPhoto_50(user.getPhoto_50());
+                            item.getMessage().setPhoto_100(user.getPhoto_100());
+                            item.getMessage().setPhoto_200(user.getPhoto_200());
+                            break;
+                        }
                     }
                 }
-
-                String title = response.getFirst_name() + " " + response.getLast_name();
-                String photo_50 = response.getPhoto_50();
-                String photo_100 = response.getPhoto_100();
-                String photo_200 = response.getPhoto_200();
-
-                item.getMessage().setTitle(title);
-                item.getMessage().setPhoto_50(photo_50);
-                item.getMessage().setPhoto_100(photo_100);
-                item.getMessage().setPhoto_200(photo_200);
             }
+
         }
-
-        return items;
     }
-
 }

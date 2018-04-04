@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String TOKEN = "token";
     public static final String MYSELF_ID = "myselfId";
 
+    private final int WRONG_ID = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         final String token = settings.getString(TOKEN, null);
-        final int myselfId = settings.getInt(MYSELF_ID, -1);
+        final int myselfId = settings.getInt(MYSELF_ID, WRONG_ID);
 
         if (!checkAuth(token, myselfId)) {
             logIn();
@@ -47,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean checkAuth(String token, int myselfId) {
-        return !(token == null || myselfId == -1);
+        return !(token == null || myselfId == WRONG_ID);
     }
 
     private void logIn() {
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onResult(VKAccessToken res) {
             final String token = res.accessToken;
+
             final String url = urlBuilder.constructGetMyselfId();
             NetworkManager.getInstance().get(url, new OnLogInComplete(token));
         }
@@ -90,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onRequestComplete(final String body) {
             int myselfId = getMyselfId(body);
-            if (myselfId == -1) {
+            if (myselfId == WRONG_ID) {
                 Log.e(this.getClass().getName(), "problems with get myselfId");
                 return;
             }
@@ -127,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 return usersByIdResponse.getResponse()[0].getId();
             }
 
-            return -1;
+            return WRONG_ID;
         }
     }
 }
