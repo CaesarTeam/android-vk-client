@@ -95,9 +95,10 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String message = textInputEditText.getText().toString();
                 textInputEditText.getText().clear();
+                textInputEditText.requestFocus();
                 sendMessage(message);
                 DialogMessage dialogMessage = new DialogMessage();
-                dialogMessage.setUser_id(MetaInfo.getMyselfId());
+                dialogMessage.setFrom_id(MetaInfo.getMyselfId());
                 dialogMessage.setBody(message);
                 adapter.addDataToEnd(dialogMessage);
             }

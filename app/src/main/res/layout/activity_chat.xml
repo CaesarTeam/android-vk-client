@@ -28,23 +28,36 @@
             android:layout_marginBottom="60dp"
             />
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/EditTextName"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/recyclerView2"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="50dp"
-            android:inputType="textPersonName">
-        </android.support.design.widget.TextInputEditText>
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            >
 
-        <Button
-            android:id="@+id/sendMessage"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@color/colorPrimary"
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/EditTextName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="50dp"
+                android:inputType="text"
+                android:hint="Enter message">
+            </android.support.design.widget.TextInputEditText>
 
-            />
+            <Button
+                android:id="@+id/sendMessage"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:layout_alignParentRight="true"
+                android:imeOptions="actionDone"
+                android:background="@drawable/send"
+                />
+
+        </RelativeLayout>
+
     </RelativeLayout>
 
 
