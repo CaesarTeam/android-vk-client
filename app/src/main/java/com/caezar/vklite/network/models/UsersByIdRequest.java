@@ -1,7 +1,5 @@
 package com.caezar.vklite.network.models;
 
-import java.util.Arrays;
-
 /**
  * Created by seva on 02.04.18 in 21:31.
  */
@@ -32,12 +30,14 @@ public class UsersByIdRequest {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
+
         for (int value : user_ids) {
             if (value > 0) {
                 builder.append(value);
                 builder.append(",");
             }
         }
+
         builder.setLength(builder.length() - 1);
         String user_ids = builder.toString();
 
@@ -47,6 +47,7 @@ public class UsersByIdRequest {
             builder.append(value);
             builder.append(",");
         }
+
         builder.setLength(builder.length() - 1);
         String fields = builder.toString();
 

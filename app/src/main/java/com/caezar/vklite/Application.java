@@ -20,7 +20,7 @@ public class Application extends android.app.Application {
         @Override
         public void onVKAccessTokenChanged(VKAccessToken oldToken, VKAccessToken newToken) {
             if (newToken == null) {
-                // VKAccessToken is invalid
+                // todo:
             } else {
                 SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
                 SharedPreferences.Editor editor = settings.edit();
@@ -35,6 +35,7 @@ public class Application extends android.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         vkAccessTokenTracker.startTracking();
         VKSdk.initialize(this);
     }

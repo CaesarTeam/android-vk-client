@@ -18,7 +18,7 @@ import com.caezar.vklite.network.NetworkManager;
 import com.caezar.vklite.network.models.ChatRequest;
 import com.caezar.vklite.network.models.ChatResponse;
 import com.caezar.vklite.network.models.DialogMessage;
-import com.caezar.vklite.network.models.SendMessageResponse;
+import com.caezar.vklite.network.models.SendMessageRequest;
 import com.caezar.vklite.network.urlBuilder;
 
 import org.codehaus.jackson.map.DeserializationConfig;
@@ -144,10 +144,10 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendMessage(String message) {
-        final SendMessageResponse sendMessageResponse = new SendMessageResponse();
-        sendMessageResponse.setMessage(message);
-        sendMessageResponse.setPeer_id(peer_id);
-        final String url = urlBuilder.constructGetSend(sendMessageResponse);
+        final SendMessageRequest sendMessageRequest = new SendMessageRequest();
+        sendMessageRequest.setMessage(message);
+        sendMessageRequest.setPeer_id(peer_id);
+        final String url = urlBuilder.constructGetSend(sendMessageRequest);
         NetworkManager.getInstance().get(url, listenerSend);
     }
 

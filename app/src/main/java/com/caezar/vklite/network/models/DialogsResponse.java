@@ -1,7 +1,5 @@
 package com.caezar.vklite.network.models;
 
-import com.caezar.vklite.network.modelsResponse.Item;
-
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import java.util.Arrays;
@@ -21,7 +19,7 @@ public class DialogsResponse {
 
         private DialogItem[] items;
 
-        public static class DialogItem extends Item {
+        public static class DialogItem {
             private int  unread;
             private int  in_read;
             private int  out_read;

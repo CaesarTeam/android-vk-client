@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.caezar.vklite.network.models.ChatRequest;
 import com.caezar.vklite.network.models.DialogsRequest;
-import com.caezar.vklite.network.models.SendMessageResponse;
+import com.caezar.vklite.network.models.SendMessageRequest;
 import com.caezar.vklite.network.models.UsersByIdRequest;
 
 /**
@@ -27,8 +27,8 @@ public class urlBuilder {
         return constructUrl(Method.MESSAGES_GET_HISTORY, chatRequest.toString());
     }
 
-    public static String constructGetSend(SendMessageResponse sendMessageResponse) {
-        return constructUrl(Method.MESSAGES_SEND, sendMessageResponse.toString());
+    public static String constructGetSend(SendMessageRequest sendMessageRequest) {
+        return constructUrl(Method.MESSAGES_SEND, sendMessageRequest.toString());
     }
 
     public static String constructGetMyselfId() {

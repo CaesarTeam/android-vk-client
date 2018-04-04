@@ -70,14 +70,12 @@ public class UsersByIdResponse {
 
         @Override
         public String toString() {
-            return "Response{" +
-                    "id=" + id +
-                    ", first_name='" + first_name + '\'' +
-                    ", last_name='" + last_name + '\'' +
-                    ", photo_50='" + photo_50 + '\'' +
-                    ", photo_100='" + photo_100 + '\'' +
-                    ", photo_200='" + photo_200 + '\'' +
-                    '}';
+            return "id=" + id +
+                    ", first_name=" + first_name +
+                    ", last_name=" + last_name +
+                    ", photo_50=" + photo_50 +
+                    ", photo_100=" + photo_100 +
+                    ", photo_200=" + photo_200;
         }
     }
 
@@ -94,8 +92,6 @@ public class UsersByIdResponse {
 
     @Override
     public String toString() {
-        return "UsersByIdResponse{" +
-                "response=" + Arrays.toString(response) +
-                '}';
+        return "response=" + Arrays.toString(response);
     }
 }
