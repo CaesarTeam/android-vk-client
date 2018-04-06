@@ -35,8 +35,10 @@ import java.util.List;
  */
 
 public class ChatActivity extends AppCompatActivity {
+    private RecyclerView recyclerView;
     private ChatAdapter adapter;
     private EditText editText;
+    private LinearLayoutManager linearLayoutManager;
     // todo: local
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -64,7 +66,7 @@ public class ChatActivity extends AppCompatActivity {
         Button button = findViewById(R.id.buttonSendMessage);
         button.setOnClickListener(onClickListener);
 
-        RecyclerView recyclerView = findViewById(R.id.messagesList);
+        recyclerView = findViewById(R.id.messagesList);
         adapter = new ChatAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
@@ -165,6 +167,11 @@ public class ChatActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     addMessagesToAdaperTop(messages);
+
+                    int itemCount = adapter.getItemCount();
+                    if (itemCount == new ChatRequest().getCount()) {
+                        recyclerView.scrollToPosition(itemCount - 1);
+                    }
                 }
             });
         }
