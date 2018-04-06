@@ -160,8 +160,6 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         private List<DialogMessage> buildMessageList(String body) {
-            Log.d("Response", body);
-
             List<DialogMessage> messages = null;
 
             ObjectMapper mapper = new ObjectMapper();

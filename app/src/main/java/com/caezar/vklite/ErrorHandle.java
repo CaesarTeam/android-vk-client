@@ -1,8 +1,5 @@
 package com.caezar.vklite;
 
-import android.widget.Toast;
-
-import com.caezar.vklite.activities.DialogsActivity;
 import com.caezar.vklite.network.models.ErrorVkApi;
 
 import org.codehaus.jackson.map.DeserializationConfig;
