@@ -51,8 +51,8 @@ public class ChatActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         String title = "";
         if (bundle != null) {
-            peer_id = bundle.getInt("peer_id");
-            title = bundle.getString("title");
+            peer_id = bundle.getInt(getString(R.string.peer_id));
+            title = bundle.getString(getString(R.string.title));
         }
         myselfId = MetaInfo.getMyselfId();
 

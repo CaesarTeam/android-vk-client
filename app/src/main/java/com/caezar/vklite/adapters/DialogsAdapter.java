@@ -114,6 +114,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         @Override
         public void onClick(View v) {
+            Context context = holder.itemView.getContext();
             int position = holder.getLayoutPosition();
             if (position != RecyclerView.NO_POSITION) {
                 DialogItem item = items.get(position);
@@ -123,16 +124,13 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     peer_id = item.getMessage().getUser_id();
 
                 } else {
-                    peer_id = 2000000000 + item.getMessage().getChat_id();
+                    peer_id = Integer.parseInt(context.getString(R.string.peer_id_constant)) + item.getMessage().getChat_id();
                 }
-
-                Context context = holder.itemView.getContext();
 
                 Intent intent = new Intent(context, ChatActivity.class);
                 Bundle b = new Bundle();
-                // todo: ask R.string ?
-                b.putInt("peer_id", peer_id);
-                b.putString("title", item.getMessage().getTitle());
+                b.putInt(context.getString(R.string.peer_id), peer_id);
+                b.putString(context.getString(R.string.title), item.getMessage().getTitle());
                 intent.putExtras(b);
                 context.startActivity(intent);
             }
