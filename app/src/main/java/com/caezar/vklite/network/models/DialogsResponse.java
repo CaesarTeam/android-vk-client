@@ -67,7 +67,7 @@ public class DialogsResponse {
                         "unread=" + unread +
                         ", in_read=" + in_read +
                         ", out_read=" + out_read +
-                        ", message=" + message +
+                        ", message_text=" + message +
                         '}';
             }
         }

@@ -106,12 +106,12 @@ public class ChatActivity extends AppCompatActivity {
         DialogMessage dialogMessage = new DialogMessage();
         dialogMessage.setFrom_id(myselfId);
         dialogMessage.setBody(message);
-        adapter.addDataToEnd(dialogMessage);
+        adapter.addItemToEnd(dialogMessage);
     }
 
     private void addMessagesToAdaperTop(List<DialogMessage> items) {
         if (items != null) {
-            adapter.addDataToTop(items);
+            adapter.addItemsToTop(items);
         }
     }
 
