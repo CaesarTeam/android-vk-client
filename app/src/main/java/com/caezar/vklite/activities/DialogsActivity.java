@@ -31,7 +31,6 @@ import com.caezar.vklite.network.models.DialogsResponse.Response.DialogItem;
 
 public class DialogsActivity extends AppCompatActivity {
     private DialogsAdapter adapter;
-    private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<DialogItem> items = null;
 
@@ -40,7 +39,7 @@ public class DialogsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialogs);
 
-        recyclerView = findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new DialogsAdapter(items);
         recyclerView.setAdapter(adapter);
@@ -70,7 +69,7 @@ public class DialogsActivity extends AppCompatActivity {
     private void getDialogs() {
         final DialogsRequest dialogsRequest = new DialogsRequest();
         final String url = urlBuilder.constructGetDialogs(dialogsRequest);
-        NetworkManager.getInstance().get(url, new OnGetFirstDialogsComplete());
+        NetworkManager.getInstance().get(url, new OnGetDialogsComplete());
     }
 
     SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
@@ -81,10 +80,10 @@ public class DialogsActivity extends AppCompatActivity {
         }
     };
 
-    private class OnGetFirstDialogsComplete implements NetworkManager.OnRequestCompleteListener {
+    private class OnGetDialogsComplete implements NetworkManager.OnRequestCompleteListener {
         private boolean dialogsComplete = false;
 
-        public OnGetFirstDialogsComplete() {
+        public OnGetDialogsComplete() {
         }
 
         @Override

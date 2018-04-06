@@ -26,7 +26,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<DialogMessage> items;
 
     public ChatAdapter() {
-        items = new ArrayList<DialogMessage>();
+        items = new ArrayList<>();
     }
 
     public static final String TAG = "ChatAdapter";

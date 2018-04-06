@@ -35,91 +35,42 @@ import java.util.List;
  */
 
 public class ChatActivity extends AppCompatActivity {
-    private final NetworkManager.OnRequestCompleteListener listenerChats =
-            new NetworkManager.OnRequestCompleteListener() {
-                @Override
-                public void onRequestComplete(final String body) {
-                    runOnUiThread(new Runnable()
-                    {
-                        @Override
-                        public void run() {
-                            List<DialogMessage> items = buildItemList(body);
-                            if (items != null) {
-                                adapter.addDataToTop(items);
-                            }
-                        }
-                    });
-                }
-            };
-
-    private final NetworkManager.OnRequestCompleteListener listenerSend =
-            new NetworkManager.OnRequestCompleteListener() {
-                @Override
-                public void onRequestComplete(final String body) {
-                    runOnUiThread(new Runnable()
-                    {
-                        @Override
-                        public void run() {
-                            Log.d("Response", body);
-                        }
-                    });
-                }
-            };
+    private ChatAdapter adapter;
+    private EditText editText;
+    // todo: local
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private int peer_id;
-    private String title;
-    private ChatAdapter adapter;
-    private RecyclerView recyclerView;
-    private EditText editText;
-    private Button button;
+    private int myselfId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        Bundle b = getIntent().getExtras();
-        if(b != null) {
-            peer_id = b.getInt("peer_id");
-            title = b.getString("title");
+        Bundle bundle = getIntent().getExtras();
+        String title = "";
+        if (bundle != null) {
+            peer_id = bundle.getInt("peer_id");
+            title = bundle.getString("title");
         }
+        myselfId = MetaInfo.getMyselfId();
 
         TextView textView = findViewById(R.id.messageTitle);
         textView.setText(title);
 
         editText = findViewById(R.id.EditTextName);
-        button = findViewById(R.id.sendMessage);
 
-        button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                String message = editText.getText().toString();
-                editText.getText().clear();
-                editText.requestFocus();
-                sendMessage(message);
-                DialogMessage dialogMessage = new DialogMessage();
-                dialogMessage.setFrom_id(MetaInfo.getMyselfId());
-                dialogMessage.setBody(message);
-                adapter.addDataToEnd(dialogMessage);
-            }
-        });
+        Button button = findViewById(R.id.sendMessage);
+        button.setOnClickListener(onClickListener);
 
-
-        recyclerView = findViewById(R.id.recyclerView2);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView2);
         adapter = new ChatAdapter();
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        final SwipeRefreshLayout mSwipeRefreshLayout = findViewById(R.id.swipe_container);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mSwipeRefreshLayout.setRefreshing(false);
-                int currentCountOfMessage = adapter.getItemCount();
-                requestChat(currentCountOfMessage);
-            }
-        });
+        swipeRefreshLayout = findViewById(R.id.swipe_container);
+        swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
 
     }
 
@@ -127,7 +78,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        requestChat(0);
+        getChat(0);
     }
 
     @Override
@@ -135,12 +86,12 @@ public class ChatActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    private void requestChat(int offset) {
+    private void getChat(int offset) {
         final ChatRequest chatRequest = new ChatRequest();
         chatRequest.setOffset(offset);
         chatRequest.setPeer_id(peer_id);
         final String url = urlBuilder.constructGetChat(chatRequest);
-        NetworkManager.getInstance().get(url, listenerChats);
+        NetworkManager.getInstance().get(url, new OnGetMessagesComplete());
     }
 
     private void sendMessage(String message) {
@@ -148,13 +99,26 @@ public class ChatActivity extends AppCompatActivity {
         sendMessageRequest.setMessage(message);
         sendMessageRequest.setPeer_id(peer_id);
         final String url = urlBuilder.constructGetSend(sendMessageRequest);
-        NetworkManager.getInstance().get(url, listenerSend);
+        NetworkManager.getInstance().get(url, new OnSendMessageComplete());
     }
 
-    public List<DialogMessage> buildItemList(String body) {
+    private void addMessageToAdapterEnd(final String message) {
+        DialogMessage dialogMessage = new DialogMessage();
+        dialogMessage.setFrom_id(myselfId);
+        dialogMessage.setBody(message);
+        adapter.addDataToEnd(dialogMessage);
+    }
+
+    private void addMessagesToAdaperTop(List<DialogMessage> items) {
+        if (items != null) {
+            adapter.addDataToTop(items);
+        }
+    }
+
+    public List<DialogMessage> buildMessageList(String body) {
         Log.d("Response", body);
 
-        List<DialogMessage> items = null;
+        List<DialogMessage> messages = null;
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -163,12 +127,55 @@ public class ChatActivity extends AppCompatActivity {
         try {
             ChatResponse chatResponse = mapper.readValue(body, mapType);
             Collections.reverse(Arrays.asList(chatResponse.getResponse().getItems()));
-            items = Arrays.asList(chatResponse.getResponse().getItems());
-
+            messages = Arrays.asList(chatResponse.getResponse().getItems());
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return items;
+        return messages;
+    }
+
+    View.OnClickListener onClickListener = new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            final String message = editText.getText().toString();
+            editText.getText().clear();
+            sendMessage(message);
+            addMessageToAdapterEnd(message);
+        }
+    };
+
+    SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            swipeRefreshLayout.setRefreshing(false);
+            int offset = adapter.getItemCount();
+            getChat(offset);
+        }
+    };
+
+    private class OnGetMessagesComplete implements NetworkManager.OnRequestCompleteListener {
+
+        @Override
+        public void onRequestComplete(final String body) {
+            Log.d("Response", body);
+            // todo: check that is doing not in main thread
+            final List<DialogMessage> messages = buildMessageList(body);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    addMessagesToAdaperTop(messages);
+                }
+            });
+        }
+    }
+
+    private class OnSendMessageComplete implements NetworkManager.OnRequestCompleteListener {
+
+        @Override
+        public void onRequestComplete(final String body) {
+            Log.d("Response", body);
+
+        }
     }
 }
