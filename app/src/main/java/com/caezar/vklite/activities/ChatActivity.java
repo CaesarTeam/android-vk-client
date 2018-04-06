@@ -1,7 +1,6 @@
 package com.caezar.vklite.activities;
 
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.caezar.vklite.R;
@@ -70,7 +70,7 @@ public class ChatActivity extends AppCompatActivity {
     private String title;
     private ChatAdapter adapter;
     private RecyclerView recyclerView;
-    private TextInputEditText textInputEditText;
+    private EditText editText;
     private Button button;
 
     @Override
@@ -87,15 +87,15 @@ public class ChatActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.messageTitle);
         textView.setText(title);
 
-        textInputEditText = findViewById(R.id.EditTextName);
+        editText = findViewById(R.id.EditTextName);
         button = findViewById(R.id.sendMessage);
 
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                String message = textInputEditText.getText().toString();
-                textInputEditText.getText().clear();
-                textInputEditText.requestFocus();
+                String message = editText.getText().toString();
+                editText.getText().clear();
+                editText.requestFocus();
                 sendMessage(message);
                 DialogMessage dialogMessage = new DialogMessage();
                 dialogMessage.setFrom_id(MetaInfo.getMyselfId());

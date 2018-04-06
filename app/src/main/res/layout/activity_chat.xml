@@ -35,14 +35,14 @@
             android:orientation="horizontal"
             >
 
-            <android.support.design.widget.TextInputEditText
+            <EditText
                 android:id="@+id/EditTextName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="50dp"
                 android:inputType="text"
                 android:hint="Enter message">
-            </android.support.design.widget.TextInputEditText>
+            </EditText>
 
             <Button
                 android:id="@+id/sendMessage"
