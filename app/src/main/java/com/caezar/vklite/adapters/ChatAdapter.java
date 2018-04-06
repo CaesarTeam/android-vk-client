@@ -84,12 +84,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 break;
             case RIGHT_IMAGE:
                 messageViewHolder.imageView.setVisibility(View.VISIBLE);
-                Glide.with(context).load(item.getAttachments()[0].getPhoto().getPhoto_130()).into(messageViewHolder.imageView);
+                Glide.with(context).load(item.getAttachments()[0].getPhoto().getPhoto_604()).into(messageViewHolder.imageView);
                 messageViewHolder.imageView.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
                 break;
             case LEFT_IMAGE:
                 messageViewHolder.imageView.setVisibility(View.VISIBLE);
-                Glide.with(context).load(item.getAttachments()[0].getPhoto().getPhoto_130()).into(messageViewHolder.imageView);
+                Glide.with(context).load(item.getAttachments()[0].getPhoto().getPhoto_604()).into(messageViewHolder.imageView);
                 messageViewHolder.imageView.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
                 break;
             default:
