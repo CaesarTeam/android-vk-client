@@ -63,7 +63,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case LEFT_IMAGE:
             case RIGHT_IMAGE:
                 View messageImageView = LayoutInflater.from(context).inflate(MESSAGE_IMAGE, parent, false);
-                return new MessageTextViewHolder(messageImageView);
+                return new MessageImageViewHolder(messageImageView);
 
             default:
                 throw new IllegalArgumentException("invalid view type");
@@ -90,11 +90,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 break;
             case LEFT_IMAGE:
             case RIGHT_IMAGE:
-                MessageImageHolder messageImageHolder = ((MessageImageHolder) holder);
-                Glide.with(context).load(item.getAttachments()[0].getPhoto().getPhoto_604()).into(messageImageHolder.imageMessage);
+                MessageImageViewHolder messageImageViewHolder = ((MessageImageViewHolder) holder);
+                Glide.with(context).load(item.getAttachments()[0].getPhoto().getPhoto_604()).into(messageImageViewHolder.imageMessage);
 
                 textAlign = getItemViewType(position) == LEFT_IMAGE ? TEXT_ALIGNMENT_VIEW_START : TEXT_ALIGNMENT_VIEW_END;
-                messageImageHolder.imageMessage.setTextAlignment(textAlign);
+                messageImageViewHolder.imageMessage.setTextAlignment(textAlign);
 
                 break;
             default:
@@ -133,11 +133,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    class MessageImageHolder extends RecyclerView.ViewHolder {
+    class MessageImageViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageMessage;
 
-        MessageImageHolder(final View itemView) {
+        MessageImageViewHolder(final View itemView) {
             super(itemView);
 
             imageMessage = itemView.findViewById(R.id.messageImage);
