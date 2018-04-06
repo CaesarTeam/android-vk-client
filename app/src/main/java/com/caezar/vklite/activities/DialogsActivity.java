@@ -6,12 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.DialogsAdapter;
 import com.caezar.vklite.network.NetworkManager;
 import com.caezar.vklite.network.models.DialogsRequest;
 import com.caezar.vklite.network.models.DialogsResponse;
+import com.caezar.vklite.network.models.ErrorVkApi;
 import com.caezar.vklite.network.models.UsersByIdRequest;
 import com.caezar.vklite.network.models.UsersByIdResponse;
 import com.caezar.vklite.network.urlBuilder;
@@ -23,7 +25,11 @@ import org.codehaus.jackson.type.TypeReference;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+
 import com.caezar.vklite.network.models.DialogsResponse.Response.DialogItem;
+
+import static com.caezar.vklite.ErrorHandle.errorParse;
 
 /**
  * Created by seva on 01.04.18 in 17:56.
@@ -87,7 +93,7 @@ public class DialogsActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onRequestComplete(final String body) {
+        public void onResponse(final String body) {
             Log.d("Response", body);
 
             if (!dialogsComplete) {
@@ -116,12 +122,28 @@ public class DialogsActivity extends AppCompatActivity {
             mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
             TypeReference<DialogsResponse> mapType = new TypeReference<DialogsResponse>() {};
+            DialogsResponse dialogsResponse = new DialogsResponse();
             try {
-                DialogsResponse dialogsResponse = mapper.readValue(body, mapType);
-                items = Arrays.asList(dialogsResponse.getResponse().getItems());
+                dialogsResponse = mapper.readValue(body, mapType);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            if (dialogsResponse.getResponse() == null) {
+                final int stringRes = errorParse(body);
+                if (stringRes != -1) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(DialogsActivity.this, stringRes, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                return;
+            }
+
+            items = Arrays.asList(dialogsResponse.getResponse().getItems());
         }
 
         private int[] getUsersIdFromPrivateDialogs() {
@@ -157,10 +179,23 @@ public class DialogsActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            if (usersByIdResponse.getResponse() == null) {
+                final int stringRes = errorParse(body);
+                if (stringRes != -1) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(DialogsActivity.this, stringRes, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                return;
+            }
+
             for (DialogItem item : items) {
                 if (item.getMessage().getTitle().equals("")) {
                     int userId = item.getMessage().getUser_id();
-                    UsersByIdResponse.Response response = new UsersByIdResponse.Response();
 
                     for (UsersByIdResponse.Response user : usersByIdResponse.getResponse()) {
                         if (user.getId() == userId) {

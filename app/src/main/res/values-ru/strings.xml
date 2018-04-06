@@ -1,3 +1,5 @@
 <resources>
     <string name="messageFormPlaceholder">Введите сообщение</string>
+    <string name="error6">Слишком много запросов</string>
+
 </resources>

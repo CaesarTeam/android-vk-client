@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.ChatAdapter;
@@ -29,6 +30,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static com.caezar.vklite.ErrorHandle.errorParse;
 
 /**
  * Created by seva on 03.04.18 in 15:40.
@@ -117,26 +120,6 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    public List<DialogMessage> buildMessageList(String body) {
-        Log.d("Response", body);
-
-        List<DialogMessage> messages = null;
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        TypeReference<ChatResponse> mapType = new TypeReference<ChatResponse>() {};
-        try {
-            ChatResponse chatResponse = mapper.readValue(body, mapType);
-            Collections.reverse(Arrays.asList(chatResponse.getResponse().getItems()));
-            messages = Arrays.asList(chatResponse.getResponse().getItems());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return messages;
-    }
-
     View.OnClickListener onClickListener = new View.OnClickListener(){
         @Override
         public void onClick(View v) {
@@ -159,7 +142,7 @@ public class ChatActivity extends AppCompatActivity {
     private class OnGetMessagesComplete implements NetworkManager.OnRequestCompleteListener {
 
         @Override
-        public void onRequestComplete(final String body) {
+        public void onResponse(final String body) {
             Log.d("Response", body);
             // todo: check that is doing not in main thread
             final List<DialogMessage> messages = buildMessageList(body);
@@ -175,12 +158,49 @@ public class ChatActivity extends AppCompatActivity {
                 }
             });
         }
+
+        private List<DialogMessage> buildMessageList(String body) {
+            Log.d("Response", body);
+
+            List<DialogMessage> messages = null;
+
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+            TypeReference<ChatResponse> mapType = new TypeReference<ChatResponse>() {};
+            ChatResponse chatResponse = new ChatResponse();
+
+            try {
+                chatResponse = mapper.readValue(body, mapType);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (chatResponse.getResponse() == null) {
+                final int stringRes = errorParse(body);
+                if (stringRes != -1) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(ChatActivity.this, stringRes, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                return messages;
+            }
+
+            Collections.reverse(Arrays.asList(chatResponse.getResponse().getItems()));
+            messages = Arrays.asList(chatResponse.getResponse().getItems());
+
+            return messages;
+        }
     }
 
     private class OnSendMessageComplete implements NetworkManager.OnRequestCompleteListener {
 
         @Override
-        public void onRequestComplete(final String body) {
+        public void onResponse(final String body) {
             Log.d("Response", body);
 
         }

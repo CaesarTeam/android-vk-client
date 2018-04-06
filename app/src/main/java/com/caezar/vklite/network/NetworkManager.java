@@ -42,7 +42,7 @@ public class NetworkManager {
             @Override
             public void run() {
                 final String body = getBody(request);
-                listener.onRequestComplete(body);
+                listener.onResponse(body);
             }
         });
     }
@@ -62,6 +62,6 @@ public class NetworkManager {
     }
 
     public interface OnRequestCompleteListener {
-        void onRequestComplete(final String body);
+        void onResponse(final String body);
     }
 }

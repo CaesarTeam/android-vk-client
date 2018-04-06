@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onRequestComplete(final String body) {
+        public void onResponse(final String body) {
             Log.d("Response", body);
 
             int myselfId = getMyselfId(body);

@@ -5,4 +5,5 @@
     <string name="peer_id">peer_id</string>
     <string name="peer_id_constant">2000000000</string>
     <string name="messageFormPlaceholder">Enter message</string>
+    <string name="error6">Too many requests per second</string>
 </resources>
