@@ -64,4 +64,6 @@ public class NetworkManager {
     public interface OnRequestCompleteListener {
         void onResponse(final String body);
     }
+
+    // todo: add class here with method check body null. extends implemenst. if null fragment with return. on close fragment try request again
 }

@@ -25,9 +25,11 @@ public class ErrorHandle {
             e.printStackTrace();
         }
         // todo: add all errors
-        switch (Objects.requireNonNull(errorVkApi).getError().getError_code()) {
-            case 6:
-                return R.string.error6;
+        if (errorVkApi != null) {
+            switch (errorVkApi.getError().getError_code()) {
+                case 6:
+                    return R.string.error6;
+            }
         }
 
         return -1;
