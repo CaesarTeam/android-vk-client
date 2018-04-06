@@ -39,7 +39,7 @@ public class DialogsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialogs);
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.dialogsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new DialogsAdapter(items);
         recyclerView.setAdapter(adapter);

@@ -97,9 +97,9 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         DialogViewHolder(final View itemView) {
             super(itemView);
-            avatar = itemView.findViewById(R.id.dialog_avatar);
-            title = itemView.findViewById(R.id.dialog_title);
-            message = itemView.findViewById(R.id.dialog_message);
+            avatar = itemView.findViewById(R.id.dialogAvatar);
+            title = itemView.findViewById(R.id.dialogTitle);
+            message = itemView.findViewById(R.id.dialogMessage);
 
             itemView.setOnClickListener(new AddRemoveClickListener(this));
         }
@@ -130,6 +130,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                 Intent intent = new Intent(context, ChatActivity.class);
                 Bundle b = new Bundle();
+                // todo: ask R.string ?
                 b.putInt("peer_id", peer_id);
                 b.putString("title", item.getMessage().getTitle());
                 intent.putExtras(b);

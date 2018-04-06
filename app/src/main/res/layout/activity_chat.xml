@@ -16,16 +16,16 @@
             android:id="@+id/messageTitle"
             android:layout_width="match_parent"
             android:textAlignment="center"
-            android:textColor="#0000ff"
+            android:textColor="@color/colorTitleChat"
             android:layout_height="wrap_content" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView2"
+            android:id="@+id/messagesList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/messageTitle"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="60dp"
+            android:layout_marginTop="@dimen/margin_top_for_messages_in_chat"
+            android:layout_marginBottom="@dimen/margin_bottom_for_messages_in_chat"
             />
 
         <RelativeLayout
@@ -36,31 +36,28 @@
             >
 
             <EditText
-                android:id="@+id/EditTextName"
+                android:id="@+id/messageForm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="50dp"
+                android:layout_marginEnd="@dimen/margin_end_for_message_form_in_chat"
                 android:inputType="text"
-                android:hint="Enter message">
+                android:hint="@string/messageFormPlaceholder">
             </EditText>
 
             <Button
-                android:id="@+id/sendMessage"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:id="@+id/buttonSendMessage"
+                android:layout_width="@dimen/button_send_message_size"
+                android:layout_height="@dimen/button_send_message_size"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="@dimen/margin_right_for_button_send_message"
                 android:layout_alignParentRight="true"
                 android:imeOptions="actionDone"
                 android:background="@drawable/send"
                 />
 
         </RelativeLayout>
-
     </RelativeLayout>
-
-
 </android.support.v4.widget.SwipeRefreshLayout>
 
 

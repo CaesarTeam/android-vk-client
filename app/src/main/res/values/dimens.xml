@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="image_size">80dp</dimen>
-    <dimen name="padding">8dp</dimen>
+    <dimen name="image_size_for_avatar_in_dialogs">100dp</dimen>
+    <dimen name="border_width_between_dialogs">1dp</dimen>
+    <dimen name="margin_left_for_avatar_in_dialog">8dp</dimen>
+    <dimen name="margin_left_for_title_in_dialog">8dp</dimen>
+    <dimen name="margin_for_message_in_dialog">8dp</dimen>
+    <dimen name="font_size_title_dialog">20sp</dimen>
+    <dimen name="image_size_in_chat">250dp</dimen>
+    <dimen name="margin_top_for_messages_in_chat">20dp</dimen>
+    <dimen name="margin_bottom_for_messages_in_chat">60dp</dimen>
+    <dimen name="margin_chat">10dp</dimen>
+    <dimen name="margin_end_for_message_form_in_chat">50dp</dimen>
+    <dimen name="margin_between_messages">15dp</dimen>
+    <dimen name="margin_right_for_button_send_message">20dp</dimen>
+    <dimen name="button_send_message_size">25dp</dimen>
 </resources>

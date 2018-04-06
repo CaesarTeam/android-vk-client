@@ -59,12 +59,12 @@ public class ChatActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.messageTitle);
         textView.setText(title);
 
-        editText = findViewById(R.id.EditTextName);
+        editText = findViewById(R.id.messageForm);
 
-        Button button = findViewById(R.id.sendMessage);
+        Button button = findViewById(R.id.buttonSendMessage);
         button.setOnClickListener(onClickListener);
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerView2);
+        RecyclerView recyclerView = findViewById(R.id.messagesList);
         adapter = new ChatAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
