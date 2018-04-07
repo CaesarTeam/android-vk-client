@@ -127,6 +127,7 @@ public class ChatActivity extends AppCompatActivity {
             editText.getText().clear();
             sendMessage(message);
             addMessageToAdapterEnd(message);
+            recyclerView.scrollToPosition(adapter.getItemCount() - 1);
         }
     };
 
