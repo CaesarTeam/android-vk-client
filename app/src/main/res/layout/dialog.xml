@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/margin_top_for_title_in_dialog"
     xmlns:tools="http://schemas.android.com/tools">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -11,11 +12,14 @@
         android:paddingBottom="@dimen/border_width_between_dialogs"
         >
 
-        <ImageView android:id="@+id/dialogAvatar"
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/dialogAvatar"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="@dimen/image_size_for_avatar_in_dialogs"
             android:layout_height="@dimen/image_size_for_avatar_in_dialogs"
             android:layout_marginStart="@dimen/margin_left_for_avatar_in_dialog"
-            tools:src="@drawable/default_avatar"/>
+            tools:src="@drawable/default_avatar"
+            app:riv_oval="true" />
 
         <TextView android:id="@+id/dialogTitle"
             android:layout_width="match_parent"

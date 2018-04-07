@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="image_size_for_avatar_in_dialogs">100dp</dimen>
+    <dimen name="image_size_for_avatar_in_dialogs">80dp</dimen>
     <dimen name="border_width_between_dialogs">1dp</dimen>
     <dimen name="margin_left_for_avatar_in_dialog">8dp</dimen>
     <dimen name="margin_left_for_title_in_dialog">8dp</dimen>
+    <dimen name="margin_top_for_title_in_dialog">10dp</dimen>
     <dimen name="margin_for_message_in_dialog">8dp</dimen>
     <dimen name="font_size_title_dialog">20sp</dimen>
     <dimen name="image_size_in_chat">250dp</dimen>
