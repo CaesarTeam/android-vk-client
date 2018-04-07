@@ -11,6 +11,10 @@
     <dimen name="margin_bottom_for_messages_in_chat">60dp</dimen>
     <dimen name="margin_chat">10dp</dimen>
     <dimen name="margin_end_for_message_form_in_chat">50dp</dimen>
+    <dimen name="margin_start_for_message_form_in_chat">20dp</dimen>
+    <dimen name="height_for_message_form_in_chat">40dp</dimen>
+    <dimen name="padding_for_message_form_in_chat">5dp</dimen>
+    <dimen name="cursor_width_message_form_in_chat">2dp</dimen>
     <dimen name="margin_between_messages">15dp</dimen>
     <dimen name="margin_right_for_button_send_message">20dp</dimen>
     <dimen name="button_send_message_size">25dp</dimen>
