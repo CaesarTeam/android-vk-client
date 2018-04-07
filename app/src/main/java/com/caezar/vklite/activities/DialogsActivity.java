@@ -160,7 +160,7 @@ public class DialogsActivity extends AppCompatActivity {
             return userIds;
         }
 
-        private void requestGetInfoAboutUsers(int[] userIds){
+        private void requestGetInfoAboutUsers(int[] userIds) {
             final UsersByIdRequest usersByIdRequest = new UsersByIdRequest();
             usersByIdRequest.setUser_ids(userIds);
 

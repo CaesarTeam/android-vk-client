@@ -18,6 +18,7 @@
     <dimen name="height_for_message_form_in_chat">40dp</dimen>
     <dimen name="padding_for_message_form_in_chat">5dp</dimen>
     <dimen name="cursor_width_message_form_in_chat">2dp</dimen>
+    <dimen name="image_size_for_avatar_in_chat">30dp</dimen>
     <dimen name="margin_between_message_and_time">3dp</dimen>
     <dimen name="margin_right_for_button_send_message">20dp</dimen>
     <dimen name="button_send_message_size">25dp</dimen>

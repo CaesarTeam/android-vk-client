@@ -1,6 +1,8 @@
 package com.caezar.vklite.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,9 +17,14 @@ import com.caezar.vklite.R;
 import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.network.MetaInfo;
 import com.caezar.vklite.network.models.DialogMessage;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static android.view.View.TEXT_ALIGNMENT_VIEW_END;
 import static android.view.View.TEXT_ALIGNMENT_VIEW_START;
@@ -29,10 +36,20 @@ import static android.view.View.TEXT_ALIGNMENT_VIEW_START;
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<DialogMessage> items;
     private int myselfId;
+    private boolean isPrivateDialog;
+    private Map<Integer, String> photoUsers;
 
-    public ChatAdapter() {
+    // todo: SuppressLint
+    @SuppressLint("UseSparseArrays")
+    public ChatAdapter(boolean isPrivateDialog) {
         items = new ArrayList<>();
+        photoUsers = new HashMap<>();
         myselfId = MetaInfo.getMyselfId();
+        this.isPrivateDialog = isPrivateDialog;
+    }
+
+    public void setUsersAvatar(Map<Integer, String> photoUsers) {
+        this.photoUsers = photoUsers;
     }
 
     static final int MESSAGE_TEXT = R.layout.message_text;
@@ -94,6 +111,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
                     messageTextViewHolder.messageTextContainer.setLayoutParams(params);
+                } else {
+                    if (!isPrivateDialog && photoUsers.containsKey(item.getFrom_id())) {
+                        Glide.with(context).load(photoUsers.get(item.getFrom_id())).into(messageTextViewHolder.messageAvatar);
+                        messageTextViewHolder.messageAvatar.setVisibility(View.VISIBLE);
+                    }
                 }
 
 
@@ -137,6 +159,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         TextView message;
         TextView messageTextTime;
         RelativeLayout messageTextContainer;
+        RoundedImageView messageAvatar;
 
         MessageTextViewHolder(final View itemView) {
             super(itemView);
@@ -144,6 +167,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             message = itemView.findViewById(R.id.messageText);
             messageTextTime = itemView.findViewById(R.id.messageTextTime);
             messageTextContainer = itemView.findViewById(R.id.messageTextContainer);
+            messageAvatar = itemView.findViewById(R.id.messageAvatar);
         }
     }
 

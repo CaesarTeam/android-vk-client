@@ -15,13 +15,20 @@ import com.caezar.vklite.R;
 import com.caezar.vklite.activities.ChatActivity;
 import com.caezar.vklite.network.models.DialogsResponse.Response.DialogItem;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by seva on 01.04.18 in 18:12.
  */
 
 public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public static final String PHOTO_PARTICIPANTS = "photoParticipants";
+    public static final String TITLE = "title";
+    public static final String PEER_ID = "peer_id";
+    public static final String IS_PRVATE_DIALOG = "isPrivateDialog";
+
     private List<DialogItem> items;
 
     public DialogsAdapter(List<DialogItem> dialogItems) {
@@ -120,18 +127,21 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 DialogItem item = items.get(position);
 
                 int peer_id;
+                boolean isPrivateDialog = false;
+
                 if (item.getMessage().getChat_id() == 0) {
                     peer_id = item.getMessage().getUser_id();
+                    isPrivateDialog = true;
 
                 } else {
                     peer_id = Integer.parseInt(context.getString(R.string.peer_id_constant)) + item.getMessage().getChat_id();
                 }
 
                 Intent intent = new Intent(context, ChatActivity.class);
-                Bundle b = new Bundle();
-                b.putInt(context.getString(R.string.peer_id), peer_id);
-                b.putString(context.getString(R.string.title), item.getMessage().getTitle());
-                intent.putExtras(b);
+                intent.putExtra(PEER_ID, peer_id);
+                intent.putExtra(TITLE, item.getMessage().getTitle());
+                intent.putExtra(IS_PRVATE_DIALOG, isPrivateDialog);
+                intent.putExtra(PHOTO_PARTICIPANTS, item.getMessage().getChat_active());
                 context.startActivity(intent);
             }
         }
