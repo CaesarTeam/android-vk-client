@@ -38,6 +38,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private int myselfId;
     private boolean isPrivateDialog;
     private Map<Integer, String> photoUsers;
+    private int prevId;
 
     // todo: SuppressLint
     @SuppressLint("UseSparseArrays")
@@ -96,6 +97,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         Context context = holder.itemView.getContext();
 
         String time = Time.getTime(item.getDate());
+        int userId = item.getUser_id();
         int textAlign;
 
         switch (getItemViewType(position)) {
@@ -114,8 +116,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 } else {
                     if (!isPrivateDialog && photoUsers.containsKey(item.getFrom_id())) {
                         Glide.with(context).load(photoUsers.get(item.getFrom_id())).into(messageTextViewHolder.messageAvatar);
-                        messageTextViewHolder.messageAvatar.setVisibility(View.VISIBLE);
+
+                        if (userId != prevId) {
+                            messageTextViewHolder.messageAvatar.setVisibility(View.VISIBLE);
+                        } else {
+                            messageTextViewHolder.messageAvatar.setVisibility(View.INVISIBLE);
+                        }
                     }
+                    prevId = userId;
                 }
 
 

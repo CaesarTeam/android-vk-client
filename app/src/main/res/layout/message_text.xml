@@ -23,7 +23,7 @@
         android:layout_marginRight="@dimen/margin_chat"
         android:layout_marginBottom="@dimen/margin_chat"
         android:padding="@dimen/padding_chat"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorMessageFromYourSelf"
         android:layout_toEndOf="@id/messageAvatar"
         >
 
