@@ -2,14 +2,17 @@ package com.caezar.vklite.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.caezar.vklite.R;
+import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.network.MetaInfo;
 import com.caezar.vklite.network.models.DialogMessage;
 
@@ -75,6 +78,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         DialogMessage item = items.get(position);
         Context context = holder.itemView.getContext();
 
+        String time = Time.getTime(item.getDate());
         int textAlign;
 
         switch (getItemViewType(position)) {
@@ -83,9 +87,15 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 String message = item.getBody();
                 MessageTextViewHolder messageTextViewHolder = ((MessageTextViewHolder) holder);
                 messageTextViewHolder.message.setText(message);
+                messageTextViewHolder.messageTextTime.setText(time);
 
-                textAlign = getItemViewType(position) == LEFT_MESSAGE ? TEXT_ALIGNMENT_VIEW_START : TEXT_ALIGNMENT_VIEW_END;
-                messageTextViewHolder.message.setTextAlignment(textAlign);
+                if (getItemViewType(position) == RIGHT_MESSAGE) {
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) messageTextViewHolder.messageTextContainer.getLayoutParams();
+                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+                    messageTextViewHolder.messageTextContainer.setLayoutParams(params);
+                }
+
 
                 break;
             case LEFT_IMAGE:
@@ -125,11 +135,15 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     class MessageTextViewHolder extends RecyclerView.ViewHolder {
 
         TextView message;
+        TextView messageTextTime;
+        RelativeLayout messageTextContainer;
 
         MessageTextViewHolder(final View itemView) {
             super(itemView);
 
             message = itemView.findViewById(R.id.messageText);
+            messageTextTime = itemView.findViewById(R.id.messageTextTime);
+            messageTextContainer = itemView.findViewById(R.id.messageTextContainer);
         }
     }
 

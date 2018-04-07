@@ -35,7 +35,7 @@ import static com.caezar.vklite.ErrorHandle.errorParse;
 /**
  * Created by seva on 01.04.18 in 17:56.
  */
-
+// todo: margin between dialogs
 public class DialogsActivity extends AppCompatActivity {
     private DialogsAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;

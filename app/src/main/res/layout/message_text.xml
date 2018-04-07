@@ -1,15 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/margin_chat"
-    android:layout_marginRight="@dimen/margin_chat">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:id="@+id/messageText"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:id="@+id/messageTextContainer"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_between_messages"
-        />
-</android.support.constraint.ConstraintLayout>
+        android:layout_marginLeft="@dimen/margin_chat"
+        android:layout_marginRight="@dimen/margin_chat"
+        android:layout_marginBottom="@dimen/margin_chat"
+        android:padding="@dimen/padding_chat"
+        android:background="@color/colorPrimary"
+        >
+
+        <TextView
+            android:id="@+id/messageText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="@dimen/max_width_for_message_in_chat"
+            android:layout_marginBottom="@dimen/margin_between_message_and_time"
+            />
+
+        <TextView
+            android:id="@+id/messageTextTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/messageText"
+            android:layout_toEndOf="@id/messageText"
+            />
+    </RelativeLayout>
+
+</RelativeLayout>

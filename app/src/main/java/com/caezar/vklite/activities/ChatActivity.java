@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.ChatAdapter;
+import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.network.MetaInfo;
 import com.caezar.vklite.network.NetworkManager;
 import com.caezar.vklite.network.models.ChatRequest;
@@ -111,6 +112,7 @@ public class ChatActivity extends AppCompatActivity {
         DialogMessage dialogMessage = new DialogMessage();
         dialogMessage.setFrom_id(myselfId);
         dialogMessage.setBody(message);
+        dialogMessage.setDate(Time.currentDate());
         adapter.addItemToEnd(dialogMessage);
     }
 
