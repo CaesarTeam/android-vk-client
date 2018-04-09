@@ -5,7 +5,7 @@ package com.caezar.vklite.network.models;
  */
 public class UsersByIdRequest {
     private int[] user_ids;
-    private String[] fields = new String[] {"photo_50", "photo_100", "photo_200"};
+    private String[] fields = new String[] {"photo_50", "photo_100", "photo_200", "photo_max"};
 
     public int[] getUser_ids() {
         return user_ids;

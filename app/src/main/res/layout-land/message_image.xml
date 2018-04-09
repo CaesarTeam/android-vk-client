@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_marginLeft="@dimen/margin_chat"
+    android:layout_marginRight="@dimen/margin_chat">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/messageAvatar"
@@ -19,29 +20,27 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_chat"
+        android:layout_toEndOf="@id/messageAvatar"
         android:layout_marginLeft="@dimen/margin_chat"
         android:layout_marginRight="@dimen/margin_chat"
-        android:layout_marginBottom="@dimen/margin_chat"
-        android:padding="@dimen/padding_chat"
-        android:background="@color/colorMessageFromYourSelf"
-        android:layout_toEndOf="@id/messageAvatar"
         >
 
-        <TextView
-            android:id="@+id/messageText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxWidth="@dimen/max_width_for_message_in_chat"
-            android:layout_marginBottom="@dimen/margin_between_message_and_time"
-            />
+        <ImageView
+            android:id="@+id/messageImage"
+            android:layout_width="@dimen/land_image_size_in_chat"
+            android:layout_height="@dimen/land_image_size_in_chat"
+            android:background="@drawable/chat_image_message_border"/>
 
         <TextView
             android:id="@+id/messageTextTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/messageText"
-            android:layout_toEndOf="@id/messageText"
-            />
-    </RelativeLayout>
+            android:layout_below="@id/messageImage"
+            android:layout_toEndOf="@id/messageImage"
+            android:layout_marginTop="@dimen/margin_top_time_image_in_chat"
+            android:layout_marginStart="@dimen/margin_left_time_image_in_chat"
+            android:background="@color/colorMessageImageTime" />
 
+    </RelativeLayout>
 </RelativeLayout>

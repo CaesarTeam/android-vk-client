@@ -274,7 +274,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
             for (UsersByIdResponse.Response user: usersByIdResponse.getResponse()) {
-                photoUsers.put(user.getId(), user.getPhoto_50());
+                photoUsers.put(user.getId(), user.getPhoto_max());
             }
 
             return photoUsers;

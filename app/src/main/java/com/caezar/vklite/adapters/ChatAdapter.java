@@ -11,9 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.caezar.vklite.R;
+import com.caezar.vklite.activities.ChatActivity;
 import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.network.MetaInfo;
 import com.caezar.vklite.network.models.DialogMessage;
@@ -200,6 +202,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             messageTextTime = itemView.findViewById(R.id.messageTextTime);
             messageTextContainer = itemView.findViewById(R.id.messageTextContainer);
             messageAvatar = itemView.findViewById(R.id.messageAvatar);
+
+            imageMessage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(itemView.getContext(), "Click", Toast.LENGTH_LONG).show();
+                }
+            });
         }
     }
 

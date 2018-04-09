@@ -16,6 +16,7 @@ public class UsersByIdResponse {
         private String photo_50;
         private String photo_100;
         private String photo_200;
+        private String photo_max;
 
         public int getId() {
             return id;
@@ -63,6 +64,14 @@ public class UsersByIdResponse {
 
         public void setPhoto_200(String photo_200) {
             this.photo_200 = photo_200;
+        }
+
+        public String getPhoto_max() {
+            return photo_max;
+        }
+
+        public void setPhoto_max(String photo_max) {
+            this.photo_max = photo_max;
         }
 
         public Response() {
