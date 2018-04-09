@@ -1,7 +1,6 @@
 package com.caezar.vklite.activities;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,22 +10,19 @@ import android.widget.Toast;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.DialogsAdapter;
+import com.caezar.vklite.libs.ConfiguredObjectMapper;
 import com.caezar.vklite.network.NetworkManager;
 import com.caezar.vklite.network.models.DialogsRequest;
 import com.caezar.vklite.network.models.DialogsResponse;
-import com.caezar.vklite.network.models.ErrorVkApi;
 import com.caezar.vklite.network.models.UsersByIdRequest;
 import com.caezar.vklite.network.models.UsersByIdResponse;
 import com.caezar.vklite.network.urlBuilder;
 
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import com.caezar.vklite.network.models.DialogsResponse.Response.DialogItem;
 
@@ -118,14 +114,11 @@ public class DialogsActivity extends AppCompatActivity {
         }
 
         private void buildDialogsList(final String body) {
-            // todo: one mapper with right setting and import them from all project
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
             TypeReference<DialogsResponse> mapType = new TypeReference<DialogsResponse>() {};
             DialogsResponse dialogsResponse = new DialogsResponse();
+
             try {
-                dialogsResponse = mapper.readValue(body, mapType);
+                dialogsResponse = ConfiguredObjectMapper.getInstance().readValue(body, mapType);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -169,13 +162,11 @@ public class DialogsActivity extends AppCompatActivity {
         }
 
         private void addInfoAboutUsersToList(final String body) {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
             TypeReference<UsersByIdResponse> mapType = new TypeReference<UsersByIdResponse>() {};
             UsersByIdResponse usersByIdResponse = new UsersByIdResponse();
+
             try {
-                usersByIdResponse = mapper.readValue(body, mapType);
+                usersByIdResponse = ConfiguredObjectMapper.getInstance().readValue(body, mapType);
             } catch (IOException e) {
                 e.printStackTrace();
             }

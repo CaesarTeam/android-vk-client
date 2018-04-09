@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.ChatAdapter;
+import com.caezar.vklite.libs.ConfiguredObjectMapper;
 import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.network.MetaInfo;
 import com.caezar.vklite.network.NetworkManager;
@@ -25,8 +26,6 @@ import com.caezar.vklite.network.models.UsersByIdRequest;
 import com.caezar.vklite.network.models.UsersByIdResponse;
 import com.caezar.vklite.network.urlBuilder;
 
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 
 import java.io.IOException;
@@ -67,7 +66,6 @@ public class ChatActivity extends AppCompatActivity {
         String title = getIntent().getStringExtra(TITLE);
         isPrivateDialog = getIntent().getBooleanExtra(IS_PRVATE_DIALOG, true);
         participantsId = getIntent().getIntArrayExtra(PHOTO_PARTICIPANTS);
-        System.out.println(Arrays.toString(participantsId));
 
         myselfId = MetaInfo.getMyselfId();
 
@@ -183,19 +181,16 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         private List<DialogMessage> buildMessageList(String body) {
-            List<DialogMessage> messages = null;
-
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
             TypeReference<ChatResponse> mapType = new TypeReference<ChatResponse>() {};
             ChatResponse chatResponse = new ChatResponse();
 
             try {
-                chatResponse = mapper.readValue(body, mapType);
+                chatResponse = ConfiguredObjectMapper.getInstance().readValue(body, mapType);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            List<DialogMessage> messages = null;
 
             if (chatResponse.getResponse() == null) {
                 final int stringRes = errorParse(body);
@@ -248,18 +243,16 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         private Map<Integer, String> parseResponse(final String body) {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-            Map<Integer, String> photoUsers = new HashMap<>();
-
             TypeReference<UsersByIdResponse> mapType = new TypeReference<UsersByIdResponse>() {};
             UsersByIdResponse usersByIdResponse = new UsersByIdResponse();
+
             try {
-                usersByIdResponse = mapper.readValue(body, mapType);
+                usersByIdResponse = ConfiguredObjectMapper.getInstance().readValue(body, mapType);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            //todo: do something with hashMap
+            Map<Integer, String> photoUsers = new HashMap<>();
 
             if (usersByIdResponse.getResponse() == null) {
                 final int stringRes = errorParse(body);
@@ -276,7 +269,7 @@ public class ChatActivity extends AppCompatActivity {
             }
 
 
-            for (UsersByIdResponse.Response user : usersByIdResponse.getResponse()) {
+            for (UsersByIdResponse.Response user: usersByIdResponse.getResponse()) {
                 photoUsers.put(user.getId(), user.getPhoto_50());
             }
 

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.caezar.vklite.R;
+import com.caezar.vklite.libs.ConfiguredObjectMapper;
 import com.caezar.vklite.network.MetaInfo;
 import com.caezar.vklite.network.NetworkManager;
 import com.caezar.vklite.network.models.UsersByIdResponse;
@@ -18,8 +19,6 @@ import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
 
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 
 import java.io.IOException;
@@ -117,13 +116,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private int getMyselfId(String body) {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
             TypeReference<UsersByIdResponse> mapType = new TypeReference<UsersByIdResponse>() {};
             UsersByIdResponse usersByIdResponse = new UsersByIdResponse();
+
             try {
-                usersByIdResponse = mapper.readValue(body, mapType);
+                usersByIdResponse = ConfiguredObjectMapper.getInstance().readValue(body, mapType);
             } catch (IOException e) {
                 e.printStackTrace();
             }
