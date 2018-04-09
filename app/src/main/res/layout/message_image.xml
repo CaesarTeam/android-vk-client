@@ -1,13 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginLeft="@dimen/margin_chat"
     android:layout_marginRight="@dimen/margin_chat">
 
-    <ImageView
-        android:id="@+id/messageImage"
-        android:layout_width="@dimen/image_size_in_chat"
-        android:layout_height="@dimen/image_size_in_chat" />
-</android.support.constraint.ConstraintLayout>
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/messageAvatar"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="@dimen/image_size_for_avatar_in_chat"
+        android:layout_height="@dimen/image_size_for_avatar_in_chat"
+        tools:src="@drawable/default_avatar"
+        android:visibility="gone"
+        app:riv_oval="true" />
+
+    <RelativeLayout
+        android:id="@+id/messageTextContainer"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_chat"
+        android:layout_toEndOf="@id/messageAvatar"
+        android:layout_marginLeft="@dimen/margin_chat"
+        android:layout_marginRight="@dimen/margin_chat"
+        >
+
+        <ImageView
+            android:id="@+id/messageImage"
+            android:layout_width="@dimen/image_size_in_chat"
+            android:layout_height="@dimen/image_size_in_chat"
+            android:background="@drawable/chat_image_message_border"/>
+
+        <TextView
+            android:id="@+id/messageTextTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/messageImage"
+            android:layout_toEndOf="@id/messageImage"
+            android:layout_marginTop="@dimen/margin_top_time_image_in_chat"
+            android:layout_marginStart="@dimen/margin_left_time_image_in_chat"
+            android:background="@color/colorMessageImageTime" />
+
+    </RelativeLayout>
+</RelativeLayout>

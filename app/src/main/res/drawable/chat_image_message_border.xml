@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FFFFFF" />
+    <stroke android:width="@dimen/border_width_image_message_in_chat" android:color="@color/colorMessageImageTime" />
+    <padding
+        android:left="@dimen/border_width_image_message_in_chat"
+        android:top="@dimen/border_width_image_message_in_chat"
+        android:right="@dimen/border_width_image_message_in_chat"
+        android:bottom="@dimen/border_width_image_message_in_chat" />
+</shape>

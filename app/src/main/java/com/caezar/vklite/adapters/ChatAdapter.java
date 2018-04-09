@@ -94,17 +94,16 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         String time = Time.getTime(item.getDate());
         int userId = item.getUser_id();
-        int textAlign;
+        boolean side = getItemViewType(position) == RIGHT_MESSAGE || getItemViewType(position) == RIGHT_IMAGE;
 
         switch (getItemViewType(position)) {
             case LEFT_MESSAGE:
             case RIGHT_MESSAGE:
-                String message = item.getBody();
                 MessageTextViewHolder messageTextViewHolder = ((MessageTextViewHolder) holder);
-                messageTextViewHolder.message.setText(message);
+                messageTextViewHolder.message.setText(item.getBody());
                 messageTextViewHolder.messageTextTime.setText(time);
 
-                if (getItemViewType(position) == RIGHT_MESSAGE) {
+                if (side) {
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) messageTextViewHolder.messageTextContainer.getLayoutParams();
                     params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
@@ -122,15 +121,23 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     prevId = userId;
                 }
 
-
                 break;
             case LEFT_IMAGE:
             case RIGHT_IMAGE:
                 MessageImageViewHolder messageImageViewHolder = ((MessageImageViewHolder) holder);
                 Glide.with(context).load(item.getAttachments()[0].getPhoto().getPhoto_604()).into(messageImageViewHolder.imageMessage);
+                messageImageViewHolder.messageTextTime.setText(time);
+                messageImageViewHolder.messageTextTime.bringToFront();
 
-                textAlign = getItemViewType(position) == LEFT_IMAGE ? TEXT_ALIGNMENT_VIEW_START : TEXT_ALIGNMENT_VIEW_END;
-                messageImageViewHolder.imageMessage.setTextAlignment(textAlign);
+                if (side) {
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) messageImageViewHolder.messageTextContainer.getLayoutParams();
+                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+                    messageImageViewHolder.messageTextContainer.setLayoutParams(params);
+                } else {
+                    Glide.with(context).load(photoUsers.get(item.getFrom_id())).into(messageImageViewHolder.messageAvatar);
+                    messageImageViewHolder.messageAvatar.setVisibility(View.VISIBLE);
+                }
 
                 break;
             default:
@@ -178,11 +185,17 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     class MessageImageViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageMessage;
+        TextView messageTextTime;
+        RelativeLayout messageTextContainer;
+        RoundedImageView messageAvatar;
 
         MessageImageViewHolder(final View itemView) {
             super(itemView);
 
             imageMessage = itemView.findViewById(R.id.messageImage);
+            messageTextTime = itemView.findViewById(R.id.messageTextTime);
+            messageTextContainer = itemView.findViewById(R.id.messageTextContainer);
+            messageAvatar = itemView.findViewById(R.id.messageAvatar);
         }
     }
 
