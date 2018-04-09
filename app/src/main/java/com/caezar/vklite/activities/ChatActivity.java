@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,7 +80,11 @@ public class ChatActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.messagesList);
         adapter = new ChatAdapter(isPrivateDialog);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
 
         swipeRefreshLayout = findViewById(R.id.swipe_container);
@@ -147,7 +152,7 @@ public class ChatActivity extends AppCompatActivity {
             editText.getText().clear();
             sendMessage(message);
             addMessageToAdapterEnd(message);
-            recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+            recyclerView.scrollToPosition(0);
         }
     };
 
@@ -174,7 +179,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     int itemCount = adapter.getItemCount();
                     if (itemCount == new ChatRequest().getCount()) {
-                        recyclerView.scrollToPosition(itemCount - 1);
+                        recyclerView.scrollToPosition(0);
                     }
                 }
             });
@@ -206,7 +211,6 @@ public class ChatActivity extends AppCompatActivity {
                 return messages;
             }
 
-            Collections.reverse(Arrays.asList(chatResponse.getResponse().getItems()));
             messages = Arrays.asList(chatResponse.getResponse().getItems());
 
             return messages;

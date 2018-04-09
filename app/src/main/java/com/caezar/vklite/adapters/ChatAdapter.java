@@ -2,7 +2,9 @@ package com.caezar.vklite.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static android.view.View.TEXT_ALIGNMENT_VIEW_END;
-import static android.view.View.TEXT_ALIGNMENT_VIEW_START;
-
 /**
  * Created by seva on 03.04.18 in 15:40.
  */
@@ -34,7 +33,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private int myselfId;
     private boolean isPrivateDialog;
     private Map<Integer, String> photoUsers;
-    private int prevId;
+    private int prevUserId;
+    private int prevPosition;
 
     // todo: SuppressLint
     @SuppressLint("UseSparseArrays")
@@ -58,14 +58,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int RIGHT_IMAGE = 4;
 
     public void addItemsToTop(List<DialogMessage> itemList) {
-        items.addAll(0, itemList);
+        items.addAll( itemList);
         // todo: почему это не работает? появляются дубликаты
 //        notifyItemInserted(0);
         notifyDataSetChanged();
     }
 
     public void addItemToEnd(DialogMessage dialogMessage) {
-        items.add(dialogMessage);
+        items.add(0, dialogMessage);
         notifyDataSetChanged();
     }
 
@@ -88,13 +88,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         DialogMessage item = items.get(position);
         Context context = holder.itemView.getContext();
 
-        String time = Time.getTime(item.getDate());
-        int userId = item.getUser_id();
-        boolean side = getItemViewType(position) == RIGHT_MESSAGE || getItemViewType(position) == RIGHT_IMAGE;
+        final String time = Time.getTime(item.getDate());
+        final int userId = item.getUser_id();
+        final boolean side = getItemViewType(position) == RIGHT_MESSAGE || getItemViewType(position) == RIGHT_IMAGE;
+        final boolean scrollUp = position > prevPosition;
 
         switch (getItemViewType(position)) {
             case LEFT_MESSAGE:
@@ -111,14 +112,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 } else {
                     if (!isPrivateDialog && photoUsers.containsKey(item.getFrom_id())) {
                         Glide.with(context).load(photoUsers.get(item.getFrom_id())).into(messageTextViewHolder.messageAvatar);
-
-                        if (userId != prevId) {
+                        final int nextPosition = position + 1;
+                        boolean nextItemExist = items.size() == nextPosition;
+                        if ((userId != prevUserId && !scrollUp) || nextItemExist || (!nextItemExist && items.get(nextPosition).getUser_id() != userId)) {
                             messageTextViewHolder.messageAvatar.setVisibility(View.VISIBLE);
                         } else {
                             messageTextViewHolder.messageAvatar.setVisibility(View.INVISIBLE);
                         }
                     }
-                    prevId = userId;
                 }
 
                 break;
@@ -143,6 +144,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             default:
                 throw new IllegalArgumentException("invalid view type");
         }
+
+        prevUserId = userId;
+        prevPosition = position;
     }
 
     @Override
