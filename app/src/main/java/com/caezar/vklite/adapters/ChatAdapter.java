@@ -2,9 +2,7 @@ package com.caezar.vklite.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +14,9 @@ import android.widget.TextView;
 import com.caezar.vklite.R;
 import com.caezar.vklite.activities.ChatActivity;
 import com.caezar.vklite.libs.Time;
-import com.caezar.vklite.network.MetaInfo;
-import com.caezar.vklite.network.models.DialogMessage;
-import com.caezar.vklite.network.models.Message;
+import com.caezar.vklite.MetaInfo;
+import com.caezar.vklite.models.DialogMessage;
+import com.caezar.vklite.models.Message;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;

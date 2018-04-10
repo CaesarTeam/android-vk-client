@@ -1,10 +1,7 @@
 package com.caezar.vklite.libs;
 
-import com.caezar.vklite.network.models.ErrorVkApi;
-
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
 
 import java.io.IOException;
 

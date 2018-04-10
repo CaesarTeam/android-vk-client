@@ -15,22 +15,22 @@ import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.ChatAdapter;
 import com.caezar.vklite.fragments.ImageMessageFullScreenFragment;
 import com.caezar.vklite.libs.Time;
-import com.caezar.vklite.network.MetaInfo;
-import com.caezar.vklite.network.NetworkManager;
-import com.caezar.vklite.network.models.ChatRequest;
-import com.caezar.vklite.network.models.ChatResponse;
-import com.caezar.vklite.network.models.DialogMessage;
-import com.caezar.vklite.network.models.SendMessageRequest;
-import com.caezar.vklite.network.models.UsersByIdRequest;
-import com.caezar.vklite.network.models.UsersByIdResponse;
-import com.caezar.vklite.network.urlBuilder;
+import com.caezar.vklite.MetaInfo;
+import com.caezar.vklite.NetworkManager;
+import com.caezar.vklite.models.request.ChatRequest;
+import com.caezar.vklite.models.response.ChatResponse;
+import com.caezar.vklite.models.DialogMessage;
+import com.caezar.vklite.models.request.SendMessageRequest;
+import com.caezar.vklite.models.request.UsersByIdRequest;
+import com.caezar.vklite.models.response.UsersByIdResponse;
+import com.caezar.vklite.libs.urlBuilder;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.caezar.vklite.ErrorHandle.makeToastError;
+import static com.caezar.vklite.ErrorHandler.makeToastError;
 import static com.caezar.vklite.activities.DialogsActivity.PEER_ID;
 import static com.caezar.vklite.activities.DialogsActivity.PHOTO_PARTICIPANTS;
 import static com.caezar.vklite.activities.DialogsActivity.TITLE;
@@ -122,7 +122,7 @@ public class ChatActivity extends AppCompatActivity {
         final SendMessageRequest sendMessageRequest = new SendMessageRequest();
         sendMessageRequest.setMessage(message);
         sendMessageRequest.setPeer_id(peer_id);
-        final String url = urlBuilder.constructGetSend(sendMessageRequest);
+        final String url = urlBuilder.constructSendMessage(sendMessageRequest);
         NetworkManager.getInstance().get(url, new OnSendMessageComplete());
     }
 

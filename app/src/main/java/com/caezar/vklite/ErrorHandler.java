@@ -3,20 +3,20 @@ package com.caezar.vklite;
 import android.app.Activity;
 import android.widget.Toast;
 
-import com.caezar.vklite.network.models.ErrorVkApi;
+import com.caezar.vklite.models.response.ErrorVkApiResponse;
 
 import static com.caezar.vklite.libs.ParseResponse.parseBody;
 
 /**
  * Created by seva on 07.04.18 in 0:30.
  */
-public class ErrorHandle {
+public class ErrorHandler {
 
     private static int errorParse(String body) {
-        ErrorVkApi errorVkApi = parseBody(ErrorVkApi.class, body);
+        ErrorVkApiResponse errorVkApiResponse = parseBody(ErrorVkApiResponse.class, body);
 
-        if (errorVkApi != null) {
-            switch (errorVkApi.getError().getError_code()) {
+        if (errorVkApiResponse != null) {
+            switch (errorVkApiResponse.getError().getError_code()) {
                 case 1:
                     return R.string.error_API_Vk_1;
                 case 2:

@@ -1,4 +1,4 @@
-package com.caezar.vklite.network;
+package com.caezar.vklite;
 
 /**
  * Created by seva on 25.03.18 in 18:09.

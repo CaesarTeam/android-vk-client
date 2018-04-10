@@ -1,7 +1,6 @@
 package com.caezar.vklite.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.caezar.vklite.R;
-import com.caezar.vklite.activities.ChatActivity;
 import com.caezar.vklite.activities.DialogsActivity;
-import com.caezar.vklite.network.models.DialogsResponse.Response.DialogItem;
+import com.caezar.vklite.models.response.DialogsResponse.Response.DialogItem;
 
 import java.util.List;
 

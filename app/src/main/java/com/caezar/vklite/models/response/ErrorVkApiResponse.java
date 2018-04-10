@@ -1,10 +1,10 @@
-package com.caezar.vklite.network.models;
+package com.caezar.vklite.models.response;
 
 /**
  * Created by seva on 07.04.18 in 0:06.
  */
 
-public class ErrorVkApi {
+public class ErrorVkApiResponse {
     private Error error;
 
     public static class Error {
@@ -39,6 +39,6 @@ public class ErrorVkApi {
         this.error = error;
     }
 
-    public ErrorVkApi() {
+    public ErrorVkApiResponse() {
     }
 }

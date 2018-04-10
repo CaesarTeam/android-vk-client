@@ -3,7 +3,6 @@ package com.caezar.vklite;
 import android.content.SharedPreferences;
 
 import com.caezar.vklite.libs.ParseResponse;
-import com.caezar.vklite.network.MetaInfo;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
 import com.vk.sdk.VKSdk;

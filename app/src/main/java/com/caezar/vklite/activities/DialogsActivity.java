@@ -9,19 +9,19 @@ import android.support.v7.widget.RecyclerView;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.DialogsAdapter;
-import com.caezar.vklite.network.NetworkManager;
-import com.caezar.vklite.network.models.DialogsRequest;
-import com.caezar.vklite.network.models.DialogsResponse;
-import com.caezar.vklite.network.models.UsersByIdRequest;
-import com.caezar.vklite.network.models.UsersByIdResponse;
-import com.caezar.vklite.network.urlBuilder;
+import com.caezar.vklite.NetworkManager;
+import com.caezar.vklite.models.request.DialogsRequest;
+import com.caezar.vklite.models.response.DialogsResponse;
+import com.caezar.vklite.models.request.UsersByIdRequest;
+import com.caezar.vklite.models.response.UsersByIdResponse;
+import com.caezar.vklite.libs.urlBuilder;
 
 import java.util.Arrays;
 import java.util.List;
 
-import com.caezar.vklite.network.models.DialogsResponse.Response.DialogItem;
+import com.caezar.vklite.models.response.DialogsResponse.Response.DialogItem;
 
-import static com.caezar.vklite.ErrorHandle.makeToastError;
+import static com.caezar.vklite.ErrorHandler.makeToastError;
 import static com.caezar.vklite.libs.ParseResponse.parseBody;
 
 /**

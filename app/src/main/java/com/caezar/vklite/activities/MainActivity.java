@@ -7,10 +7,10 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.caezar.vklite.R;
-import com.caezar.vklite.network.MetaInfo;
-import com.caezar.vklite.network.NetworkManager;
-import com.caezar.vklite.network.models.UsersByIdResponse;
-import com.caezar.vklite.network.urlBuilder;
+import com.caezar.vklite.MetaInfo;
+import com.caezar.vklite.NetworkManager;
+import com.caezar.vklite.models.response.UsersByIdResponse;
+import com.caezar.vklite.libs.urlBuilder;
 
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKCallback;
@@ -18,7 +18,7 @@ import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
 
-import static com.caezar.vklite.ErrorHandle.makeToastError;
+import static com.caezar.vklite.ErrorHandler.makeToastError;
 import static com.caezar.vklite.libs.ParseResponse.parseBody;
 
 public class MainActivity extends AppCompatActivity {
