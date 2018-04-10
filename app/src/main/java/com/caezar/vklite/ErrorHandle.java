@@ -2,12 +2,7 @@ package com.caezar.vklite;
 
 import com.caezar.vklite.network.models.ErrorVkApi;
 
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
-
-import java.io.IOException;
-import java.util.Objects;
+import static com.caezar.vklite.libs.ParseResponse.parseBody;
 
 /**
  * Created by seva on 07.04.18 in 0:30.
@@ -15,15 +10,7 @@ import java.util.Objects;
 public class ErrorHandle {
 
     public static int errorParse(String body) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        TypeReference<ErrorVkApi> mapError = new TypeReference<ErrorVkApi>() {};
-        ErrorVkApi errorVkApi = null;
-        try {
-            errorVkApi = mapper.readValue(body, mapError);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ErrorVkApi errorVkApi = parseBody(ErrorVkApi.class, body);
 
         if (errorVkApi != null) {
             switch (errorVkApi.getError().getError_code()) {

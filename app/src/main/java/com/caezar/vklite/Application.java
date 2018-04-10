@@ -2,7 +2,7 @@ package com.caezar.vklite;
 
 import android.content.SharedPreferences;
 
-import com.caezar.vklite.libs.ConfiguredObjectMapper;
+import com.caezar.vklite.libs.ParseResponse;
 import com.caezar.vklite.network.MetaInfo;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
@@ -37,7 +37,7 @@ public class Application extends android.app.Application {
     public void onCreate() {
         super.onCreate();
 
-        ConfiguredObjectMapper.initInstance();
+        ParseResponse.initInstance();
         vkAccessTokenTracker.startTracking();
         VKSdk.initialize(this);
     }

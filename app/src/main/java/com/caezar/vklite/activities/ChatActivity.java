@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.ChatAdapter;
 import com.caezar.vklite.fragments.ImageMessageFullScreenFragment;
-import com.caezar.vklite.libs.ConfiguredObjectMapper;
 import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.network.MetaInfo;
 import com.caezar.vklite.network.NetworkManager;
@@ -27,9 +26,6 @@ import com.caezar.vklite.network.models.UsersByIdRequest;
 import com.caezar.vklite.network.models.UsersByIdResponse;
 import com.caezar.vklite.network.urlBuilder;
 
-import org.codehaus.jackson.type.TypeReference;
-
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +35,7 @@ import static com.caezar.vklite.ErrorHandle.errorParse;
 import static com.caezar.vklite.activities.DialogsActivity.PEER_ID;
 import static com.caezar.vklite.activities.DialogsActivity.PHOTO_PARTICIPANTS;
 import static com.caezar.vklite.activities.DialogsActivity.TITLE;
+import static com.caezar.vklite.libs.ParseResponse.parseBody;
 
 /**
  * Created by seva on 03.04.18 in 15:40.
@@ -198,14 +195,7 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         private List<DialogMessage> buildMessageList(String body) {
-            TypeReference<ChatResponse> mapType = new TypeReference<ChatResponse>() {};
-            ChatResponse chatResponse = new ChatResponse();
-
-            try {
-                chatResponse = ConfiguredObjectMapper.getInstance().readValue(body, mapType);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            ChatResponse chatResponse = parseBody(ChatResponse.class, body);
 
             List<DialogMessage> messages = null;
 
@@ -256,14 +246,8 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         private Map<Integer, String> parseResponse(final String body) {
-            TypeReference<UsersByIdResponse> mapType = new TypeReference<UsersByIdResponse>() {};
-            UsersByIdResponse usersByIdResponse = new UsersByIdResponse();
+            UsersByIdResponse usersByIdResponse = parseBody(UsersByIdResponse.class, body);
 
-            try {
-                usersByIdResponse = ConfiguredObjectMapper.getInstance().readValue(body, mapType);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             //todo: do something with hashMap
             Map<Integer, String> photoUsers = new HashMap<>();
 

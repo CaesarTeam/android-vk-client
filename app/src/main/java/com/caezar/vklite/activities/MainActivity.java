@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.caezar.vklite.R;
-import com.caezar.vklite.libs.ConfiguredObjectMapper;
 import com.caezar.vklite.network.MetaInfo;
 import com.caezar.vklite.network.NetworkManager;
 import com.caezar.vklite.network.models.UsersByIdResponse;
@@ -19,9 +18,7 @@ import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
 
-import org.codehaus.jackson.type.TypeReference;
-
-import java.io.IOException;
+import static com.caezar.vklite.libs.ParseResponse.parseBody;
 
 public class MainActivity extends AppCompatActivity {
     public static final String PREFS_NAME = "Vk";
@@ -114,14 +111,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private int getMyselfId(String body) {
-            TypeReference<UsersByIdResponse> mapType = new TypeReference<UsersByIdResponse>() {};
-            UsersByIdResponse usersByIdResponse = new UsersByIdResponse();
-
-            try {
-                usersByIdResponse = ConfiguredObjectMapper.getInstance().readValue(body, mapType);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            UsersByIdResponse usersByIdResponse = parseBody(UsersByIdResponse.class, body);
 
             if (usersByIdResponse != null) {
                 return usersByIdResponse.getResponse()[0].getId();

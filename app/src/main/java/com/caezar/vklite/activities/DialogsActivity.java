@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.DialogsAdapter;
-import com.caezar.vklite.libs.ConfiguredObjectMapper;
 import com.caezar.vklite.network.NetworkManager;
 import com.caezar.vklite.network.models.DialogsRequest;
 import com.caezar.vklite.network.models.DialogsResponse;
@@ -18,15 +17,13 @@ import com.caezar.vklite.network.models.UsersByIdRequest;
 import com.caezar.vklite.network.models.UsersByIdResponse;
 import com.caezar.vklite.network.urlBuilder;
 
-import org.codehaus.jackson.type.TypeReference;
-
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 import com.caezar.vklite.network.models.DialogsResponse.Response.DialogItem;
 
 import static com.caezar.vklite.ErrorHandle.errorParse;
+import static com.caezar.vklite.libs.ParseResponse.parseBody;
 
 /**
  * Created by seva on 01.04.18 in 17:56.
@@ -122,14 +119,7 @@ public class DialogsActivity extends AppCompatActivity {
         }
 
         private void buildDialogsList(final String body) {
-            TypeReference<DialogsResponse> mapType = new TypeReference<DialogsResponse>() {};
-            DialogsResponse dialogsResponse = new DialogsResponse();
-
-            try {
-                dialogsResponse = ConfiguredObjectMapper.getInstance().readValue(body, mapType);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            DialogsResponse dialogsResponse = parseBody(DialogsResponse.class, body);
 
             if (dialogsResponse.getResponse() == null) {
                 final int stringRes = errorParse(body);
@@ -170,14 +160,7 @@ public class DialogsActivity extends AppCompatActivity {
         }
 
         private void addInfoAboutUsersToList(final String body) {
-            TypeReference<UsersByIdResponse> mapType = new TypeReference<UsersByIdResponse>() {};
-            UsersByIdResponse usersByIdResponse = new UsersByIdResponse();
-
-            try {
-                usersByIdResponse = ConfiguredObjectMapper.getInstance().readValue(body, mapType);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            UsersByIdResponse usersByIdResponse = parseBody(UsersByIdResponse.class, body);
 
             if (usersByIdResponse.getResponse() == null) {
                 final int stringRes = errorParse(body);
