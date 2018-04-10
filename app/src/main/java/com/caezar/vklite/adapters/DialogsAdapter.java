@@ -26,7 +26,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public static final String PHOTO_PARTICIPANTS = "photoParticipants";
     public static final String TITLE = "title";
     public static final String PEER_ID = "peer_id";
-    public static final String IS_PRVATE_DIALOG = "isPrivateDialog";
+    public static final String IS_PRIVATE_DIALOG = "isPrivateDialog";
 
     private List<DialogItem> items;
 
@@ -139,7 +139,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 Intent intent = new Intent(context, ChatActivity.class);
                 intent.putExtra(PEER_ID, peer_id);
                 intent.putExtra(TITLE, item.getMessage().getTitle());
-                intent.putExtra(IS_PRVATE_DIALOG, isPrivateDialog);
+                intent.putExtra(IS_PRIVATE_DIALOG, isPrivateDialog);
                 intent.putExtra(PHOTO_PARTICIPANTS, item.getMessage().getChat_active());
                 context.startActivity(intent);
             }
