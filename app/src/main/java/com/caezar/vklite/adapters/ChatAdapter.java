@@ -2,29 +2,32 @@ package com.caezar.vklite.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.caezar.vklite.R;
-import com.caezar.vklite.activities.ChatActivity;
 import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.network.MetaInfo;
 import com.caezar.vklite.network.models.DialogMessage;
+import com.caezar.vklite.network.models.Message;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.caezar.vklite.activities.ChatActivity.ACTION_OPEN_IMAGE_FULL_SIZE;
+import static com.caezar.vklite.activities.ChatActivity.PHOTO_URL;
 
 /**
  * Created by seva on 03.04.18 in 15:40.
@@ -37,14 +40,16 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Map<Integer, String> photoUsers;
     private int prevUserId;
     private int prevPosition;
+    private Context context;
 
     // todo: SuppressLint
     @SuppressLint("UseSparseArrays")
-    public ChatAdapter(boolean isPrivateDialog) {
+    public ChatAdapter(Context context, boolean isPrivateDialog) {
         items = new ArrayList<>();
         photoUsers = new HashMap<>();
         myselfId = MetaInfo.getMyselfId();
         this.isPrivateDialog = isPrivateDialog;
+        this.context = context;
     }
 
     public void setUsersAvatar(Map<Integer, String> photoUsers) {
@@ -128,6 +133,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case LEFT_IMAGE:
             case RIGHT_IMAGE:
                 MessageImageViewHolder messageImageViewHolder = ((MessageImageViewHolder) holder);
+                messageImageViewHolder.position = position;
                 Glide.with(context).load(item.getAttachments()[0].getPhoto().getPhoto_604()).into(messageImageViewHolder.imageMessage);
                 messageImageViewHolder.messageTextTime.setText(time);
                 messageImageViewHolder.messageTextTime.bringToFront();
@@ -194,6 +200,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         TextView messageTextTime;
         RelativeLayout messageTextContainer;
         RoundedImageView messageAvatar;
+        int position;
 
         MessageImageViewHolder(final View itemView) {
             super(itemView);
@@ -206,7 +213,18 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             imageMessage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(itemView.getContext(), "Click", Toast.LENGTH_LONG).show();
+                    Message.Attachments.Photo photo = items.get(position).getAttachments()[0].getPhoto();
+                    String maxPhotoSize = photo.getPhoto_1280();
+                    if (maxPhotoSize == null) {
+                        maxPhotoSize = photo.getPhoto_807();
+                    }
+                    if (maxPhotoSize == null) {
+                        maxPhotoSize = photo.getPhoto_604();
+                    }
+
+                    Intent intent = new Intent(ACTION_OPEN_IMAGE_FULL_SIZE);
+                    intent.putExtra(PHOTO_URL, maxPhotoSize);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                 }
             });
         }

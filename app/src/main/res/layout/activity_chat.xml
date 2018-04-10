@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/chatSwipeContainer"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/swipe_container"
     tools:context=".activities.DialogsActivity">
 
     <RelativeLayout
+        android:id="@+id/chatContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -55,9 +56,8 @@
                 android:layout_height="@dimen/button_send_message_size"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/margin_right_for_button_send_message"
-                android:layout_alignParentRight="true"
-                android:imeOptions="actionDone"
+                android:layout_marginEnd="@dimen/margin_right_for_button_send_message"
+                android:layout_alignParentEnd="true"
                 android:background="@drawable/send"
                 />
 

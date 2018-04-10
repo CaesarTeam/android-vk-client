@@ -1,6 +1,12 @@
 package com.caezar.vklite.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,12 +15,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.ChatAdapter;
+import com.caezar.vklite.fragments.ImageMessageFullScreen;
 import com.caezar.vklite.libs.ConfiguredObjectMapper;
 import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.network.MetaInfo;
@@ -31,7 +37,6 @@ import org.codehaus.jackson.type.TypeReference;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +52,9 @@ import static com.caezar.vklite.adapters.DialogsAdapter.TITLE;
  */
 
 public class ChatActivity extends AppCompatActivity {
+    public static final String ACTION_OPEN_IMAGE_FULL_SIZE = "actionOpenImageFullSize";
+    public static final String PHOTO_URL = "photoUrl";
+
     private RecyclerView recyclerView;
     private ChatAdapter adapter;
     private EditText editText;
@@ -79,7 +87,7 @@ public class ChatActivity extends AppCompatActivity {
         button.setOnClickListener(onClickListener);
 
         recyclerView = findViewById(R.id.messagesList);
-        adapter = new ChatAdapter(isPrivateDialog);
+        adapter = new ChatAdapter(this, isPrivateDialog);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
@@ -87,9 +95,10 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
 
-        swipeRefreshLayout = findViewById(R.id.swipe_container);
+        swipeRefreshLayout = findViewById(R.id.chatSwipeContainer);
         swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(openFullSizeImageBroadcastReceiver, new IntentFilter(ACTION_OPEN_IMAGE_FULL_SIZE));
     }
 
     @Override
@@ -105,6 +114,13 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        this.unregisterReceiver(openFullSizeImageBroadcastReceiver);
     }
 
     private void getInfoAboutUsers(int[] userIds) {
@@ -145,7 +161,24 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    View.OnClickListener onClickListener = new View.OnClickListener(){
+    private final BroadcastReceiver openFullSizeImageBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = new Bundle();
+            bundle.putString(PHOTO_URL, intent.getExtras().getString(PHOTO_URL));
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+            ImageMessageFullScreen imageMessageFullScreen = new ImageMessageFullScreen();
+            imageMessageFullScreen.setArguments(bundle);
+            transaction.replace(R.id.chatContainer, imageMessageFullScreen);
+            transaction.addToBackStack(null);
+
+            transaction.commit();
+        }
+    };
+
+    private final View.OnClickListener onClickListener = new View.OnClickListener(){
         @Override
         public void onClick(View v) {
             final String message = editText.getText().toString();
@@ -156,7 +189,7 @@ public class ChatActivity extends AppCompatActivity {
         }
     };
 
-    SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+    private final SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
             swipeRefreshLayout.setRefreshing(false);
@@ -274,7 +307,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
             for (UsersByIdResponse.Response user: usersByIdResponse.getResponse()) {
-                photoUsers.put(user.getId(), user.getPhoto_max());
+                photoUsers.put(user.getId(), user.getPhoto_50());
             }
 
             return photoUsers;
