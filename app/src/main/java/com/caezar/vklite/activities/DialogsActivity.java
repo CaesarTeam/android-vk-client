@@ -1,5 +1,6 @@
 package com.caezar.vklite.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +34,11 @@ import static com.caezar.vklite.ErrorHandle.errorParse;
  */
 // todo: margin between dialogs
 public class DialogsActivity extends AppCompatActivity {
+    public static final String PHOTO_PARTICIPANTS = "photoParticipants";
+    public static final String TITLE = "title";
+    public static final String PEER_ID = "peer_id";
+    public static final String IS_PRIVATE_DIALOG = "isPrivateDialog";
+
     private DialogsAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<DialogItem> items = null;
@@ -44,7 +50,7 @@ public class DialogsActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.dialogsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new DialogsAdapter(items);
+        adapter = new DialogsAdapter(this, items);
         recyclerView.setAdapter(adapter);
 
         swipeRefreshLayout = findViewById(R.id.swipe_container);
@@ -61,12 +67,19 @@ public class DialogsActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    public void openChat(int peer_id, String title, int[] photoParticipants) {
+        Intent intent = new Intent(DialogsActivity.this, ChatActivity.class);
+        intent.putExtra(PEER_ID, peer_id);
+        intent.putExtra(TITLE, title);
+        intent.putExtra(PHOTO_PARTICIPANTS, photoParticipants);
+        startActivity(intent);
     }
 
     private void getDialogs() {

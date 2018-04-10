@@ -42,10 +42,10 @@ import java.util.List;
 import java.util.Map;
 
 import static com.caezar.vklite.ErrorHandle.errorParse;
-import static com.caezar.vklite.adapters.DialogsAdapter.IS_PRIVATE_DIALOG;
-import static com.caezar.vklite.adapters.DialogsAdapter.PEER_ID;
-import static com.caezar.vklite.adapters.DialogsAdapter.PHOTO_PARTICIPANTS;
-import static com.caezar.vklite.adapters.DialogsAdapter.TITLE;
+import static com.caezar.vklite.activities.DialogsActivity.IS_PRIVATE_DIALOG;
+import static com.caezar.vklite.activities.DialogsActivity.PEER_ID;
+import static com.caezar.vklite.activities.DialogsActivity.PHOTO_PARTICIPANTS;
+import static com.caezar.vklite.activities.DialogsActivity.TITLE;
 
 /**
  * Created by seva on 03.04.18 in 15:40.
@@ -72,7 +72,7 @@ public class ChatActivity extends AppCompatActivity {
 
         peer_id = getIntent().getIntExtra(PEER_ID, 0);
         String title = getIntent().getStringExtra(TITLE);
-        isPrivateDialog = getIntent().getBooleanExtra(IS_PRIVATE_DIALOG, true);
+        isPrivateDialog = peer_id < Integer.parseInt(getString(R.string.peer_id_constant));
         participantsId = getIntent().getIntArrayExtra(PHOTO_PARTICIPANTS);
 
         myselfId = MetaInfo.getMyselfId();

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.activities.ChatActivity;
+import com.caezar.vklite.activities.DialogsActivity;
 import com.caezar.vklite.network.models.DialogsResponse.Response.DialogItem;
 
 import java.util.List;
@@ -23,18 +24,15 @@ import static com.caezar.vklite.libs.ImageLoader.getUrlForResource;
  */
 
 public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public static final String PHOTO_PARTICIPANTS = "photoParticipants";
-    public static final String TITLE = "title";
-    public static final String PEER_ID = "peer_id";
-    public static final String IS_PRIVATE_DIALOG = "isPrivateDialog";
-
     private List<DialogItem> items;
+    private Context context;
 
-    public DialogsAdapter(List<DialogItem> dialogItems) {
+    public DialogsAdapter(Context context, List<DialogItem> dialogItems) {
         items = dialogItems;
+        this.context = context;
     }
 
-    static final int ITEM_DIALOGS = R.layout.dialog;
+    private final int ITEM_DIALOGS = R.layout.dialog;
 
     public void changeItems(List<DialogItem> dialogItems) {
         items = dialogItems;
@@ -57,7 +55,6 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         DialogItem item = items.get(position);
-        Context context = holder.itemView.getContext();
 
         switch (getItemViewType(position)) {
             case ITEM_DIALOGS:
@@ -107,41 +104,35 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             title = itemView.findViewById(R.id.dialogTitle);
             message = itemView.findViewById(R.id.dialogMessage);
 
-            itemView.setOnClickListener(new AddRemoveClickListener(this));
+            itemView.setOnClickListener(new onDialogClickListener(this));
         }
     }
 
-    class AddRemoveClickListener implements View.OnClickListener {
+    class onDialogClickListener implements View.OnClickListener {
         DialogViewHolder holder;
 
-        AddRemoveClickListener(DialogViewHolder holder) {
+        onDialogClickListener(DialogViewHolder holder) {
             this.holder = holder;
         }
 
         @Override
         public void onClick(View v) {
-            Context context = holder.itemView.getContext();
             int position = holder.getLayoutPosition();
             if (position != RecyclerView.NO_POSITION) {
                 DialogItem item = items.get(position);
 
                 int peer_id;
-                boolean isPrivateDialog = false;
 
                 if (item.getMessage().getChat_id() == 0) {
                     peer_id = item.getMessage().getUser_id();
-                    isPrivateDialog = true;
 
                 } else {
                     peer_id = Integer.parseInt(context.getString(R.string.peer_id_constant)) + item.getMessage().getChat_id();
                 }
 
-                Intent intent = new Intent(context, ChatActivity.class);
-                intent.putExtra(PEER_ID, peer_id);
-                intent.putExtra(TITLE, item.getMessage().getTitle());
-                intent.putExtra(IS_PRIVATE_DIALOG, isPrivateDialog);
-                intent.putExtra(PHOTO_PARTICIPANTS, item.getMessage().getChat_active());
-                context.startActivity(intent);
+                if (context instanceof DialogsActivity){
+                    ((DialogsActivity)context).openChat(peer_id, item.getMessage().getTitle(), item.getMessage().getChat_active());
+                }
             }
         }
     }
