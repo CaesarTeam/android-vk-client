@@ -2,6 +2,41 @@
     <string name="app_name">VkLite</string>
     <integer name="com_vk_sdk_AppId">6424252</integer>
     <string name="peer_id_constant">2000000000</string>
-    <string name="messageFormPlaceholder">Enter message</string>
-    <string name="error6">Too many requests per second</string>
+    <string name="message_form_placeholder">Enter message</string>
+
+    <string name = "error_API_Vk_1">An unknown error occurred</string>
+    <string name = "error_API_Vk_2">Application is disabled</string>
+    <string name = "error_API_Vk_3">An unknown method was passed</string>
+    <string name = "error_API_Vk_4">Invalid signature</string>
+    <string name = "error_API_Vk_5">User authorization failed</string>
+    <string name="error_API_Vk_6">Too many requests per second</string>
+    <string name = "error_API_Vk_7">No permissions to perform this action</string>
+    <string name = "error_API_Vk_8">Invalid request</string>
+    <string name = "error_API_Vk_9">Too many actions of the same type</string>
+    <string name = "error_API_Vk_10">An internal server error occurred</string>
+    <string name = "error_API_Vk_11">In test mode, the application must be turned off or the user must be logged in</string>
+    <string name = "error_API_Vk_14">Input of code from the image (Captcha) is required</string>
+    <string name = "error_API_Vk_15">Access denied</string>
+    <string name = "error_API_Vk_16">HTTPS requests are required, because the user has enabled a setting that requires a secure connection</string>
+    <string name = "error_API_Vk_17">User Validation Required</string>
+    <string name = "error_API_Vk_18">The page has been deleted or locked</string>
+    <string name = "error_API_Vk_20">This action is prohibited for non-Standalone applications</string>
+    <string name = "error_API_Vk_21">This action is only allowed for Standalone and Open Application APIs</string>
+    <string name = "error_API_Vk_23">The method was turned off</string>
+    <string name = "error_API_Vk_24">Requires confirmation from the user</string>
+    <string name = "error_API_Vk_27">Community access key is not valid</string>
+    <string name = "error_API_Vk_28">Application access key is invalid</string>
+    <string name = "error_API_Vk_29">Quantitative limit on method call reached</string>
+    <string name = "error_API_Vk_100">One of the required parameters was not passed or is incorrect</string>
+    <string name = "error_API_Vk_101">Invalid API Application ID</string>
+    <string name = "error_API_Vk_113">Invalid user ID</string>
+    <string name = "error_API_Vk_150">Invalid timestamp</string>
+    <string name = "error_API_Vk_200">Album access is denied</string>
+    <string name = "error_API_Vk_201">Access to audio is denied</string>
+    <string name = "error_API_Vk_203">Access to the group is denied</string>
+    <string name = "error_API_Vk_300">Album is full</string>
+    <string name = "error_API_Vk_500">The action is prohibited. You must include translations of voices in the application settings</string>
+    <string name = "error_API_Vk_600">No permissions to perform these operations with the advertising cabinet</string>
+    <string name = "error_API_Vk_603">An error occurred while working with the advertisement</string>
+
 </resources>

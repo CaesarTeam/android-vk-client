@@ -47,7 +47,7 @@
                 android:background="@android:color/transparent"
                 android:padding="@dimen/padding_for_message_form_in_chat"
                 android:textCursorDrawable="@drawable/color_cursor_message_form"
-                android:hint="@string/messageFormPlaceholder">
+                android:hint="@string/message_form_placeholder">
             </EditText>
 
             <Button

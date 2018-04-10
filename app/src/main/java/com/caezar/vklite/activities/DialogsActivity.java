@@ -81,8 +81,7 @@ public class DialogsActivity extends AppCompatActivity {
     }
 
     private void getDialogs() {
-        final DialogsRequest dialogsRequest = new DialogsRequest();
-        final String url = urlBuilder.constructGetDialogs(dialogsRequest);
+        final String url = urlBuilder.constructGetDialogs(new DialogsRequest());
         NetworkManager.getInstance().get(url, new OnGetDialogsComplete());
     }
 
