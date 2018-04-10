@@ -6,7 +6,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.DialogsAdapter;
@@ -22,7 +21,7 @@ import java.util.List;
 
 import com.caezar.vklite.network.models.DialogsResponse.Response.DialogItem;
 
-import static com.caezar.vklite.ErrorHandle.errorParse;
+import static com.caezar.vklite.ErrorHandle.makeToastError;
 import static com.caezar.vklite.libs.ParseResponse.parseBody;
 
 /**
@@ -122,16 +121,7 @@ public class DialogsActivity extends AppCompatActivity {
             DialogsResponse dialogsResponse = parseBody(DialogsResponse.class, body);
 
             if (dialogsResponse.getResponse() == null) {
-                final int stringRes = errorParse(body);
-                if (stringRes != -1) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(DialogsActivity.this, stringRes, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-
+                makeToastError(body, DialogsActivity.this);
                 return;
             }
 
@@ -163,16 +153,7 @@ public class DialogsActivity extends AppCompatActivity {
             UsersByIdResponse usersByIdResponse = parseBody(UsersByIdResponse.class, body);
 
             if (usersByIdResponse.getResponse() == null) {
-                final int stringRes = errorParse(body);
-                if (stringRes != -1) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(DialogsActivity.this, stringRes, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-
+                makeToastError(body, DialogsActivity.this);
                 return;
             }
 

@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.ChatAdapter;
@@ -31,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.caezar.vklite.ErrorHandle.errorParse;
+import static com.caezar.vklite.ErrorHandle.makeToastError;
 import static com.caezar.vklite.activities.DialogsActivity.PEER_ID;
 import static com.caezar.vklite.activities.DialogsActivity.PHOTO_PARTICIPANTS;
 import static com.caezar.vklite.activities.DialogsActivity.TITLE;
@@ -197,25 +196,12 @@ public class ChatActivity extends AppCompatActivity {
         private List<DialogMessage> buildMessageList(String body) {
             ChatResponse chatResponse = parseBody(ChatResponse.class, body);
 
-            List<DialogMessage> messages = null;
-
             if (chatResponse.getResponse() == null) {
-                final int stringRes = errorParse(body);
-                if (stringRes != -1) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(ChatActivity.this, stringRes, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-
-                return messages;
+                makeToastError(body, ChatActivity.this);
+                return null;
             }
 
-            messages = Arrays.asList(chatResponse.getResponse().getItems());
-
-            return messages;
+            return Arrays.asList(chatResponse.getResponse().getItems());
         }
     }
 
@@ -248,23 +234,13 @@ public class ChatActivity extends AppCompatActivity {
         private Map<Integer, String> parseResponse(final String body) {
             UsersByIdResponse usersByIdResponse = parseBody(UsersByIdResponse.class, body);
 
-            //todo: do something with hashMap
-            Map<Integer, String> photoUsers = new HashMap<>();
-
             if (usersByIdResponse.getResponse() == null) {
-                final int stringRes = errorParse(body);
-                if (stringRes != -1) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(ChatActivity.this, stringRes, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-
-                return photoUsers;
+                makeToastError(body, ChatActivity.this);
+                return new HashMap<>();
             }
 
+            //todo: do something with hashMap
+            Map<Integer, String> photoUsers = new HashMap<>();
 
             for (UsersByIdResponse.Response user: usersByIdResponse.getResponse()) {
                 photoUsers.put(user.getId(), user.getPhoto_50());

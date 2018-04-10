@@ -1,5 +1,8 @@
 package com.caezar.vklite;
 
+import android.app.Activity;
+import android.widget.Toast;
+
 import com.caezar.vklite.network.models.ErrorVkApi;
 
 import static com.caezar.vklite.libs.ParseResponse.parseBody;
@@ -9,7 +12,7 @@ import static com.caezar.vklite.libs.ParseResponse.parseBody;
  */
 public class ErrorHandle {
 
-    public static int errorParse(String body) {
+    private static int errorParse(String body) {
         ErrorVkApi errorVkApi = parseBody(ErrorVkApi.class, body);
 
         if (errorVkApi != null) {
@@ -86,5 +89,17 @@ public class ErrorHandle {
         }
 
         return -1;
+    }
+
+    public static void makeToastError(String body, final Activity activity) {
+        final int stringRes = errorParse(body);
+        if (stringRes != -1) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(activity, stringRes, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }

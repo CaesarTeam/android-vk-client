@@ -18,6 +18,7 @@ import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
 
+import static com.caezar.vklite.ErrorHandle.makeToastError;
 import static com.caezar.vklite.libs.ParseResponse.parseBody;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,6 +32,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         final String token = settings.getString(TOKEN, null);
@@ -113,11 +119,12 @@ public class MainActivity extends AppCompatActivity {
         private int getMyselfId(String body) {
             UsersByIdResponse usersByIdResponse = parseBody(UsersByIdResponse.class, body);
 
-            if (usersByIdResponse != null) {
-                return usersByIdResponse.getResponse()[0].getId();
+            if (usersByIdResponse == null) {
+                makeToastError(body, MainActivity.this);
+                return WRONG_ID;
             }
 
-            return WRONG_ID;
+            return usersByIdResponse.getResponse()[0].getId();
         }
     }
 }
