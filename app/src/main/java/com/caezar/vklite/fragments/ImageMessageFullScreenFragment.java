@@ -15,11 +15,12 @@ import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
 /**
  * Created by seva on 10.04.18 in 12:56.
  */
-public class ImageMessageFullScreen extends Fragment {
+
+public class ImageMessageFullScreenFragment extends Fragment {
 
     private String urlPhoto;
 
-    public ImageMessageFullScreen() {
+    public ImageMessageFullScreenFragment() {
 
     }
 

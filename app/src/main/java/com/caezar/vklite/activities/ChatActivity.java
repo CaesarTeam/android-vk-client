@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.ChatAdapter;
-import com.caezar.vklite.fragments.ImageMessageFullScreen;
+import com.caezar.vklite.fragments.ImageMessageFullScreenFragment;
 import com.caezar.vklite.libs.ConfiguredObjectMapper;
 import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.network.MetaInfo;
@@ -167,9 +167,9 @@ public class ChatActivity extends AppCompatActivity {
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-            ImageMessageFullScreen imageMessageFullScreen = new ImageMessageFullScreen();
-            imageMessageFullScreen.setArguments(bundle);
-            transaction.replace(R.id.chatContainer, imageMessageFullScreen);
+            ImageMessageFullScreenFragment imageMessageFullScreenFragment = new ImageMessageFullScreenFragment();
+            imageMessageFullScreenFragment.setArguments(bundle);
+            transaction.replace(R.id.chatContainer, imageMessageFullScreenFragment);
             transaction.addToBackStack(null);
 
             transaction.commit();
