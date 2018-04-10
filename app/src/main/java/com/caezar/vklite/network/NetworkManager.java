@@ -31,6 +31,7 @@ public class NetworkManager {
     }
 
     public void get(final String url, final OnRequestCompleteListener listener) {
+        Log.d("request", url);
         final Request request = new Request.Builder()
                 .url(url)
                 .build();
@@ -42,6 +43,7 @@ public class NetworkManager {
             @Override
             public void run() {
                 final String body = getBody(request);
+                Log.d("response", body);
                 listener.onResponse(body);
             }
         });

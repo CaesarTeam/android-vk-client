@@ -91,8 +91,6 @@ public class DialogsActivity extends AppCompatActivity {
 
         @Override
         public void onResponse(final String body) {
-            Log.d("Response", body);
-
             if (!dialogsComplete) {
                 buildDialogsList(body);
                 dialogsComplete = true;

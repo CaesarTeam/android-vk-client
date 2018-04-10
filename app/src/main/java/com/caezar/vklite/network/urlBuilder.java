@@ -35,10 +35,8 @@ public class urlBuilder {
         return constructUrl(Method.USERS_GET, "");
     }
 
-    public static String constructUrl(Method method, String query) {
-        final String url = APIServiceAddressHost + method.getMethod() + "?" + query + "&access_token=" + MetaInfo.getToken() + "&v=" + version;
-        Log.d("request", url);
-        return url;
+    private static String constructUrl(Method method, String query) {
+        return  APIServiceAddressHost + method.getMethod() + "?" + query + "&access_token=" + MetaInfo.getToken() + "&v=" + version;
     }
 
     private enum Method {

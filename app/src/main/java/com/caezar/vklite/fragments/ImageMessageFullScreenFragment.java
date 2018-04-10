@@ -37,7 +37,7 @@ public class ImageMessageFullScreenFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         if (urlPhoto != null) {
             ImageView imageView = view.findViewById(R.id.fullSizeImage);
-            asyncImageLoad(view.getContext(), urlPhoto, imageView);
+            asyncImageLoad(urlPhoto, imageView);
         }
     }
 

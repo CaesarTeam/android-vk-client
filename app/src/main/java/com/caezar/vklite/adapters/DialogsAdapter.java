@@ -68,9 +68,9 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 String imageUrl = item.getMessage().getPhoto_100();
 
                 if(imageUrl != null) {
-                    asyncImageLoad(context, imageUrl, dialogViewHolder.avatar);
+                    asyncImageLoad(imageUrl, dialogViewHolder.avatar);
                 } else {
-                    asyncImageLoad(context, getUrlForResource(R.drawable.default_avatar), dialogViewHolder.avatar);
+                    asyncImageLoad(getUrlForResource(R.drawable.default_avatar), dialogViewHolder.avatar);
                 }
 
                 dialogViewHolder.title.setText(title);

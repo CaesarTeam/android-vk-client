@@ -200,7 +200,6 @@ public class ChatActivity extends AppCompatActivity {
 
         @Override
         public void onResponse(final String body) {
-            Log.d("Response", body);
             // todo: check that is doing not in main thread
             final List<DialogMessage> messages = buildMessageList(body);
             runOnUiThread(new Runnable() {
@@ -252,7 +251,6 @@ public class ChatActivity extends AppCompatActivity {
 
         @Override
         public void onResponse(final String body) {
-            Log.d("Response", body);
 
         }
     }
@@ -264,8 +262,6 @@ public class ChatActivity extends AppCompatActivity {
 
         @Override
         public void onResponse(final String body) {
-            Log.d("Response", body);
-
             final Map<Integer, String> photoUsers = parseResponse(body);
 
             runOnUiThread(new Runnable() {

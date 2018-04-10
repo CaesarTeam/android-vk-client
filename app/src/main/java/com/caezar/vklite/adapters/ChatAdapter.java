@@ -118,7 +118,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     messageTextViewHolder.messageTextContainer.setLayoutParams(params);
                 } else {
                     if (!isPrivateDialog && photoUsers.containsKey(item.getFrom_id())) {
-                        asyncImageLoad(context, photoUsers.get(item.getFrom_id()), messageTextViewHolder.messageAvatar);
+                        asyncImageLoad(photoUsers.get(item.getFrom_id()), messageTextViewHolder.messageAvatar);
                         final int nextPosition = position + 1;
                         boolean nextItemExist = items.size() == nextPosition;
                         if ((userId != prevUserId && !scrollUp) || nextItemExist || (!nextItemExist && items.get(nextPosition).getUser_id() != userId)) {
@@ -135,7 +135,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 MessageImageViewHolder messageImageViewHolder = ((MessageImageViewHolder) holder);
                 messageImageViewHolder.position = position;
 
-                asyncImageLoad(context, item.getAttachments()[0].getPhoto().getPhoto_604(), messageImageViewHolder.imageMessage);
+                asyncImageLoad(item.getAttachments()[0].getPhoto().getPhoto_604(), messageImageViewHolder.imageMessage);
 
                 messageImageViewHolder.messageTextTime.setText(time);
                 messageImageViewHolder.messageTextTime.bringToFront();
@@ -146,7 +146,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                     messageImageViewHolder.messageTextContainer.setLayoutParams(params);
                 } else {
-                    asyncImageLoad(context, photoUsers.get(item.getFrom_id()), messageImageViewHolder.messageAvatar);
+                    asyncImageLoad(photoUsers.get(item.getFrom_id()), messageImageViewHolder.messageAvatar);
                     messageImageViewHolder.messageAvatar.setVisibility(View.VISIBLE);
                 }
 

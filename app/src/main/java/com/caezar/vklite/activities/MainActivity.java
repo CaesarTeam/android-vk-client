@@ -91,8 +91,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onResponse(final String body) {
-            Log.d("Response", body);
-
             int myselfId = getMyselfId(body);
             if (myselfId == WRONG_ID) {
                 Log.e(this.getClass().getName(), "problems with get myselfId");
