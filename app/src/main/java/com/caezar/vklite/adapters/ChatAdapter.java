@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.caezar.vklite.R;
 import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.network.MetaInfo;
@@ -28,6 +27,7 @@ import java.util.Map;
 
 import static com.caezar.vklite.activities.ChatActivity.ACTION_OPEN_IMAGE_FULL_SIZE;
 import static com.caezar.vklite.activities.ChatActivity.PHOTO_URL;
+import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
 
 /**
  * Created by seva on 03.04.18 in 15:40.
@@ -118,7 +118,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     messageTextViewHolder.messageTextContainer.setLayoutParams(params);
                 } else {
                     if (!isPrivateDialog && photoUsers.containsKey(item.getFrom_id())) {
-                        Glide.with(context).load(photoUsers.get(item.getFrom_id())).into(messageTextViewHolder.messageAvatar);
+                        asyncImageLoad(context, photoUsers.get(item.getFrom_id()), messageTextViewHolder.messageAvatar);
                         final int nextPosition = position + 1;
                         boolean nextItemExist = items.size() == nextPosition;
                         if ((userId != prevUserId && !scrollUp) || nextItemExist || (!nextItemExist && items.get(nextPosition).getUser_id() != userId)) {
@@ -134,7 +134,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case RIGHT_IMAGE:
                 MessageImageViewHolder messageImageViewHolder = ((MessageImageViewHolder) holder);
                 messageImageViewHolder.position = position;
-                Glide.with(context).load(item.getAttachments()[0].getPhoto().getPhoto_604()).into(messageImageViewHolder.imageMessage);
+
+                asyncImageLoad(context, item.getAttachments()[0].getPhoto().getPhoto_604(), messageImageViewHolder.imageMessage);
+
                 messageImageViewHolder.messageTextTime.setText(time);
                 messageImageViewHolder.messageTextTime.bringToFront();
 
@@ -144,7 +146,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                     messageImageViewHolder.messageTextContainer.setLayoutParams(params);
                 } else {
-                    Glide.with(context).load(photoUsers.get(item.getFrom_id())).into(messageImageViewHolder.messageAvatar);
+                    asyncImageLoad(context, photoUsers.get(item.getFrom_id()), messageImageViewHolder.messageAvatar);
                     messageImageViewHolder.messageAvatar.setVisibility(View.VISIBLE);
                 }
 

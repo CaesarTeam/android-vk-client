@@ -2,7 +2,6 @@ package com.caezar.vklite.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,14 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.caezar.vklite.R;
 import com.caezar.vklite.activities.ChatActivity;
 import com.caezar.vklite.network.models.DialogsResponse.Response.DialogItem;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
+import static com.caezar.vklite.libs.ImageLoader.getUrlForResource;
 
 /**
  * Created by seva on 01.04.18 in 18:12.
@@ -69,9 +68,9 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 String imageUrl = item.getMessage().getPhoto_100();
 
                 if(imageUrl != null) {
-                    Glide.with(context).load(imageUrl).into(dialogViewHolder.avatar);
+                    asyncImageLoad(context, imageUrl, dialogViewHolder.avatar);
                 } else {
-                    Glide.with(context).load(R.drawable.default_avatar).into(dialogViewHolder.avatar);
+                    asyncImageLoad(context, getUrlForResource(R.drawable.default_avatar), dialogViewHolder.avatar);
                 }
 
                 dialogViewHolder.title.setText(title);

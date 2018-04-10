@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.caezar.vklite.R;
 
 import static com.caezar.vklite.activities.ChatActivity.PHOTO_URL;
+import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
 
 /**
  * Created by seva on 10.04.18 in 12:56.
@@ -36,7 +36,7 @@ public class ImageMessageFullScreen extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         if (urlPhoto != null) {
             ImageView imageView = view.findViewById(R.id.fullSizeImage);
-            Glide.with(view.getContext()).load(urlPhoto).into(imageView);
+            asyncImageLoad(view.getContext(), urlPhoto, imageView);
         }
     }
 
