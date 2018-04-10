@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.caezar.vklite.R;
+import com.caezar.vklite.activities.ChatActivity;
 import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.network.MetaInfo;
 import com.caezar.vklite.network.models.DialogMessage;
@@ -25,8 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.caezar.vklite.activities.ChatActivity.ACTION_OPEN_IMAGE_FULL_SIZE;
-import static com.caezar.vklite.activities.ChatActivity.PHOTO_URL;
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
 
 /**
@@ -97,7 +96,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         DialogMessage item = items.get(position);
-        Context context = holder.itemView.getContext();
 
         final String time = Time.getTime(item.getDate());
         final int userId = item.getUser_id();
@@ -224,9 +222,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         maxPhotoSize = photo.getPhoto_604();
                     }
 
-                    Intent intent = new Intent(ACTION_OPEN_IMAGE_FULL_SIZE);
-                    intent.putExtra(PHOTO_URL, maxPhotoSize);
-                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                    if (context instanceof ChatActivity){
+                        ((ChatActivity)context).createFragmentFullSizeImageMessage(maxPhotoSize);
+                    }
                 }
             });
         }

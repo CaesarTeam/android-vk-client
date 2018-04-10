@@ -52,10 +52,7 @@ import static com.caezar.vklite.adapters.DialogsAdapter.TITLE;
  */
 
 public class ChatActivity extends AppCompatActivity {
-    public static final String ACTION_OPEN_IMAGE_FULL_SIZE = "actionOpenImageFullSize";
     public static final String PHOTO_URL = "photoUrl";
-
-    LocalBroadcastManager localBroadcastManager;
 
     private RecyclerView recyclerView;
     private ChatAdapter adapter;
@@ -99,9 +96,6 @@ public class ChatActivity extends AppCompatActivity {
 
         swipeRefreshLayout = findViewById(R.id.chatSwipeContainer);
         swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
-
-        localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        localBroadcastManager.registerReceiver(openFullSizeImageBroadcastReceiver, new IntentFilter(ACTION_OPEN_IMAGE_FULL_SIZE));
     }
 
     @Override
@@ -117,8 +111,6 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        localBroadcastManager.unregisterReceiver(openFullSizeImageBroadcastReceiver);
     }
 
     private void getInfoAboutUsers(int[] userIds) {
@@ -159,22 +151,19 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    private final BroadcastReceiver openFullSizeImageBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Bundle bundle = new Bundle();
-            bundle.putString(PHOTO_URL, intent.getExtras().getString(PHOTO_URL));
+    public void createFragmentFullSizeImageMessage(String photoUrl) {
+        Bundle bundle = new Bundle();
+        bundle.putString(PHOTO_URL, photoUrl);
 
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-            ImageMessageFullScreenFragment imageMessageFullScreenFragment = new ImageMessageFullScreenFragment();
-            imageMessageFullScreenFragment.setArguments(bundle);
-            transaction.replace(R.id.chatContainer, imageMessageFullScreenFragment);
-            transaction.addToBackStack(null);
+        ImageMessageFullScreenFragment imageMessageFullScreenFragment = new ImageMessageFullScreenFragment();
+        imageMessageFullScreenFragment.setArguments(bundle);
+        transaction.replace(R.id.chatContainer, imageMessageFullScreenFragment);
+        transaction.addToBackStack(null);
 
-            transaction.commit();
-        }
-    };
+        transaction.commit();
+    }
 
     private final View.OnClickListener onClickListener = new View.OnClickListener(){
         @Override
