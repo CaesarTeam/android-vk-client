@@ -6,7 +6,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.caezar.vklite.R;
@@ -37,7 +36,6 @@ public class DialogsActivity extends AppCompatActivity {
     public static final String PHOTO_PARTICIPANTS = "photoParticipants";
     public static final String TITLE = "title";
     public static final String PEER_ID = "peer_id";
-    public static final String IS_PRIVATE_DIALOG = "isPrivateDialog";
 
     private DialogsAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
