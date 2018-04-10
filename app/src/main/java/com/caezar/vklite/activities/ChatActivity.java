@@ -55,6 +55,8 @@ public class ChatActivity extends AppCompatActivity {
     public static final String ACTION_OPEN_IMAGE_FULL_SIZE = "actionOpenImageFullSize";
     public static final String PHOTO_URL = "photoUrl";
 
+    LocalBroadcastManager localBroadcastManager;
+
     private RecyclerView recyclerView;
     private ChatAdapter adapter;
     private EditText editText;
@@ -98,7 +100,8 @@ public class ChatActivity extends AppCompatActivity {
         swipeRefreshLayout = findViewById(R.id.chatSwipeContainer);
         swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(openFullSizeImageBroadcastReceiver, new IntentFilter(ACTION_OPEN_IMAGE_FULL_SIZE));
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        localBroadcastManager.registerReceiver(openFullSizeImageBroadcastReceiver, new IntentFilter(ACTION_OPEN_IMAGE_FULL_SIZE));
     }
 
     @Override
@@ -112,15 +115,10 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        this.unregisterReceiver(openFullSizeImageBroadcastReceiver);
+        localBroadcastManager.unregisterReceiver(openFullSizeImageBroadcastReceiver);
     }
 
     private void getInfoAboutUsers(int[] userIds) {
