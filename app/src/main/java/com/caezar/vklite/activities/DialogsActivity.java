@@ -2,7 +2,6 @@ package com.caezar.vklite.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,18 +11,17 @@ import android.text.TextUtils;
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.DialogsAdapter;
 import com.caezar.vklite.NetworkManager;
-import com.caezar.vklite.fragments.ErrorInternetFragment;
-import com.caezar.vklite.fragments.ImageMessageFullScreenFragment;
 import com.caezar.vklite.models.request.DialogsRequest;
 import com.caezar.vklite.models.response.DialogsResponse;
 import com.caezar.vklite.models.request.UsersByIdRequest;
 import com.caezar.vklite.models.response.UsersByIdResponse;
 import com.caezar.vklite.libs.urlBuilder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.caezar.vklite.models.response.DialogsResponse.Response.DialogItem;
+import com.caezar.vklite.models.DialogItem;
 
 import static com.caezar.vklite.ErrorHandler.createErrorInternetFragment;
 import static com.caezar.vklite.ErrorHandler.makeToastError;
@@ -37,19 +35,24 @@ public class DialogsActivity extends AppCompatActivity {
     public static final String PHOTO_PARTICIPANTS = "photoParticipants";
     public static final String TITLE = "title";
     public static final String PEER_ID = "peer_id";
+    public static final String DIALOGS = "dialogs";
 
     private DialogsAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private List<DialogItem> items = null;
+    private List<DialogItem> dialogs = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialogs);
 
+        if (savedInstanceState != null && savedInstanceState.getSerializable(DIALOGS) != null) {
+            dialogs = savedInstanceState.getParcelableArrayList(DIALOGS);
+        }
+
         RecyclerView recyclerView = findViewById(R.id.dialogsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new DialogsAdapter(this, items);
+        adapter = new DialogsAdapter(this, dialogs);
         recyclerView.setAdapter(adapter);
 
         swipeRefreshLayout = findViewById(R.id.swipe_container);
@@ -57,20 +60,32 @@ public class DialogsActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (dialogs != null) {
+            outState.putParcelableArrayList(DIALOGS, new ArrayList<>(dialogs));
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
 
-        getDialogs();
+        if (dialogs == null) {
+            getDialogs();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 
     public void openChat(int peer_id, String title, int[] photoParticipants) {
@@ -125,7 +140,7 @@ public class DialogsActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    adapter.changeItems(items);
+                    adapter.changeItems(dialogs);
                 }
             });
 
@@ -139,13 +154,13 @@ public class DialogsActivity extends AppCompatActivity {
                 return;
             }
 
-            items = Arrays.asList(dialogsResponse.getResponse().getItems());
+            dialogs = Arrays.asList(dialogsResponse.getResponse().getItems());
         }
 
         private int[] getUsersIdFromPrivateDialogs() {
-            int[] userIds = new int[items.size()];
+            int[] userIds = new int[dialogs.size()];
             int i = 0;
-            for (DialogItem item : items) {
+            for (DialogItem item : dialogs) {
                 if (TextUtils.isEmpty(item.getMessage().getTitle())) {
                     userIds[i] = item.getMessage().getUser_id();
                     i++;
@@ -171,7 +186,7 @@ public class DialogsActivity extends AppCompatActivity {
                 return;
             }
 
-            for (DialogItem item : items) {
+            for (DialogItem item : dialogs) {
                 if (TextUtils.isEmpty(item.getMessage().getTitle())) {
                     int userId = item.getMessage().getUser_id();
 

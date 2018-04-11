@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.activities.DialogsActivity;
-import com.caezar.vklite.models.response.DialogsResponse.Response.DialogItem;
+import com.caezar.vklite.models.DialogItem;
 
 import java.util.List;
 
