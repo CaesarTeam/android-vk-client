@@ -16,7 +16,7 @@ import com.caezar.vklite.activities.ChatActivity;
 import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.MetaInfo;
 import com.caezar.vklite.models.DialogMessage;
-import com.caezar.vklite.models.Message;
+import com.caezar.vklite.models.Photo;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
@@ -211,7 +211,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             imageMessage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Message.Attachments.Photo photo = items.get(position).getAttachments()[0].getPhoto();
+                    Photo photo = items.get(position).getAttachments()[0].getPhoto();
                     String maxPhotoSize = photo.getPhoto_1280();
                     if (maxPhotoSize == null) {
                         maxPhotoSize = photo.getPhoto_807();

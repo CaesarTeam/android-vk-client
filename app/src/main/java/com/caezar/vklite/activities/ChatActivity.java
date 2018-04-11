@@ -34,6 +34,7 @@ import static com.caezar.vklite.ErrorHandler.makeToastError;
 import static com.caezar.vklite.activities.DialogsActivity.PEER_ID;
 import static com.caezar.vklite.activities.DialogsActivity.PHOTO_PARTICIPANTS;
 import static com.caezar.vklite.activities.DialogsActivity.TITLE;
+import static com.caezar.vklite.libs.KeyBoard.hideKeyboard;
 import static com.caezar.vklite.libs.ParseResponse.parseBody;
 
 /**
@@ -162,6 +163,7 @@ public class ChatActivity extends AppCompatActivity {
             sendMessage(message);
             addMessageToAdapterEnd(message);
             recyclerView.scrollToPosition(0);
+            hideKeyboard(editText);
         }
     };
 
