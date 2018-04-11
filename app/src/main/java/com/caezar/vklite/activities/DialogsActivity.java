@@ -23,7 +23,7 @@ import java.util.List;
 
 import com.caezar.vklite.models.DialogItem;
 
-import static com.caezar.vklite.ErrorHandler.createErrorInternetFragment;
+import static com.caezar.vklite.ErrorHandler.createErrorInternetToast;
 import static com.caezar.vklite.ErrorHandler.makeToastError;
 import static com.caezar.vklite.libs.ParseResponse.parseBody;
 
@@ -117,7 +117,7 @@ public class DialogsActivity extends AppCompatActivity {
 
         @Override
         public void onError(String body) {
-            createErrorInternetFragment(R.id.dialogsContainer, getSupportFragmentManager());
+            createErrorInternetToast(DialogsActivity.this);
         }
 
         @Override

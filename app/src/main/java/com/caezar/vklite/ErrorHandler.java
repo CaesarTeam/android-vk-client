@@ -1,12 +1,8 @@
 package com.caezar.vklite;
 
 import android.app.Activity;
-import android.support.annotation.IdRes;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
 
-import com.caezar.vklite.fragments.ErrorInternetFragment;
 import com.caezar.vklite.models.response.ErrorVkApiResponse;
 
 import static com.caezar.vklite.libs.ParseResponse.parseBody;
@@ -14,6 +10,7 @@ import static com.caezar.vklite.libs.ParseResponse.parseBody;
 /**
  * Created by seva on 07.04.18 in 0:30.
  */
+
 public class ErrorHandler {
 
     private static int errorParse(String body) {
@@ -107,13 +104,12 @@ public class ErrorHandler {
         }
     }
 
-    public static void createErrorInternetFragment(@IdRes int containerViewId, FragmentManager manager) {
-        FragmentTransaction transaction = manager.beginTransaction();
-
-        ErrorInternetFragment errorInternetFragment = new ErrorInternetFragment();
-        transaction.replace(containerViewId, errorInternetFragment);
-        transaction.addToBackStack(null);
-
-        transaction.commit();
+    public static void createErrorInternetToast(final Activity activity) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(activity, R.string.error_internet_connection, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

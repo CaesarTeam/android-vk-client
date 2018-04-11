@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.caezar.vklite.ErrorHandler.createErrorInternetFragment;
+import static com.caezar.vklite.ErrorHandler.createErrorInternetToast;
 import static com.caezar.vklite.ErrorHandler.makeToastError;
 import static com.caezar.vklite.activities.DialogsActivity.PEER_ID;
 import static com.caezar.vklite.activities.DialogsActivity.PHOTO_PARTICIPANTS;
@@ -199,7 +199,7 @@ public class ChatActivity extends AppCompatActivity {
 
         @Override
         public void onError(String body) {
-            createErrorInternetFragment(R.id.chatContainer, getSupportFragmentManager());
+            createErrorInternetToast(ChatActivity.this);
         }
 
         @Override
@@ -232,7 +232,7 @@ public class ChatActivity extends AppCompatActivity {
 
         @Override
         public void onError(String body) {
-            createErrorInternetFragment(R.id.chatContainer, getSupportFragmentManager());
+            createErrorInternetToast(ChatActivity.this);
         }
 
         @Override
@@ -261,7 +261,7 @@ public class ChatActivity extends AppCompatActivity {
 
         @Override
         public void onError(String body) {
-            createErrorInternetFragment(R.id.chatContainer, getSupportFragmentManager());
+            createErrorInternetToast(ChatActivity.this);
         }
 
         @Override
