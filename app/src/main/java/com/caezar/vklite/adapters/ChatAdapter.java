@@ -2,6 +2,7 @@ package com.caezar.vklite.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -192,10 +193,18 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         MessageTextViewHolder(final View itemView) {
             super(itemView);
 
-            message = itemView.findViewById(R.id.messageText);
-            messageTextTime = itemView.findViewById(R.id.messageTextTime);
-            messageTextContainer = itemView.findViewById(R.id.messageTextContainer);
-            messageAvatar = itemView.findViewById(R.id.messageAvatar);
+            if (context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
+                message = itemView.findViewById(R.id.messageText);
+                messageTextTime = itemView.findViewById(R.id.messageTextTime);
+                messageTextContainer = itemView.findViewById(R.id.messageTextContainer);
+                messageAvatar = itemView.findViewById(R.id.messageAvatar);
+            } else {
+                message = itemView.findViewById(R.id.messageTextLand);
+                messageTextTime = itemView.findViewById(R.id.messageTextTimeLand);
+                messageTextContainer = itemView.findViewById(R.id.messageTextContainerLand);
+                messageAvatar = itemView.findViewById(R.id.messageAvatarLand);
+            }
+
         }
     }
 
@@ -210,10 +219,18 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         MessageImageViewHolder(final View itemView) {
             super(itemView);
 
-            imageMessage = itemView.findViewById(R.id.messageImage);
-            messageTextTime = itemView.findViewById(R.id.messageTextTime);
-            messageTextContainer = itemView.findViewById(R.id.messageTextContainer);
-            messageAvatar = itemView.findViewById(R.id.messageAvatar);
+            if (context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
+                imageMessage = itemView.findViewById(R.id.messageImage);
+                messageTextTime = itemView.findViewById(R.id.messageTextTime);
+                messageTextContainer = itemView.findViewById(R.id.messageTextContainer);
+                messageAvatar = itemView.findViewById(R.id.messageAvatar);
+            } else {
+                imageMessage = itemView.findViewById(R.id.messageImageLand);
+                messageTextTime = itemView.findViewById(R.id.messageTextTimeLand);
+                messageTextContainer = itemView.findViewById(R.id.messageTextContainerLand);
+                messageAvatar = itemView.findViewById(R.id.messageAvatarLand);
+            }
+
 
             imageMessage.setOnClickListener(new View.OnClickListener() {
                 @Override

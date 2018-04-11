@@ -61,17 +61,11 @@ public class DialogsActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
         if (dialogs != null) {
             outState.putParcelableArrayList(DIALOGS, new ArrayList<>(dialogs));
         }
-    }
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -81,11 +75,6 @@ public class DialogsActivity extends AppCompatActivity {
         if (dialogs == null) {
             getDialogs();
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     public void openChat(int peer_id, String title, int[] photoParticipants) {
