@@ -1,47 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_top_for_title_in_dialog"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@drawable/dialogs_bottom_border"
-        android:paddingBottom="@dimen/border_width_between_dialogs"
-        >
+        android:layout_marginTop="@dimen/margin_for_dialog"
+        android:layout_marginBottom="@dimen/margin_for_dialog">
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/dialogAvatar"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="@dimen/image_size_for_avatar_in_dialogs"
             android:layout_height="@dimen/image_size_for_avatar_in_dialogs"
             android:layout_marginStart="@dimen/margin_left_for_avatar_in_dialog"
-            tools:src="@drawable/default_avatar"
-            app:riv_oval="true" />
+            app:riv_oval="true"
+            xmlns:app="http://schemas.android.com/apk/res-auto"/>
 
-        <TextView android:id="@+id/dialogTitle"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:layout_toEndOf="@+id/dialogAvatar"
-            android:layout_marginStart="@dimen/margin_left_for_title_in_dialog"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:textSize="@dimen/font_size_title_dialog"
-            />
+            android:layout_height="@dimen/image_size_for_avatar_in_dialogs"
+            android:background="@drawable/dialogs_bottom_border"
+            android:layout_toEndOf="@+id/dialogAvatar">
 
-        <TextView android:id="@+id/dialogMessage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/dialogTitle"
-            android:layout_toEndOf="@+id/dialogAvatar"
-            android:layout_marginTop="@dimen/margin_for_message_in_dialog"
-            android:layout_marginStart="@dimen/margin_for_message_in_dialog"
-            android:singleLine="true"
-            android:layout_centerHorizontal="true"
-            />
+            <TextView
+                android:id="@+id/dialogTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginStart="@dimen/margin_left_for_title_in_dialog"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:textSize="@dimen/font_size_title_dialog"/>
+
+            <TextView
+                android:id="@+id/dialogMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/dialogTitle"
+                android:layout_marginTop="@dimen/margin_for_message_in_dialog"
+                android:layout_marginStart="@dimen/margin_for_message_in_dialog"
+                android:singleLine="true"
+                android:textAlignment="textStart"/>
+        </RelativeLayout>
+
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

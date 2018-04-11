@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.SwipeRefreshLayout
     android:id="@+id/chatSwipeContainer"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".activities.DialogsActivity">
+    tools:context=".activities.DialogsActivity"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:id="@+id/chatContainer"
@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:textAlignment="center"
             android:textColor="@color/colorTitleChat"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/messagesList"
@@ -26,16 +26,14 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/messageTitle"
             android:layout_marginTop="@dimen/margin_top_for_messages_in_chat"
-            android:layout_marginBottom="@dimen/margin_bottom_for_messages_in_chat"
-            />
+            android:layout_marginBottom="@dimen/margin_bottom_for_messages_in_chat" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_for_message_form_in_chat"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal"
-            android:background="@drawable/message_form_top_border"
-            >
+            android:background="@drawable/message_form_top_border">
 
             <EditText
                 android:id="@+id/messageForm"
@@ -47,8 +45,7 @@
                 android:background="@android:color/transparent"
                 android:padding="@dimen/padding_for_message_form_in_chat"
                 android:textCursorDrawable="@drawable/color_cursor_message_form"
-                android:hint="@string/message_form_placeholder">
-            </EditText>
+                android:hint="@string/message_form_placeholder"/>
 
             <Button
                 android:id="@+id/buttonSendMessage"
@@ -58,11 +55,12 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/margin_right_for_button_send_message"
                 android:layout_alignParentEnd="true"
-                android:background="@drawable/send"
-                />
+                android:background="@drawable/send"/>
 
         </RelativeLayout>
+
     </RelativeLayout>
+
 </android.support.v4.widget.SwipeRefreshLayout>
 
 

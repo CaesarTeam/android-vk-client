@@ -3,7 +3,7 @@
     <item>
         <shape android:shape="rectangle">
             <stroke
-                android:color="@color/colorPrimary"
+                android:color="@color/messageFormBorder"
                 android:width="@dimen/border_width_between_dialogs" />
             </shape>
     </item>

@@ -38,7 +38,7 @@ import static com.caezar.vklite.libs.Predicates.isPositiveUserId;
 /**
  * Created by seva on 01.04.18 in 17:56.
  */
-// todo: margin between dialogs
+
 public class DialogsActivity extends AppCompatActivity {
     public static final String PHOTO_PARTICIPANTS = "photoParticipants";
     public static final String TITLE = "title";
