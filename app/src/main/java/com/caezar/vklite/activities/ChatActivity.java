@@ -22,6 +22,7 @@ import com.caezar.vklite.models.response.ChatResponse;
 import com.caezar.vklite.models.DialogMessage;
 import com.caezar.vklite.models.request.SendMessageRequest;
 import com.caezar.vklite.models.request.UsersByIdRequest;
+import com.caezar.vklite.models.response.SendResponse;
 import com.caezar.vklite.models.response.UsersByIdResponse;
 import com.caezar.vklite.libs.urlBuilder;
 
@@ -211,7 +212,11 @@ public class ChatActivity extends AppCompatActivity {
 
         @Override
         public void onResponse(final String body) {
+            SendResponse sendResponse = parseBody(SendResponse.class, body);
 
+            if (sendResponse.getResponse() == 0) {
+                makeToastError(body, ChatActivity.this);
+            }
         }
     }
 
