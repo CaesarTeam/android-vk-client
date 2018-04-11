@@ -32,9 +32,13 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private final int ITEM_DIALOGS = R.layout.dialog;
 
-    public void changeItems(List<DialogItem> dialogItems) {
+    public void setItems(List<DialogItem> dialogItems) {
         items = dialogItems;
         notifyDataSetChanged();
+    }
+
+    public List<DialogItem> getItems() {
+        return items;
     }
 
     @Override
@@ -129,7 +133,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
 
                 if (context instanceof DialogsActivity){
-                    ((DialogsActivity)context).openChat(peer_id, item.getMessage().getTitle(), item.getMessage().getChat_active());
+                    ((DialogsActivity)context).openChatCallback(peer_id, item.getMessage().getTitle(), item.getMessage().getChat_active());
                 }
             }
         }

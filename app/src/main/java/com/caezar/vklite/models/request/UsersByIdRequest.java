@@ -40,7 +40,9 @@ public class UsersByIdRequest {
             }
         }
 
-        builder.setLength(builder.length() - 1);
+        if (builder.length() > 0) {
+            builder.setLength(builder.length() - 1);
+        }
         String user_ids = builder.toString();
 
         builder.setLength(0);

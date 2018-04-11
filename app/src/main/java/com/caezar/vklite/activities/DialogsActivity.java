@@ -2,11 +2,11 @@ package com.caezar.vklite.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.DialogsAdapter;
@@ -19,13 +19,21 @@ import com.caezar.vklite.libs.urlBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import com.caezar.vklite.models.DialogItem;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
+import com.google.common.primitives.Ints;
 
 import static com.caezar.vklite.ErrorHandler.createErrorInternetToast;
 import static com.caezar.vklite.ErrorHandler.makeToastError;
 import static com.caezar.vklite.libs.ParseResponse.parseBody;
+import static com.caezar.vklite.libs.Predicates.isEmptyTitle;
+import static com.caezar.vklite.libs.Predicates.isPositiveUserId;
 
 /**
  * Created by seva on 01.04.18 in 17:56.
@@ -38,14 +46,13 @@ public class DialogsActivity extends AppCompatActivity {
     public static final String DIALOGS = "dialogs";
 
     private DialogsAdapter adapter;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private List<DialogItem> dialogs = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialogs);
 
+        List<DialogItem> dialogs = null;
         if (savedInstanceState != null && savedInstanceState.getSerializable(DIALOGS) != null) {
             dialogs = savedInstanceState.getParcelableArrayList(DIALOGS);
         }
@@ -55,29 +62,35 @@ public class DialogsActivity extends AppCompatActivity {
         adapter = new DialogsAdapter(this, dialogs);
         recyclerView.setAdapter(adapter);
 
-        swipeRefreshLayout = findViewById(R.id.swipe_container);
-        swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        if (dialogs != null) {
-            outState.putParcelableArrayList(DIALOGS, new ArrayList<>(dialogs));
-        }
-
-        super.onSaveInstanceState(outState);
+        final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_container);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(false);
+                getDialogs();
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        if (dialogs == null) {
+        if (adapter.getItems() == null) {
             getDialogs();
         }
     }
 
-    public void openChat(int peer_id, String title, int[] photoParticipants) {
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if (adapter.getItems() != null) {
+            outState.putParcelableArrayList(DIALOGS, new ArrayList<>(adapter.getItems()));
+        }
+
+        super.onSaveInstanceState(outState);
+    }
+
+    public void openChatCallback(int peer_id, String title, int[] photoParticipants) {
         Intent intent = new Intent(DialogsActivity.this, ChatActivity.class);
         intent.putExtra(PEER_ID, peer_id);
         intent.putExtra(TITLE, title);
@@ -90,17 +103,11 @@ public class DialogsActivity extends AppCompatActivity {
         NetworkManager.getInstance().get(url, new OnGetDialogsComplete());
     }
 
-    SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
-        @Override
-        public void onRefresh() {
-            swipeRefreshLayout.setRefreshing(false);
-            getDialogs();
-        }
-    };
+    private void setDialogs(List<DialogItem> dialogs) {
+        adapter.setItems(dialogs);
+    }
 
     private class OnGetDialogsComplete implements NetworkManager.OnRequestCompleteListener {
-        private boolean dialogsComplete = false;
-
         public OnGetDialogsComplete() {
         }
 
@@ -115,27 +122,6 @@ public class DialogsActivity extends AppCompatActivity {
 
         @Override
         public void onResponse(final String body) {
-            if (!dialogsComplete) {
-                buildDialogsList(body);
-                dialogsComplete = true;
-                final int[] userIds = getUsersIdFromPrivateDialogs();
-                requestGetInfoAboutUsers(userIds);
-
-                return;
-            }
-
-            addInfoAboutUsersToList(body);
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    adapter.changeItems(dialogs);
-                }
-            });
-
-        }
-
-        private void buildDialogsList(final String body) {
             DialogsResponse dialogsResponse = parseBody(DialogsResponse.class, body);
 
             if (dialogsResponse.getResponse() == null) {
@@ -143,31 +129,58 @@ public class DialogsActivity extends AppCompatActivity {
                 return;
             }
 
-            dialogs = Arrays.asList(dialogsResponse.getResponse().getItems());
+            final List<DialogItem> dialogs = Arrays.asList(dialogsResponse.getResponse().getItems());
+
+            final int[] userIds = getUsersIdFromPrivateDialogs(dialogs);
+            if (userIds.length > 0) {
+                requestGetUsers(userIds, dialogs);
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setDialogs(dialogs);
+                    }
+                });
+            }
         }
 
-        private int[] getUsersIdFromPrivateDialogs() {
-            int[] userIds = new int[dialogs.size()];
-            int i = 0;
-            for (DialogItem item : dialogs) {
-                if (TextUtils.isEmpty(item.getMessage().getTitle())) {
-                    userIds[i] = item.getMessage().getUser_id();
-                    i++;
-                }
+        private int[] getUsersIdFromPrivateDialogs(List<DialogItem> dialogs) {
+            Collection<DialogItem> privateDialogs = Collections2.filter(dialogs, Predicates.and(isEmptyTitle, isPositiveUserId));
+
+            List<Integer> userIds = new ArrayList<>(privateDialogs.size());
+            for (DialogItem item: privateDialogs) {
+                userIds.add(item.getMessage().getUser_id());
             }
 
-            return userIds;
+            return Ints.toArray(userIds);
         }
 
-        private void requestGetInfoAboutUsers(int[] userIds) {
+        private void requestGetUsers(int[] userIds, List<DialogItem> dialogs) {
             final UsersByIdRequest usersByIdRequest = new UsersByIdRequest();
             usersByIdRequest.setUser_ids(userIds);
-
             final String url = urlBuilder.constructGetUsersInfo(usersByIdRequest);
-            NetworkManager.getInstance().get(url, this);
+            NetworkManager.getInstance().get(url, new OnGetUsersComplete(dialogs));
+        }
+    }
+
+    private class OnGetUsersComplete implements NetworkManager.OnRequestCompleteListener {
+        private List<DialogItem> dialogs;
+
+        public OnGetUsersComplete(List<DialogItem> dialogs) {
+            this.dialogs = dialogs;
         }
 
-        private void addInfoAboutUsersToList(final String body) {
+        @Override
+        public void onError(String body) {
+            createErrorInternetToast(DialogsActivity.this);
+        }
+
+        @Override
+        public void onErrorCode(int code) {
+        }
+
+        @Override
+        public void onResponse(final String body) {
             UsersByIdResponse usersByIdResponse = parseBody(UsersByIdResponse.class, body);
 
             if (usersByIdResponse.getResponse() == null) {
@@ -175,22 +188,36 @@ public class DialogsActivity extends AppCompatActivity {
                 return;
             }
 
-            for (DialogItem item : dialogs) {
-                if (TextUtils.isEmpty(item.getMessage().getTitle())) {
-                    int userId = item.getMessage().getUser_id();
+            dialogs = addDataToDialogsList(dialogs, usersByIdResponse);
 
-                    for (UsersByIdResponse.Response user : usersByIdResponse.getResponse()) {
-                        if (user.getId() == userId) {
-                            item.getMessage().setTitle(user.getFirst_name() + " " + user.getLast_name());
-                            item.getMessage().setPhoto_50(user.getPhoto_50());
-                            item.getMessage().setPhoto_100(user.getPhoto_100());
-                            item.getMessage().setPhoto_200(user.getPhoto_200());
-                            break;
-                        }
-                    }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setDialogs(dialogs);
                 }
+            });
+        }
+
+        private List<DialogItem> addDataToDialogsList(List<DialogItem> dialogs, UsersByIdResponse usersByIdResponse) {
+            Collection<DialogItem> privateDialogs = Collections2.filter(dialogs, Predicates.and(isEmptyTitle, isPositiveUserId));
+            List<UsersByIdResponse.Response> users = Arrays.asList(usersByIdResponse.getResponse());
+
+            for (DialogItem item: privateDialogs) {
+                final int userId = item.getMessage().getUser_id();
+
+                UsersByIdResponse.Response user = Iterables.find(users, new Predicate<UsersByIdResponse.Response> () {
+                    public boolean apply(@NonNull UsersByIdResponse.Response user) {
+                        return user.getId() == userId;
+                    }
+                });
+
+                item.getMessage().setTitle(user.getFirst_name() + " " + user.getLast_name());
+                item.getMessage().setPhoto_50(user.getPhoto_50());
+                item.getMessage().setPhoto_100(user.getPhoto_100());
+                item.getMessage().setPhoto_200(user.getPhoto_200());
             }
 
+            return dialogs;
         }
     }
 }
