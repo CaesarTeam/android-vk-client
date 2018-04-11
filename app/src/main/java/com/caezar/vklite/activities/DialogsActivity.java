@@ -46,20 +46,20 @@ public class DialogsActivity extends AppCompatActivity {
     public static final String DIALOGS = "dialogs";
 
     private DialogsAdapter adapter;
+    private boolean requestDialogsFinish = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialogs);
 
-        List<DialogItem> dialogs = null;
-        if (savedInstanceState != null && savedInstanceState.getSerializable(DIALOGS) != null) {
-            dialogs = savedInstanceState.getParcelableArrayList(DIALOGS);
+        if (savedInstanceState != null) {
+            requestDialogsFinish = false;
         }
 
         RecyclerView recyclerView = findViewById(R.id.dialogsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new DialogsAdapter(this, dialogs);
+        adapter = new DialogsAdapter(this);
         recyclerView.setAdapter(adapter);
 
         final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_container);
@@ -67,6 +67,7 @@ public class DialogsActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(false);
+                adapter.resetItems();
                 getDialogs();
             }
         });
@@ -76,14 +77,24 @@ public class DialogsActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        if (adapter.getItems() == null) {
+        if (adapter.getItems().size() == 0) {
             getDialogs();
         }
     }
 
     @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if (savedInstanceState.getSerializable(DIALOGS) != null) {
+            List<DialogItem> dialogs = savedInstanceState.getParcelableArrayList(DIALOGS);
+            setDialogs(dialogs);
+        }
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if (adapter.getItems() != null) {
+        if (adapter.getItemCount() != 0) {
             outState.putParcelableArrayList(DIALOGS, new ArrayList<>(adapter.getItems()));
         }
 
@@ -98,26 +109,39 @@ public class DialogsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void requestDialogsCallback() {
+        getDialogs();
+    }
+
     private void getDialogs() {
-        final String url = urlBuilder.constructGetDialogs(new DialogsRequest());
-        NetworkManager.getInstance().get(url, new OnGetDialogsComplete());
+        if (requestDialogsFinish) {
+            requestDialogsFinish = false;
+            DialogsRequest dialogsRequest = new DialogsRequest();
+            dialogsRequest.setOffset(adapter.getItemCount());
+            final String url = urlBuilder.constructGetDialogs(dialogsRequest);
+            NetworkManager.getInstance().get(url, new OnGetDialogsComplete());
+        }
     }
 
     private void setDialogs(List<DialogItem> dialogs) {
-        adapter.setItems(dialogs);
+        adapter.addItemsToEnd(dialogs);
+        requestDialogsFinish = true;
     }
 
     private class OnGetDialogsComplete implements NetworkManager.OnRequestCompleteListener {
+
         public OnGetDialogsComplete() {
         }
 
         @Override
         public void onError(String body) {
             createErrorInternetToast(DialogsActivity.this);
+            requestDialogsFinish = true;
         }
 
         @Override
         public void onErrorCode(int code) {
+            requestDialogsFinish = true;
         }
 
         @Override
@@ -173,10 +197,12 @@ public class DialogsActivity extends AppCompatActivity {
         @Override
         public void onError(String body) {
             createErrorInternetToast(DialogsActivity.this);
+            requestDialogsFinish = true;
         }
 
         @Override
         public void onErrorCode(int code) {
+            requestDialogsFinish = true;
         }
 
         @Override

@@ -63,9 +63,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int RIGHT_IMAGE = 4;
 
     public void addItemsToTop(List<DialogMessage> itemList) {
-        items.addAll( itemList);
-        // todo: почему это не работает? появляются дубликаты
-//        notifyItemInserted(0);
+        items.addAll(itemList);
         notifyDataSetChanged();
     }
 

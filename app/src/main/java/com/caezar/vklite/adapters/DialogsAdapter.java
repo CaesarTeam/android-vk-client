@@ -1,7 +1,9 @@
 package com.caezar.vklite.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +13,9 @@ import android.widget.TextView;
 import com.caezar.vklite.R;
 import com.caezar.vklite.activities.DialogsActivity;
 import com.caezar.vklite.models.DialogItem;
+import com.caezar.vklite.models.DialogMessage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
@@ -22,21 +26,31 @@ import static com.caezar.vklite.libs.ImageLoader.getUrlForResource;
  */
 
 public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<DialogItem> items;
-    private Context context;
+    private final int ITEM_DIALOGS = R.layout.dialog;
 
-    public DialogsAdapter(Context context, List<DialogItem> dialogItems) {
-        items = dialogItems;
+    @NonNull private List<DialogItem> items;
+    private Context context;
+    // todo: to config and new name!
+    private final int minDifferenceToRequest = 5;
+
+    public DialogsAdapter(Context context) {
+        items = new ArrayList<>();
         this.context = context;
     }
 
-    private final int ITEM_DIALOGS = R.layout.dialog;
+    public void addItemsToEnd(List<DialogItem> dialogItems) {
+        if (dialogItems != null) {
+            items.addAll(dialogItems);
+            notifyDataSetChanged();
+        }
+    }
 
-    public void setItems(List<DialogItem> dialogItems) {
-        items = dialogItems;
+    public void resetItems() {
+        items = new ArrayList<>();
         notifyDataSetChanged();
     }
 
+    @NonNull
     public List<DialogItem> getItems() {
         return items;
     }
@@ -66,7 +80,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 String message = item.getMessage().getBody();
                 String imageUrl = item.getMessage().getPhoto_100();
 
-                if(imageUrl != null) {
+                if (imageUrl != null) {
                     asyncImageLoad(imageUrl, dialogViewHolder.avatar);
                 } else {
                     asyncImageLoad(getUrlForResource(R.drawable.default_avatar), dialogViewHolder.avatar);
@@ -79,6 +93,14 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             default:
                 throw new IllegalArgumentException("invalid view type");
         }
+
+        if (isTimeToRequestDialogs(position)) {
+            ((DialogsActivity)context).requestDialogsCallback();
+        }
+    }
+
+    private boolean isTimeToRequestDialogs(int position) {
+        return items.size() - position < minDifferenceToRequest;
     }
 
     @Override

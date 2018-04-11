@@ -7,7 +7,7 @@ package com.caezar.vklite.models.request;
 @SuppressWarnings({"unused"})
 public class DialogsRequest {
     private int offset;
-    private int count = 20;
+    private int count = 60;
     private long start_message_id;
     private int preview_length;
     private boolean unread;
