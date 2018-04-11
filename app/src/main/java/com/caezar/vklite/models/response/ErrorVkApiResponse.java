@@ -4,6 +4,7 @@ package com.caezar.vklite.models.response;
  * Created by seva on 07.04.18 in 0:06.
  */
 
+@SuppressWarnings({"unused"})
 public class ErrorVkApiResponse {
     private Error error;
 

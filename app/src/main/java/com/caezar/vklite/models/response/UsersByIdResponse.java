@@ -6,6 +6,7 @@ import java.util.Arrays;
  * Created by seva on 02.04.18 in 21:51.
  */
 
+@SuppressWarnings({"unused"})
 public class UsersByIdResponse {
     private Response[] response;
 

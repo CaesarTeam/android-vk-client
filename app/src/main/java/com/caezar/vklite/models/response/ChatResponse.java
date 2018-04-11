@@ -6,6 +6,7 @@ import com.caezar.vklite.models.DialogMessage;
  * Created by seva on 25.03.18 in 18:41.
  */
 
+@SuppressWarnings({"unused"})
 public class ChatResponse {
     private Response response;
 

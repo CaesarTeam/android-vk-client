@@ -3,6 +3,8 @@ package com.caezar.vklite.models.request;
 /**
  * Created by seva on 04.04.18 in 0:34.
  */
+
+@SuppressWarnings({"unused"})
 public class SendMessageRequest {
     private int peer_id;
     private String message;

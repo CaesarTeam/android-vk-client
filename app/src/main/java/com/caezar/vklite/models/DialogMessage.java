@@ -6,6 +6,7 @@ import java.util.Arrays;
  * Created by seva on 03.04.18 in 16:42.
  */
 
+@SuppressWarnings({"unused"})
 public class DialogMessage extends Message {
     private int chat_id;
     private int[] chat_active;
@@ -21,8 +22,7 @@ public class DialogMessage extends Message {
     private String photo_100;
     private String photo_200;
 
-    private Push_settings push_settings;
-
+    private PushSettings push_settings;
 
 //                public enum Action {
 //                    CHAT_PHOTO_UPDATE("chat_photo_update"), // обновлена фотография беседы
@@ -50,32 +50,11 @@ public class DialogMessage extends Message {
 //                    }
 //                }
 
-    public static class Push_settings {
-        private int sound;
-        private int disabled_until;
-
-        public int getSound() {
-            return sound;
-        }
-
-        public void setSound(int sound) {
-            this.sound = sound;
-        }
-
-        public int getDisabled_until() {
-            return disabled_until;
-        }
-
-        public void setDisabled_until(int disabled_until) {
-            this.disabled_until = disabled_until;
-        }
-    }
-
-    public Push_settings getPush_settings() {
+    public PushSettings getPush_settings() {
         return push_settings;
     }
 
-    public void setPush_settings(Push_settings push_settings) {
+    public void setPush_settings(PushSettings push_settings) {
         this.push_settings = push_settings;
     }
 

@@ -4,6 +4,7 @@ package com.caezar.vklite.models.request;
  * Created by seva on 25.03.18 in 18:16.
  */
 
+@SuppressWarnings({"unused"})
 public class ChatRequest {
     private int offset;
     private int count = 20;

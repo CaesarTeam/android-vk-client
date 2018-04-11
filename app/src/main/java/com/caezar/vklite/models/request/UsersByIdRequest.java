@@ -3,6 +3,8 @@ package com.caezar.vklite.models.request;
 /**
  * Created by seva on 02.04.18 in 21:31.
  */
+
+@SuppressWarnings({"unused"})
 public class UsersByIdRequest {
     private int[] user_ids;
     private String[] fields = new String[] {"photo_50", "photo_100", "photo_200", "photo_max"};

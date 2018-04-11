@@ -3,8 +3,8 @@ package com.caezar.vklite.models.request;
 /**
  * Created by seva on 25.03.18 in 18:15.
  */
-// todo: annotation unsigned, max, min
 
+@SuppressWarnings({"unused"})
 public class DialogsRequest {
     private int offset;
     private int count = 20;

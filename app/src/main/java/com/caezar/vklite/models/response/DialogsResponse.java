@@ -2,15 +2,13 @@ package com.caezar.vklite.models.response;
 
 import com.caezar.vklite.models.DialogMessage;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-
 import java.util.Arrays;
 
 /**
  * Created by seva on 01.04.18 in 20:03.
  */
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@SuppressWarnings({"unused"})
 public class DialogsResponse {
     private Response response;
 
