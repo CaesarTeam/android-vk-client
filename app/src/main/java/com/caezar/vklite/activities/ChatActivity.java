@@ -143,6 +143,10 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    private void removeWrongMessage() {
+        adapter.removeLastItem();
+    }
+
     public void createFragmentFullSizeImageMessage(String photoUrl) {
         Bundle bundle = new Bundle();
         bundle.putString(PHOTO_URL, photoUrl);
@@ -227,6 +231,13 @@ public class ChatActivity extends AppCompatActivity {
 
             if (sendResponse.getResponse() == 0) {
                 makeToastError(body, ChatActivity.this);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        removeWrongMessage();
+                    }
+                });
             }
         }
 
