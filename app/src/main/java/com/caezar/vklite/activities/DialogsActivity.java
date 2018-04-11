@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.DialogsAdapter;
@@ -132,7 +133,7 @@ public class DialogsActivity extends AppCompatActivity {
             int[] userIds = new int[items.size()];
             int i = 0;
             for (DialogItem item : items) {
-                if (item.getMessage().getTitle().equals("")) {
+                if (TextUtils.isEmpty(item.getMessage().getTitle())) {
                     userIds[i] = item.getMessage().getUser_id();
                     i++;
                 }
@@ -158,7 +159,7 @@ public class DialogsActivity extends AppCompatActivity {
             }
 
             for (DialogItem item : items) {
-                if (item.getMessage().getTitle().equals("")) {
+                if (TextUtils.isEmpty(item.getMessage().getTitle())) {
                     int userId = item.getMessage().getUser_id();
 
                     for (UsersByIdResponse.Response user : usersByIdResponse.getResponse()) {
