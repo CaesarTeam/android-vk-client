@@ -4,7 +4,7 @@ package com.caezar.vklite;
  * Created by seva on 25.03.18 in 22:00.
  */
 
-public class MetaInfo {
+public class Config {
     private static int myselfId;
     private static String token;
 
@@ -13,7 +13,7 @@ public class MetaInfo {
     }
 
     public static void setMyselfId(int myselfId) {
-        MetaInfo.myselfId = myselfId;
+        Config.myselfId = myselfId;
     }
 
     public static String getToken() {
@@ -21,9 +21,9 @@ public class MetaInfo {
     }
 
     public static void setToken(String token) {
-        MetaInfo.token = token;
+        Config.token = token;
     }
 
-    public MetaInfo() {
+    public Config() {
     }
 }

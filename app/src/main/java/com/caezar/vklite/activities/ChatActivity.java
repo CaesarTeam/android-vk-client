@@ -15,7 +15,7 @@ import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.ChatAdapter;
 import com.caezar.vklite.fragments.ImageMessageFullScreenFragment;
 import com.caezar.vklite.libs.Time;
-import com.caezar.vklite.MetaInfo;
+import com.caezar.vklite.Config;
 import com.caezar.vklite.NetworkManager;
 import com.caezar.vklite.models.request.ChatRequest;
 import com.caezar.vklite.models.response.ChatResponse;
@@ -67,7 +67,7 @@ public class ChatActivity extends AppCompatActivity {
         isPrivateDialog = peer_id < Integer.parseInt(getString(R.string.peer_id_constant));
         participantsId = getIntent().getIntArrayExtra(PHOTO_PARTICIPANTS);
 
-        myselfId = MetaInfo.getMyselfId();
+        myselfId = Config.getMyselfId();
 
         TextView textView = findViewById(R.id.messageTitle);
         textView.setText(title);

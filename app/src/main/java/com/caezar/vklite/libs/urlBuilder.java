@@ -1,6 +1,6 @@
 package com.caezar.vklite.libs;
 
-import com.caezar.vklite.MetaInfo;
+import com.caezar.vklite.Config;
 import com.caezar.vklite.models.request.ChatRequest;
 import com.caezar.vklite.models.request.DialogsRequest;
 import com.caezar.vklite.models.request.SendMessageRequest;
@@ -36,7 +36,7 @@ public class urlBuilder {
 
     private static String constructGetUrl(Method method, String query) {
         String baseUrl = constructUrl(method);
-        return baseUrl + "?" + query + "&access_token=" + MetaInfo.getToken() + "&v=" + version;
+        return baseUrl + "?" + query + "&access_token=" + Config.getToken() + "&v=" + version;
     }
 
     private static String constructUrl(Method method) {

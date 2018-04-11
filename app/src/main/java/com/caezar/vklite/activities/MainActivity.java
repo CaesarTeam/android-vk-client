@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.caezar.vklite.R;
-import com.caezar.vklite.MetaInfo;
+import com.caezar.vklite.Config;
 import com.caezar.vklite.NetworkManager;
 import com.caezar.vklite.models.response.UsersByIdResponse;
 import com.caezar.vklite.libs.urlBuilder;
@@ -61,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initMetaInfo(String token, int myselfId) {
-        MetaInfo.setToken(token);
-        MetaInfo.setMyselfId(myselfId);
+        Config.setToken(token);
+        Config.setMyselfId(myselfId);
     }
 
     @Override

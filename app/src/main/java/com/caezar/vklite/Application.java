@@ -27,7 +27,7 @@ public class Application extends android.app.Application {
                 editor.putString(TOKEN, newToken.accessToken);
                 editor.apply();
 
-                MetaInfo.setToken(newToken.accessToken);
+                Config.setToken(newToken.accessToken);
             }
         }
     };

@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.caezar.vklite.R;
 import com.caezar.vklite.activities.ChatActivity;
 import com.caezar.vklite.libs.Time;
-import com.caezar.vklite.MetaInfo;
+import com.caezar.vklite.Config;
 import com.caezar.vklite.models.DialogMessage;
 import com.caezar.vklite.models.Photo;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -44,7 +44,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public ChatAdapter(Context context, boolean isPrivateDialog) {
         items = new ArrayList<>();
         photoUsers = new HashMap<>();
-        myselfId = MetaInfo.getMyselfId();
+        myselfId = Config.getMyselfId();
         this.isPrivateDialog = isPrivateDialog;
         this.context = context;
     }
