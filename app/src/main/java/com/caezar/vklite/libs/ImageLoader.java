@@ -8,6 +8,7 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by seva on 10.04.18 in 16:38.
  */
+
 public class ImageLoader {
     public static void asyncImageLoad(final String imageUrl, ImageView view) {
         Picasso.get()

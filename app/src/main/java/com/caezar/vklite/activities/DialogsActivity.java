@@ -2,6 +2,7 @@ package com.caezar.vklite.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,8 @@ import android.text.TextUtils;
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.DialogsAdapter;
 import com.caezar.vklite.NetworkManager;
+import com.caezar.vklite.fragments.ErrorInternetFragment;
+import com.caezar.vklite.fragments.ImageMessageFullScreenFragment;
 import com.caezar.vklite.models.request.DialogsRequest;
 import com.caezar.vklite.models.response.DialogsResponse;
 import com.caezar.vklite.models.request.UsersByIdRequest;
@@ -22,6 +25,7 @@ import java.util.List;
 
 import com.caezar.vklite.models.response.DialogsResponse.Response.DialogItem;
 
+import static com.caezar.vklite.ErrorHandler.createErrorInternetFragment;
 import static com.caezar.vklite.ErrorHandler.makeToastError;
 import static com.caezar.vklite.libs.ParseResponse.parseBody;
 
@@ -98,12 +102,11 @@ public class DialogsActivity extends AppCompatActivity {
 
         @Override
         public void onError(String body) {
-
+            createErrorInternetFragment(R.id.dialogsContainer, getSupportFragmentManager());
         }
 
         @Override
         public void onErrorCode(int code) {
-
         }
 
         @Override

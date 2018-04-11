@@ -18,6 +18,7 @@ import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
 
+import static com.caezar.vklite.ErrorHandler.createErrorInternetFragment;
 import static com.caezar.vklite.ErrorHandler.makeToastError;
 import static com.caezar.vklite.libs.ParseResponse.parseBody;
 
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onError(String body) {
-
+            createErrorInternetFragment(R.id.mainContainer, getSupportFragmentManager());
         }
 
         @Override

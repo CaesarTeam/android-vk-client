@@ -3,6 +3,7 @@
     <integer name="com_vk_sdk_AppId">6424252</integer>
     <string name="peer_id_constant">2000000000</string>
     <string name="message_form_placeholder">Enter message</string>
+    <string name="error_internet_connection">Check you internet connection</string>
 
     <string name = "error_API_Vk_1">An unknown error occurred</string>
     <string name = "error_API_Vk_2">Application is disabled</string>
