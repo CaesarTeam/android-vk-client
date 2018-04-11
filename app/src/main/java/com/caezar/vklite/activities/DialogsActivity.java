@@ -97,6 +97,16 @@ public class DialogsActivity extends AppCompatActivity {
         }
 
         @Override
+        public void onError(String body) {
+
+        }
+
+        @Override
+        public void onErrorCode(int code) {
+
+        }
+
+        @Override
         public void onResponse(final String body) {
             if (!dialogsComplete) {
                 buildDialogsList(body);

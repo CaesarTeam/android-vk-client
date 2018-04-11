@@ -93,6 +93,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
+        public void onError(String body) {
+
+        }
+
+        @Override
+        public void onErrorCode(int code) {
+
+        }
+
+        @Override
         public void onResponse(final String body) {
             int myselfId = getMyselfId(body);
             if (myselfId == WRONG_ID) {

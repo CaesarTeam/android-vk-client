@@ -196,6 +196,16 @@ public class ChatActivity extends AppCompatActivity {
             });
         }
 
+        @Override
+        public void onError(String body) {
+
+        }
+
+        @Override
+        public void onErrorCode(int code) {
+
+        }
+
         private List<DialogMessage> buildMessageList(String body) {
             ChatResponse chatResponse = parseBody(ChatResponse.class, body);
 
@@ -218,6 +228,16 @@ public class ChatActivity extends AppCompatActivity {
                 makeToastError(body, ChatActivity.this);
             }
         }
+
+        @Override
+        public void onError(String body) {
+
+        }
+
+        @Override
+        public void onErrorCode(int code) {
+
+        }
     }
 
     private class OnGetUsersInfoComplete implements NetworkManager.OnRequestCompleteListener {
@@ -235,6 +255,16 @@ public class ChatActivity extends AppCompatActivity {
                     adapter.setUsersAvatar(photoUsers);
                 }
             });
+
+        }
+
+        @Override
+        public void onError(String body) {
+
+        }
+
+        @Override
+        public void onErrorCode(int code) {
 
         }
 
