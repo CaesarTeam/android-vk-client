@@ -5,6 +5,7 @@ package com.caezar.vklite;
  */
 
 public class Config {
+    public static int peerIdConstant = 2000000000;
     private static int myselfId;
     private static String token;
 

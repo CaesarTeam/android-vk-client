@@ -1,10 +1,13 @@
 package com.caezar.vklite;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.caezar.vklite.models.db.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,6 +31,9 @@ public class DbManager {
     private final String DIALOGS_COLUMN_TITLE = "title";
     private final String DIALOGS_COLUMN_MESSAGE = "message";
     private final String DIALOGS_COLUMN_IMAGE_URL = "imageUrl";
+    private final String DIALOGS_COLUMN_PEER_ID = "peerId";
+
+    private final String COLUMN_DATE = "date";
 
     public static DbManager getInstance(Context context) {
         INSTANCE.context = context.getApplicationContext();
@@ -40,11 +46,11 @@ public class DbManager {
 
     private SQLiteDatabase database;
 
-    public void insert(final String title, final String message, final String imageUrl) {
+    public <T extends BaseModel> void insert(final T model) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                insertInternal(title, message, imageUrl);
+                insertInternal(model);
             }
         });
     }
@@ -76,7 +82,13 @@ public class DbManager {
 
             @Override
             public void onCreate(SQLiteDatabase db) {
-                createDatabase(db);
+                db.execSQL("CREATE TABLE " + TABLE_DIALOGS + " ("
+                        + DIALOGS_COLUMN_PEER_ID + " INTEGER PRIMARY KEY NOT NULL,"
+                        + DIALOGS_COLUMN_TITLE + " TEXT NOT NULL, "
+                        + DIALOGS_COLUMN_MESSAGE + " TEXT,"
+                        + DIALOGS_COLUMN_IMAGE_URL + " TEXT,"
+                        + COLUMN_DATE + " INTEGER NOT NULL);"
+                );
             }
 
             @Override
@@ -87,19 +99,37 @@ public class DbManager {
         database = helper.getWritableDatabase();
     }
 
-    private void createDatabase(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TABLE_DIALOGS + " ("
-                + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + DIALOGS_COLUMN_TITLE + " TEXT NOT NULL, "
-                + DIALOGS_COLUMN_MESSAGE + " TEXT NOT NULL,"
-                + DIALOGS_COLUMN_IMAGE_URL + " TEXT NOT NULL);"
-                );
-    }
-
-    private void insertInternal(String title, String message, String imageUrl) {
+    private <T extends BaseModel> void insertInternal(T model) {
         checkInitialized();
 
-        database.execSQL("INSERT INTO " + TABLE_DIALOGS + " (" + DIALOGS_COLUMN_TITLE + "," + DIALOGS_COLUMN_MESSAGE + "," + DIALOGS_COLUMN_IMAGE_URL + ") VALUES (?,?,?)", new Object[]{title, message, imageUrl});
+        switch (model.getType()) {
+            case DIALOG:
+                insertDialog(model);
+                break;
+            case MESSAGE:
+                break;
+        }
+    }
+
+    private <T extends BaseModel> void insertDialog(T model) {
+        DialogModel dialogModel = (DialogModel) model;
+        String title = dialogModel.getTitle();
+        String message = dialogModel.getMessage();
+        String imageUrl = dialogModel.getImageUrl();
+        int date = dialogModel.getDate();
+        int peerId = dialogModel.getPeerId();
+        ContentValues values = new ContentValues();
+        values.put(DIALOGS_COLUMN_PEER_ID, peerId);
+        values.put(DIALOGS_COLUMN_TITLE, title);
+        values.put(DIALOGS_COLUMN_MESSAGE, message);
+        values.put(DIALOGS_COLUMN_IMAGE_URL, imageUrl);
+        values.put(COLUMN_DATE, date);
+
+        long rowId = database.insertWithOnConflict(TABLE_DIALOGS, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        if (rowId == -1) {
+            values.remove(DIALOGS_COLUMN_PEER_ID);
+            database.update(TABLE_DIALOGS, values, DIALOGS_COLUMN_PEER_ID + "=" + peerId, null);
+        }
     }
 
     private void readAllInternal(final ReadAllListener<String> listener) {

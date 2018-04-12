@@ -16,6 +16,7 @@ import com.caezar.vklite.models.network.DialogItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.caezar.vklite.libs.DialogsHelper.getPeerId;
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
 import static com.caezar.vklite.libs.ImageLoader.getUrlForResource;
 
@@ -143,13 +144,12 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             int position = holder.getLayoutPosition();
             if (position != RecyclerView.NO_POSITION) {
                 DialogItem item = items.get(position);
-                final int chatId = item.getMessage().getChat_id();
-                int peer_id = chatId == 0 ?
-                        item.getMessage().getUser_id() :
-                        Integer.parseInt(context.getString(R.string.peer_id_constant)) + chatId;
+                int peer_id = getPeerId(item);
+                String title = item.getMessage().getTitle();
+                int[] chatActive = item.getMessage().getChat_active();
 
                 if (context instanceof DialogsActivity) {
-                    ((DialogsActivity)context).openChatCallback(peer_id, item.getMessage().getTitle(), item.getMessage().getChat_active());
+                    ((DialogsActivity)context).openChatCallback(peer_id, title, chatActive);
                 }
             }
         }

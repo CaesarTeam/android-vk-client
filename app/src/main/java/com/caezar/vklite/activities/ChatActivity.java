@@ -34,7 +34,7 @@ import java.util.Map;
 import static com.caezar.vklite.ErrorHandler.createErrorInternetToast;
 import static com.caezar.vklite.ErrorHandler.makeToastError;
 import static com.caezar.vklite.activities.DialogsActivity.PEER_ID;
-import static com.caezar.vklite.activities.DialogsActivity.PHOTO_PARTICIPANTS;
+import static com.caezar.vklite.activities.DialogsActivity.PARTICIPANTS_ID;
 import static com.caezar.vklite.activities.DialogsActivity.TITLE;
 import static com.caezar.vklite.libs.KeyBoard.hideKeyboard;
 import static com.caezar.vklite.libs.ParseResponse.parseBody;
@@ -61,8 +61,8 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         peer_id = getIntent().getIntExtra(PEER_ID, 0);
-        isPrivateDialog = peer_id < Integer.parseInt(getString(R.string.peer_id_constant));
-        participantsId = getIntent().getIntArrayExtra(PHOTO_PARTICIPANTS);
+        isPrivateDialog = peer_id < Config.peerIdConstant;
+        participantsId = getIntent().getIntArrayExtra(PARTICIPANTS_ID);
         myselfId = Config.getMyselfId();
 
         TextView textView = findViewById(R.id.messageTitle);
