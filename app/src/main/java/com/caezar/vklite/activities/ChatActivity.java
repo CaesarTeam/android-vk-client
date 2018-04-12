@@ -104,16 +104,6 @@ public class ChatActivity extends AppCompatActivity {
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
-
-        final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.chatSwipeContainer);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(false);
-                int offset = adapter.getItemCount();
-                getChat(offset);
-            }
-        });
     }
 
     @Override
