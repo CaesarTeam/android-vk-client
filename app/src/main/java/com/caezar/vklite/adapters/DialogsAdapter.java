@@ -44,9 +44,12 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    public void resetItems() {
-        items = new ArrayList<>();
-        notifyDataSetChanged();
+    public void setItems(List<DialogItem> dialogItems) {
+        if (dialogItems != null) {
+            items = new ArrayList<>();
+            items.addAll(dialogItems);
+            notifyDataSetChanged();
+        }
     }
 
     @NonNull
@@ -82,7 +85,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         if (isTimeToRequestDialogs(position)) {
-            ((DialogsActivity)context).getDialogsCallback();
+            ((DialogsActivity)context).getDialogsCallback(getItemCount());
         }
     }
 

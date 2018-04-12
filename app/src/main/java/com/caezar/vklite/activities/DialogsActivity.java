@@ -48,6 +48,7 @@ public class DialogsActivity extends AppCompatActivity {
 
     private DialogsAdapter adapter;
     private boolean requestDialogsFinish = true;
+    private boolean refresh = false;
 
     DbManager manager;
 
@@ -72,8 +73,8 @@ public class DialogsActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(false);
-                adapter.resetItems();
-                getDialogs();
+                refresh = true;
+                getDialogs(0);
             }
         });
     }
@@ -83,7 +84,7 @@ public class DialogsActivity extends AppCompatActivity {
         super.onStart();
 
         if (adapter.getItems().size() == 0) {
-            getDialogs();
+            getDialogs(0);
         }
     }
 
@@ -113,22 +114,27 @@ public class DialogsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void getDialogsCallback() {
-        getDialogs();
+    public void getDialogsCallback(int offset) {
+        getDialogs(offset);
     }
 
-    private void getDialogs() {
+    private void getDialogs(int offset) {
         if (requestDialogsFinish) {
             requestDialogsFinish = false;
             DialogsRequest dialogsRequest = new DialogsRequest();
-            dialogsRequest.setOffset(adapter.getItemCount());
+            dialogsRequest.setOffset(offset);
             final String url = urlBuilder.constructGetDialogs(dialogsRequest);
             NetworkManager.getInstance().get(url, new OnGetDialogsComplete());
         }
     }
 
     private void setDialogs(List<DialogItem> dialogs) {
-        adapter.addItemsToEnd(dialogs);
+        if (refresh) {
+            adapter.setItems(dialogs);
+            refresh = false;
+        } else {
+            adapter.addItemsToEnd(dialogs);
+        }
         requestDialogsFinish = true;
     }
 
