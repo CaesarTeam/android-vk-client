@@ -139,9 +139,13 @@ public class ChatActivity extends AppCompatActivity {
             // todo: do something with this crazy
             int[] usersId = savedInstanceState.getIntArray(USERS_ID);
             ArrayList<String> avatarUrl = savedInstanceState.getStringArrayList(AVATARS_URL);
-            SparseArray<String> photoUsers = new SparseArray<>(usersId.length);
-            for (int i = 0; i < usersId.length; i++) {
-                photoUsers.append(usersId[i], avatarUrl.get(i));
+            SparseArray<String> photoUsers = new SparseArray<>();
+            if (usersId != null) {
+                for (int i = 0; i < usersId.length; i++) {
+                    if (avatarUrl != null) {
+                        photoUsers.append(usersId[i], avatarUrl.get(i));
+                    }
+                }
             }
             setAvatarsToAdapter(photoUsers);
         }
