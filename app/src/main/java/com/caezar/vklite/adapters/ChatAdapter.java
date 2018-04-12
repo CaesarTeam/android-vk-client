@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,28 +33,6 @@ import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
  */
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<DialogMessage> items;
-    private int myselfId;
-    private boolean isPrivateDialog;
-    private Map<Integer, String> photoUsers;
-    private int prevUserId;
-    private int prevPosition;
-    private Context context;
-
-    // todo: SuppressLint
-    @SuppressLint("UseSparseArrays")
-    public ChatAdapter(Context context, boolean isPrivateDialog) {
-        items = new ArrayList<>();
-        photoUsers = new HashMap<>();
-        myselfId = Config.getMyselfId();
-        this.isPrivateDialog = isPrivateDialog;
-        this.context = context;
-    }
-
-    public void setUsersAvatar(Map<Integer, String> photoUsers) {
-        this.photoUsers = photoUsers;
-    }
-
     static final int MESSAGE_TEXT = R.layout.message_text;
     static final int MESSAGE_IMAGE = R.layout.message_image;
 
@@ -61,6 +40,26 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int LEFT_IMAGE = 2;
     private static final int RIGHT_MESSAGE = 3;
     private static final int RIGHT_IMAGE = 4;
+
+    private Context context;
+    private List<DialogMessage> items;
+    private SparseArray<String> photoUsers;
+    private int myselfId;
+    private boolean isPrivateDialog;
+    private int prevUserId;
+    private int prevPosition;
+
+    public ChatAdapter(Context context, boolean isPrivateDialog) {
+        items = new ArrayList<>();
+        photoUsers = new SparseArray<>();
+        myselfId = Config.getMyselfId();
+        this.isPrivateDialog = isPrivateDialog;
+        this.context = context;
+    }
+
+    public void setUsersAvatar(SparseArray<String> photoUsers) {
+        this.photoUsers = photoUsers;
+    }
 
     public void addItemsToTop(@NonNull List<DialogMessage> itemList) {
         items.addAll(itemList);
@@ -72,6 +71,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         notifyDataSetChanged();
     }
 
+    @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
@@ -112,7 +112,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                     messageTextViewHolder.messageTextContainer.setLayoutParams(params);
                 } else {
-                    if (!isPrivateDialog && photoUsers.containsKey(item.getFrom_id())) {
+                    if (!isPrivateDialog && photoUsers.get(item.getFrom_id()) != null) {
                         asyncImageLoad(photoUsers.get(item.getFrom_id()), messageTextViewHolder.messageAvatar);
                         final int nextPosition = position + 1;
                         boolean nextItemExist = items.size() == nextPosition;
