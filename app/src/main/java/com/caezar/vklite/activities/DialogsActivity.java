@@ -109,7 +109,7 @@ public class DialogsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void requestDialogsCallback() {
+    public void getDialogsCallback() {
         getDialogs();
     }
 

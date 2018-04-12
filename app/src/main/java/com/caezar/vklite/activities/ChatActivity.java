@@ -49,8 +49,6 @@ public class ChatActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ChatAdapter adapter;
     private EditText editText;
-    // todo: local
-    private SwipeRefreshLayout swipeRefreshLayout;
 
     private int peer_id;
     private int myselfId;
@@ -63,14 +61,12 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         peer_id = getIntent().getIntExtra(PEER_ID, 0);
-        String title = getIntent().getStringExtra(TITLE);
         isPrivateDialog = peer_id < Integer.parseInt(getString(R.string.peer_id_constant));
         participantsId = getIntent().getIntArrayExtra(PHOTO_PARTICIPANTS);
-
         myselfId = Config.getMyselfId();
 
         TextView textView = findViewById(R.id.messageTitle);
-        textView.setText(title);
+        textView.setText(getIntent().getStringExtra(TITLE));
 
         editText = findViewById(R.id.messageForm);
 
@@ -82,12 +78,18 @@ public class ChatActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
-
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
 
-        swipeRefreshLayout = findViewById(R.id.chatSwipeContainer);
-        swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
+        final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.chatSwipeContainer);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(false);
+                int offset = adapter.getItemCount();
+                getChat(offset);
+            }
+        });
     }
 
     @Override
@@ -108,7 +110,6 @@ public class ChatActivity extends AppCompatActivity {
     private void getInfoAboutUsers(int[] userIds) {
         final UsersByIdRequest usersByIdRequest = new UsersByIdRequest();
         usersByIdRequest.setUser_ids(userIds);
-
         final String url = urlBuilder.constructGetUsersInfo(usersByIdRequest);
         NetworkManager.getInstance().get(url, new OnGetUsersInfoComplete());
     }
@@ -170,15 +171,6 @@ public class ChatActivity extends AppCompatActivity {
             addMessageToAdapterEnd(message);
             recyclerView.scrollToPosition(0);
             hideKeyboard(editText);
-        }
-    };
-
-    private final SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
-        @Override
-        public void onRefresh() {
-            swipeRefreshLayout.setRefreshing(false);
-            int offset = adapter.getItemCount();
-            getChat(offset);
         }
     };
 

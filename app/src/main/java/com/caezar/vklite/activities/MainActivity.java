@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         final String token = settings.getString(TOKEN, null);
         final int myselfId = settings.getInt(MYSELF_ID, WRONG_ID);
 
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
             initMetaInfo(token, myselfId);
 
-            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+            SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
             SharedPreferences.Editor editor = settings.edit();
             editor.putInt(MYSELF_ID, myselfId);
             editor.putString(TOKEN, token);

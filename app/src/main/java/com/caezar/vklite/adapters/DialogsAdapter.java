@@ -3,7 +3,6 @@ package com.caezar.vklite.adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import com.caezar.vklite.R;
 import com.caezar.vklite.activities.DialogsActivity;
 import com.caezar.vklite.models.DialogItem;
-import com.caezar.vklite.models.DialogMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,19 +73,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         switch (getItemViewType(position)) {
             case ITEM_DIALOGS:
                 DialogViewHolder dialogViewHolder = ((DialogViewHolder) holder);
-
-                String title = item.getMessage().getTitle();
-                String message = item.getMessage().getBody();
-                String imageUrl = item.getMessage().getPhoto_100();
-
-                if (imageUrl != null) {
-                    asyncImageLoad(imageUrl, dialogViewHolder.avatar);
-                } else {
-                    asyncImageLoad(getUrlForResource(R.drawable.default_avatar), dialogViewHolder.avatar);
-                }
-
-                dialogViewHolder.title.setText(title);
-                dialogViewHolder.message.setText(message);
+                dialogViewHolder.bind(item);
                 break;
 
             default:
@@ -95,7 +81,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         if (isTimeToRequestDialogs(position)) {
-            ((DialogsActivity)context).requestDialogsCallback();
+            ((DialogsActivity)context).getDialogsCallback();
         }
     }
 
@@ -130,6 +116,19 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             itemView.setOnClickListener(new onDialogClickListener(this));
         }
+
+        private void bind(DialogItem item) {
+            String imageUrl = item.getMessage().getPhoto_100();
+
+            if (imageUrl != null) {
+                asyncImageLoad(imageUrl, avatar);
+            } else {
+                asyncImageLoad(getUrlForResource(R.drawable.default_avatar), avatar);
+            }
+
+            title.setText(item.getMessage().getTitle());
+            message.setText(item.getMessage().getBody());
+        }
     }
 
     class onDialogClickListener implements View.OnClickListener {
@@ -144,17 +143,12 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             int position = holder.getLayoutPosition();
             if (position != RecyclerView.NO_POSITION) {
                 DialogItem item = items.get(position);
+                final int chatId = item.getMessage().getChat_id();
+                int peer_id = chatId == 0 ?
+                        item.getMessage().getUser_id() :
+                        Integer.parseInt(context.getString(R.string.peer_id_constant)) + chatId;
 
-                int peer_id;
-
-                if (item.getMessage().getChat_id() == 0) {
-                    peer_id = item.getMessage().getUser_id();
-
-                } else {
-                    peer_id = Integer.parseInt(context.getString(R.string.peer_id_constant)) + item.getMessage().getChat_id();
-                }
-
-                if (context instanceof DialogsActivity){
+                if (context instanceof DialogsActivity) {
                     ((DialogsActivity)context).openChatCallback(peer_id, item.getMessage().getTitle(), item.getMessage().getChat_active());
                 }
             }

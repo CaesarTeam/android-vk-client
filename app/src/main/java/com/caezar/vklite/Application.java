@@ -22,7 +22,7 @@ public class Application extends android.app.Application {
             if (newToken == null) {
                 // todo:
             } else {
-                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString(TOKEN, newToken.accessToken);
                 editor.apply();
