@@ -10,7 +10,6 @@
     <dimen name="image_size_in_chat">150dp</dimen>
     <dimen name="land_image_size_in_chat">250dp</dimen>
     <dimen name="margin_top_for_messages_in_chat">20dp</dimen>
-    <dimen name="margin_bottom_for_messages_in_chat">60dp</dimen>
     <dimen name="max_width_for_message_in_chat">200dp</dimen>
     <dimen name="land_max_width_for_message_in_chat">400dp</dimen>
     <dimen name="margin_top_time_image_in_chat">-30dp</dimen>
