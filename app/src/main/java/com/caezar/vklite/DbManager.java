@@ -112,9 +112,12 @@ public class DbManager {
     }
 
     private <T extends BaseModel> void insertDialog(T model) {
+        // todo: to config
+        int limit = 100;
         DialogModel dialogModel = (DialogModel) model;
         String title = dialogModel.getTitle();
         String message = dialogModel.getMessage();
+        message = message.length() > limit ? message.substring(0, limit) : message;
         String imageUrl = dialogModel.getImageUrl();
         int date = dialogModel.getDate();
         int peerId = dialogModel.getPeerId();
