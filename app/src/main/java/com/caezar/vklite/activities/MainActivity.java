@@ -9,7 +9,7 @@ import android.util.Log;
 import com.caezar.vklite.R;
 import com.caezar.vklite.Config;
 import com.caezar.vklite.NetworkManager;
-import com.caezar.vklite.models.response.UsersByIdResponse;
+import com.caezar.vklite.models.network.response.UsersByIdResponse;
 import com.caezar.vklite.libs.urlBuilder;
 
 import com.vk.sdk.VKAccessToken;

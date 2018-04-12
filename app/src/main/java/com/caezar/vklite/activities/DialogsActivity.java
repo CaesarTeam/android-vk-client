@@ -12,10 +12,10 @@ import com.caezar.vklite.DbManager;
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.DialogsAdapter;
 import com.caezar.vklite.NetworkManager;
-import com.caezar.vklite.models.request.DialogsRequest;
-import com.caezar.vklite.models.response.DialogsResponse;
-import com.caezar.vklite.models.request.UsersByIdRequest;
-import com.caezar.vklite.models.response.UsersByIdResponse;
+import com.caezar.vklite.models.network.request.DialogsRequest;
+import com.caezar.vklite.models.network.response.DialogsResponse;
+import com.caezar.vklite.models.network.request.UsersByIdRequest;
+import com.caezar.vklite.models.network.response.UsersByIdResponse;
 import com.caezar.vklite.libs.urlBuilder;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import com.caezar.vklite.models.DialogItem;
+import com.caezar.vklite.models.network.DialogItem;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;

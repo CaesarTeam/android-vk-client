@@ -1,4 +1,4 @@
-package com.caezar.vklite.models;
+package com.caezar.vklite.models.network;
 
 import android.os.Parcel;
 import android.os.Parcelable;

@@ -3,7 +3,7 @@ package com.caezar.vklite;
 import android.app.Activity;
 import android.widget.Toast;
 
-import com.caezar.vklite.models.response.ErrorVkApiResponse;
+import com.caezar.vklite.models.network.response.ErrorVkApiResponse;
 
 import static com.caezar.vklite.libs.ParseResponse.parseBody;
 

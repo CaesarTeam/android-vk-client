@@ -1,4 +1,4 @@
-package com.caezar.vklite.models.response;
+package com.caezar.vklite.models.network.response;
 
 /**
  * Created by seva on 07.04.18 in 0:06.

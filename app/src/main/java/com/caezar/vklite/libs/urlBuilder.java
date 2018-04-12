@@ -1,10 +1,10 @@
 package com.caezar.vklite.libs;
 
 import com.caezar.vklite.Config;
-import com.caezar.vklite.models.request.ChatRequest;
-import com.caezar.vklite.models.request.DialogsRequest;
-import com.caezar.vklite.models.request.SendMessageRequest;
-import com.caezar.vklite.models.request.UsersByIdRequest;
+import com.caezar.vklite.models.network.request.ChatRequest;
+import com.caezar.vklite.models.network.request.DialogsRequest;
+import com.caezar.vklite.models.network.request.SendMessageRequest;
+import com.caezar.vklite.models.network.request.UsersByIdRequest;
 
 /**
  * Created by seva on 25.03.18 in 18:11.

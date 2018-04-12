@@ -16,8 +16,8 @@ import com.caezar.vklite.R;
 import com.caezar.vklite.activities.ChatActivity;
 import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.Config;
-import com.caezar.vklite.models.DialogMessage;
-import com.caezar.vklite.models.Photo;
+import com.caezar.vklite.models.network.DialogMessage;
+import com.caezar.vklite.models.network.Photo;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
