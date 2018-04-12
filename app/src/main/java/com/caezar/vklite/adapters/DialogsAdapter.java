@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.activities.DialogsActivity;
+import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.models.network.DialogItem;
 
 import java.util.ArrayList;
@@ -108,12 +109,14 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ImageView avatar;
         TextView title;
         TextView message;
+        TextView time;
 
         DialogViewHolder(final View itemView) {
             super(itemView);
             avatar = itemView.findViewById(R.id.dialogAvatar);
             title = itemView.findViewById(R.id.dialogTitle);
             message = itemView.findViewById(R.id.dialogMessage);
+            time = itemView.findViewById(R.id.dialogTime);
 
             itemView.setOnClickListener(new onDialogClickListener(this));
         }
@@ -129,6 +132,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             title.setText(item.getMessage().getTitle());
             message.setText(item.getMessage().getBody());
+            time.setText(String.valueOf(Time.getStringTime(item.getMessage().getDate())));
         }
     }
 
