@@ -50,4 +50,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.0' // http://192.168.1.68:8080 to see db
 }

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.caezar.vklite.DbManager;
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.DialogsAdapter;
 import com.caezar.vklite.NetworkManager;
@@ -31,6 +32,7 @@ import com.google.common.primitives.Ints;
 
 import static com.caezar.vklite.ErrorHandler.createErrorInternetToast;
 import static com.caezar.vklite.ErrorHandler.makeToastError;
+import static com.caezar.vklite.libs.Db.insertDialogs;
 import static com.caezar.vklite.libs.ParseResponse.parseBody;
 import static com.caezar.vklite.libs.Predicates.isEmptyTitle;
 import static com.caezar.vklite.libs.Predicates.isPositiveUserId;
@@ -48,10 +50,14 @@ public class DialogsActivity extends AppCompatActivity {
     private DialogsAdapter adapter;
     private boolean requestDialogsFinish = true;
 
+    DbManager manager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialogs);
+
+        manager = DbManager.getInstance(this);
 
         if (savedInstanceState != null) {
             requestDialogsFinish = false;
@@ -128,6 +134,17 @@ public class DialogsActivity extends AppCompatActivity {
         requestDialogsFinish = true;
     }
 
+    private void setDialogsFromListener(final List<DialogItem> dialogs) {
+        insertDialogs(manager, dialogs);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setDialogs(dialogs);
+            }
+        });
+    }
+
     private class OnGetDialogsComplete implements NetworkManager.OnRequestCompleteListener {
 
         public OnGetDialogsComplete() {
@@ -159,12 +176,7 @@ public class DialogsActivity extends AppCompatActivity {
             if (userIds.length > 0) {
                 requestGetUsers(userIds, dialogs);
             } else {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        setDialogs(dialogs);
-                    }
-                });
+                setDialogsFromListener(dialogs);
             }
         }
 
@@ -216,12 +228,7 @@ public class DialogsActivity extends AppCompatActivity {
 
             dialogs = addDataToDialogsList(dialogs, usersByIdResponse);
 
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    setDialogs(dialogs);
-                }
-            });
+            setDialogsFromListener(dialogs);
         }
 
         private List<DialogItem> addDataToDialogsList(List<DialogItem> dialogs, UsersByIdResponse usersByIdResponse) {
