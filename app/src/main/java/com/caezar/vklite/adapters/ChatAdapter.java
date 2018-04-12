@@ -62,21 +62,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int RIGHT_MESSAGE = 3;
     private static final int RIGHT_IMAGE = 4;
 
-    public void addItemsToTop(List<DialogMessage> itemList) {
+    public void addItemsToTop(@NonNull List<DialogMessage> itemList) {
         items.addAll(itemList);
         notifyDataSetChanged();
     }
 
-    public void addItemToEnd(DialogMessage dialogMessage) {
+    public void addItemToEnd(@NonNull DialogMessage dialogMessage) {
         items.add(0, dialogMessage);
         notifyDataSetChanged();
-    }
-
-    public void removeLastItem() {
-        if (items.size() > 0) {
-            items.remove(0);
-            notifyDataSetChanged();
-        }
     }
 
     @Override

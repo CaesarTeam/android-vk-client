@@ -102,11 +102,6 @@ public class ChatActivity extends AppCompatActivity {
         getChat(0);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
     private void getInfoAboutUsers(int[] userIds) {
         final UsersByIdRequest usersByIdRequest = new UsersByIdRequest();
         usersByIdRequest.setUser_ids(userIds);
@@ -122,12 +117,12 @@ public class ChatActivity extends AppCompatActivity {
         NetworkManager.getInstance().get(url, new OnGetMessagesComplete());
     }
 
-    private void sendMessage(String message) {
+    private void sendMessage(final String message) {
         final SendMessageRequest sendMessageRequest = new SendMessageRequest();
         sendMessageRequest.setMessage(message);
         sendMessageRequest.setPeer_id(peer_id);
         final String url = urlBuilder.constructSendMessage(sendMessageRequest);
-        NetworkManager.getInstance().get(url, new OnSendMessageComplete());
+        NetworkManager.getInstance().get(url, new OnSendMessageComplete(message));
     }
 
     private void addMessageToAdapterEnd(final String message) {
@@ -139,13 +134,10 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void addMessagesToAdapterTop(List<DialogMessage> items) {
-        if (items != null) {
-            adapter.addItemsToTop(items);
+        adapter.addItemsToTop(items);
+        if (adapter.getItemCount() == new ChatRequest().getCount()) {
+            recyclerView.scrollToPosition(0);
         }
-    }
-
-    private void removeWrongMessage() {
-        adapter.removeLastItem();
     }
 
     public void createFragmentFullSizeImageMessage(String photoUrl) {
@@ -168,7 +160,6 @@ public class ChatActivity extends AppCompatActivity {
             final String message = editText.getText().toString();
             editText.getText().clear();
             sendMessage(message);
-            addMessageToAdapterEnd(message);
             recyclerView.scrollToPosition(0);
             hideKeyboard(editText);
         }
@@ -178,17 +169,11 @@ public class ChatActivity extends AppCompatActivity {
 
         @Override
         public void onResponse(final String body) {
-            // todo: check that is doing not in main thread
             final List<DialogMessage> messages = buildMessageList(body);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     addMessagesToAdapterTop(messages);
-
-                    int itemCount = adapter.getItemCount();
-                    if (itemCount == new ChatRequest().getCount()) {
-                        recyclerView.scrollToPosition(0);
-                    }
                 }
             });
         }
@@ -216,6 +201,11 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private class OnSendMessageComplete implements NetworkManager.OnRequestCompleteListener {
+        private String message;
+
+        OnSendMessageComplete(final String message) {
+            this.message = message;
+        }
 
         @Override
         public void onResponse(final String body) {
@@ -223,14 +213,15 @@ public class ChatActivity extends AppCompatActivity {
 
             if (sendResponse.getResponse() == 0) {
                 makeToastError(body, ChatActivity.this);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        removeWrongMessage();
-                    }
-                });
+                return;
             }
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    addMessageToAdapterEnd(message);
+                }
+            });
         }
 
         @Override
