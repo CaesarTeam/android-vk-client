@@ -39,7 +39,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int RIGHT_IMAGE = 4;
 
     // todo: to config and new name!
-    private final int minDifferenceToRequest = 10;
+    private final int minDifferenceToRequest = 40;
 
     private Context context;
     private List<DialogMessage> items;
@@ -59,6 +59,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void setUsersAvatar(SparseArray<String> photoUsers) {
         this.photoUsers = photoUsers;
+        notifyDataSetChanged();
     }
 
     public void addItemsToTop(@NonNull List<DialogMessage> itemList) {
@@ -111,7 +112,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         DialogMessage item = items.get(position);
 
         final String time = Time.getTime(item.getDate());
-        final int userId = item.getUser_id();
+        final int userId = item.getFrom_id();
         final boolean side = getItemViewType(position) == RIGHT_MESSAGE || getItemViewType(position) == RIGHT_IMAGE;
         final boolean scrollUp = position > prevPosition;
 
@@ -127,16 +128,17 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
                     messageTextViewHolder.messageTextContainer.setLayoutParams(params);
-                } else {
-                    if (!isPrivateDialog && photoUsers.get(item.getFrom_id()) != null) {
+                } else if (!isPrivateDialog && photoUsers.get(item.getFrom_id()) != null) {
+                    int nextUserId = 0;
+                    if (items.size() > position + 1) {
+                        nextUserId = items.get(position + 1).getFrom_id();
+                    }
+
+                    if (isNonDuplicatesAvatar(items.size(), position, userId, prevUserId, nextUserId, scrollUp)) {
                         asyncImageLoad(photoUsers.get(item.getFrom_id()), messageTextViewHolder.messageAvatar);
-                        final int nextPosition = position + 1;
-                        boolean nextItemExist = items.size() == nextPosition;
-                        if ((userId != prevUserId && !scrollUp) || nextItemExist || (!nextItemExist && items.get(nextPosition).getUser_id() != userId)) {
-                            messageTextViewHolder.messageAvatar.setVisibility(View.VISIBLE);
-                        } else {
-                            messageTextViewHolder.messageAvatar.setVisibility(View.INVISIBLE);
-                        }
+                        messageTextViewHolder.messageAvatar.setVisibility(View.VISIBLE);
+                    } else {
+                        messageTextViewHolder.messageAvatar.setVisibility(View.INVISIBLE);
                     }
                 }
 
@@ -156,7 +158,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
                     messageImageViewHolder.messageTextContainer.setLayoutParams(params);
-                } else {
+                } else if (!isPrivateDialog && photoUsers.get(item.getFrom_id()) != null) {
                     asyncImageLoad(photoUsers.get(item.getFrom_id()), messageImageViewHolder.messageAvatar);
                     messageImageViewHolder.messageAvatar.setVisibility(View.VISIBLE);
                 }
@@ -172,6 +174,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (isTimeToRequestDialogs(position)) {
             ((ChatActivity)context).getMessageCallback(getItemCount());
         }
+    }
+
+    private boolean isNonDuplicatesAvatar(int itemSize, int position, int userId, int prevUserId, int nextUserId, boolean scrollUp) {
+        final boolean isLastItem = (itemSize - 1) == position;
+        final boolean isMessageSameAuthorBelow = userId != prevUserId && !scrollUp;
+        final boolean isMessageSameAuthorUp = nextUserId != userId && scrollUp;
+        return isLastItem || isMessageSameAuthorBelow || isMessageSameAuthorUp;
     }
 
     @Override
