@@ -13,4 +13,8 @@ public class DialogsHelper {
         final int chatId = item.getMessage().getChat_id();
         return  chatId == 0 ? item.getMessage().getUser_id() : peerIdConstant + chatId;
     }
+
+    public static int getChatIdFromPeerId(int peerId) {
+        return peerId - peerIdConstant;
+    }
 }

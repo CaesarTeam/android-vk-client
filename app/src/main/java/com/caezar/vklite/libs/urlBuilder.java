@@ -5,6 +5,7 @@ import com.caezar.vklite.models.network.request.ChatRequest;
 import com.caezar.vklite.models.network.request.DialogsRequest;
 import com.caezar.vklite.models.network.request.SendMessageRequest;
 import com.caezar.vklite.models.network.request.UsersByIdRequest;
+import com.caezar.vklite.models.network.request.UsersChatRequest;
 
 /**
  * Created by seva on 25.03.18 in 18:11.
@@ -24,6 +25,10 @@ public class urlBuilder {
 
     public static String constructGetChat(ChatRequest chatRequest) {
         return constructGetUrl(Method.MESSAGES_GET_HISTORY, chatRequest.toString());
+    }
+
+    public static String constructGetUsersChat(UsersChatRequest usersChatRequest) {
+        return constructGetUrl(Method.MESSAGES_GET_CHAT, usersChatRequest.toString());
     }
 
     public static String constructSendMessage(SendMessageRequest sendMessageRequest) {
@@ -47,6 +52,7 @@ public class urlBuilder {
         MESSAGES_SEND("messages.send"),
         MESSAGES_GET_HISTORY("messages.getHistory"),
         MESSAGES_GET_DIALOGS("messages.getDialogs"),
+        MESSAGES_GET_CHAT("messages.getChat"),
         USERS_GET("users.get");
 
         private String method;

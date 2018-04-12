@@ -146,10 +146,9 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 DialogItem item = items.get(position);
                 int peer_id = getPeerId(item);
                 String title = item.getMessage().getTitle();
-                int[] chatActive = item.getMessage().getChat_active();
 
                 if (context instanceof DialogsActivity) {
-                    ((DialogsActivity)context).openChatCallback(peer_id, title, chatActive);
+                    ((DialogsActivity)context).openChatCallback(peer_id, title);
                 }
             }
         }

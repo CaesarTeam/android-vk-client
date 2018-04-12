@@ -42,7 +42,6 @@ import static com.caezar.vklite.libs.Predicates.isPositiveUserId;
  */
 
 public class DialogsActivity extends AppCompatActivity {
-    public static final String PARTICIPANTS_ID = "participantsId";
     public static final String TITLE = "title";
     public static final String PEER_ID = "peer_id";
     public static final String DIALOGS = "dialogs";
@@ -107,11 +106,10 @@ public class DialogsActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-    public void openChatCallback(int peer_id, String title, int[] chatActive) {
+    public void openChatCallback(int peer_id, String title) {
         Intent intent = new Intent(DialogsActivity.this, ChatActivity.class);
         intent.putExtra(PEER_ID, peer_id);
         intent.putExtra(TITLE, title);
-        intent.putExtra(PARTICIPANTS_ID, chatActive);
         startActivity(intent);
     }
 

@@ -18,6 +18,7 @@ import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.Config;
 import com.caezar.vklite.NetworkManager;
 import com.caezar.vklite.models.network.request.ChatRequest;
+import com.caezar.vklite.models.network.request.UsersChatRequest;
 import com.caezar.vklite.models.network.response.ChatResponse;
 import com.caezar.vklite.models.network.DialogMessage;
 import com.caezar.vklite.models.network.request.SendMessageRequest;
@@ -25,6 +26,7 @@ import com.caezar.vklite.models.network.request.UsersByIdRequest;
 import com.caezar.vklite.models.network.response.SendResponse;
 import com.caezar.vklite.models.network.response.UsersByIdResponse;
 import com.caezar.vklite.libs.urlBuilder;
+import com.caezar.vklite.models.network.response.UsersChatResponse;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -34,8 +36,8 @@ import java.util.Map;
 import static com.caezar.vklite.ErrorHandler.createErrorInternetToast;
 import static com.caezar.vklite.ErrorHandler.makeToastError;
 import static com.caezar.vklite.activities.DialogsActivity.PEER_ID;
-import static com.caezar.vklite.activities.DialogsActivity.PARTICIPANTS_ID;
 import static com.caezar.vklite.activities.DialogsActivity.TITLE;
+import static com.caezar.vklite.libs.DialogsHelper.getChatIdFromPeerId;
 import static com.caezar.vklite.libs.KeyBoard.hideKeyboard;
 import static com.caezar.vklite.libs.ParseResponse.parseBody;
 
@@ -52,7 +54,6 @@ public class ChatActivity extends AppCompatActivity {
 
     private int peer_id;
     private int myselfId;
-    private int[] participantsId;
     private boolean isPrivateDialog;
 
     @Override
@@ -62,7 +63,6 @@ public class ChatActivity extends AppCompatActivity {
 
         peer_id = getIntent().getIntExtra(PEER_ID, 0);
         isPrivateDialog = peer_id < Config.peerIdConstant;
-        participantsId = getIntent().getIntArrayExtra(PARTICIPANTS_ID);
         myselfId = Config.getMyselfId();
 
         TextView textView = findViewById(R.id.messageTitle);
@@ -97,16 +97,23 @@ public class ChatActivity extends AppCompatActivity {
         super.onStart();
 
         if (!isPrivateDialog) {
-            getInfoAboutUsers(participantsId);
+            getParticipantsChat(getChatIdFromPeerId(peer_id));
         }
         getChat(0);
+    }
+
+    private void getParticipantsChat(int chatId) {
+        UsersChatRequest usersChatRequest = new UsersChatRequest();
+        usersChatRequest.setChat_id(chatId);
+        final String url = urlBuilder.constructGetUsersChat(usersChatRequest);
+        NetworkManager.getInstance().get(url, new OnGetUsersIdComplete());
     }
 
     private void getInfoAboutUsers(int[] userIds) {
         final UsersByIdRequest usersByIdRequest = new UsersByIdRequest();
         usersByIdRequest.setUser_ids(userIds);
         final String url = urlBuilder.constructGetUsersInfo(usersByIdRequest);
-        NetworkManager.getInstance().get(url, new OnGetUsersInfoComplete());
+        NetworkManager.getInstance().get(url, new OnGetUsersAvatarsComplete());
     }
 
     private void getChat(int offset) {
@@ -235,9 +242,37 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    private class OnGetUsersInfoComplete implements NetworkManager.OnRequestCompleteListener {
+    private class OnGetUsersIdComplete implements NetworkManager.OnRequestCompleteListener {
 
-        public OnGetUsersInfoComplete() {
+        public OnGetUsersIdComplete() {
+        }
+
+        @Override
+        public void onResponse(final String body) {
+            UsersChatResponse usersChatResponse = parseBody(UsersChatResponse.class, body);
+
+            if (usersChatResponse.getResponse() == null) {
+                makeToastError(body, ChatActivity.this);
+                return;
+            }
+
+            final int[] usersId = usersChatResponse.getResponse().getUsers();
+            getInfoAboutUsers(usersId);
+        }
+
+        @Override
+        public void onError(String body) {
+            createErrorInternetToast(ChatActivity.this);
+        }
+
+        @Override
+        public void onErrorCode(int code) {
+        }
+    }
+
+    private class OnGetUsersAvatarsComplete implements NetworkManager.OnRequestCompleteListener {
+
+        public OnGetUsersAvatarsComplete() {
         }
 
         @Override
