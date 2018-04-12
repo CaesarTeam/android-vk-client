@@ -1,6 +1,5 @@
 package com.caezar.vklite.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.support.annotation.NonNull;
@@ -22,9 +21,7 @@ import com.caezar.vklite.models.network.Photo;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
 
@@ -69,6 +66,22 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void addItemToEnd(@NonNull DialogMessage dialogMessage) {
         items.add(0, dialogMessage);
         notifyDataSetChanged();
+    }
+
+    public List<DialogMessage> getItems() {
+        return items;
+    }
+
+    public SparseArray<String> getPhotoUsers() {
+        return photoUsers;
+    }
+
+    public int getPhotoUsersSize() {
+        if (photoUsers == null) {
+            return 0;
+        }
+
+        return photoUsers.size();
     }
 
     @NonNull

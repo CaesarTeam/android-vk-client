@@ -1,11 +1,14 @@
 package com.caezar.vklite.models.network;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by seva on 25.03.18 in 19:07.
  */
 
 @SuppressWarnings({"unused"})
-public class Message {
+public class Message implements Parcelable {
     private int id;
     private int user_id;
     private int from_id;
@@ -134,6 +137,16 @@ public class Message {
     }
 
     public Message() {
+
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
 
     }
 }

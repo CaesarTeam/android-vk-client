@@ -58,7 +58,7 @@ public class DialogsActivity extends AppCompatActivity {
 
         manager = DbManager.getInstance(this);
 
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null && savedInstanceState.getSerializable(DIALOGS) != null) {
             requestDialogsFinish = false;
         }
 
