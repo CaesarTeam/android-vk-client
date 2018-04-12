@@ -163,6 +163,10 @@ public class ChatActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
+    public void getMessageCallback(int offset) {
+        getChat(offset);
+    }
+
     private void getParticipantsChat(int chatId) {
         if (requestAvatarsFinish) {
             requestAvatarsFinish = false;

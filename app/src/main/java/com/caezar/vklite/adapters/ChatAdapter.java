@@ -38,6 +38,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int RIGHT_MESSAGE = 3;
     private static final int RIGHT_IMAGE = 4;
 
+    // todo: to config and new name!
+    private final int minDifferenceToRequest = 10;
+
     private Context context;
     private List<DialogMessage> items;
     private SparseArray<String> photoUsers;
@@ -165,6 +168,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         prevUserId = userId;
         prevPosition = position;
+
+        if (isTimeToRequestDialogs(position)) {
+            ((ChatActivity)context).getMessageCallback(getItemCount());
+        }
     }
 
     @Override
@@ -185,6 +192,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    private boolean isTimeToRequestDialogs(int position) {
+        return items.size() - position < minDifferenceToRequest;
     }
 
     class MessageTextViewHolder extends RecyclerView.ViewHolder {
