@@ -216,18 +216,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         MessageTextViewHolder(final View itemView) {
             super(itemView);
 
-            if (context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
-                messageTextAvatar = itemView.findViewById(R.id.messageTextAvatar);
-                messageTextContainer = itemView.findViewById(R.id.messageTextContainer);
-                messageText = itemView.findViewById(R.id.messageText);
-                messageTextTime = itemView.findViewById(R.id.messageTextTime);
-            } else {
-                messageTextAvatar = itemView.findViewById(R.id.messageTextAvatarLand);
-                messageTextContainer = itemView.findViewById(R.id.messageTextContainerLand);
-                messageText = itemView.findViewById(R.id.messageTextLand);
-                messageTextTime = itemView.findViewById(R.id.messageTextTimeLand);
-            }
-
+            final boolean isPort = context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE;
+            messageTextAvatar = (RoundedImageView) (isPort ? itemView.findViewById(R.id.messageTextAvatar) : itemView.findViewById(R.id.messageTextAvatarLand));
+            messageTextContainer = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageTextContainer) : itemView.findViewById(R.id.messageTextContainerLand));
+            messageText = (TextView) (isPort ? itemView.findViewById(R.id.messageText) : itemView.findViewById(R.id.messageTextLand));
+            messageTextTime = (TextView) (isPort ? itemView.findViewById(R.id.messageTextTime) : itemView.findViewById(R.id.messageTextTimeLand));
         }
     }
 
@@ -242,18 +235,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         MessageImageViewHolder(final View itemView) {
             super(itemView);
 
-            if (context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
-                messageImageAvatar = itemView.findViewById(R.id.messageImageAvatar);
-                messageImageContainer = itemView.findViewById(R.id.messageImageContainer);
-                messageImage = itemView.findViewById(R.id.messageImage);
-                messageImageTime = itemView.findViewById(R.id.messageImageTime);
-            } else {
-                messageImageAvatar = itemView.findViewById(R.id.messageImageAvatarLand);
-                messageImageContainer = itemView.findViewById(R.id.messageImageContainerLand);
-                messageImage = itemView.findViewById(R.id.messageImageLand);
-                messageImageTime = itemView.findViewById(R.id.messageImageTimeLand);
-            }
-
+            final boolean isPort = context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE;
+            messageImageAvatar = (RoundedImageView) (isPort ? itemView.findViewById(R.id.messageImageAvatar) : itemView.findViewById(R.id.messageImageAvatarLand));
+            messageImageContainer = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageImageContainer) : itemView.findViewById(R.id.messageImageContainerLand));
+            messageImage = (ImageView) (isPort ? itemView.findViewById(R.id.messageImage) : itemView.findViewById(R.id.messageImageLand));
+            messageImageTime = (TextView) (isPort ? itemView.findViewById(R.id.messageImageTime) : itemView.findViewById(R.id.messageImageTimeLand));
 
             messageImage.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -285,17 +271,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         MessageStickerViewHolder(final View itemView) {
             super(itemView);
 
-            if (context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
-                messageStickerAvatar = itemView.findViewById(R.id.messageStickerAvatar);
-                messageStickerContainer = itemView.findViewById(R.id.messageStickerContainer);
-                messageSticker = itemView.findViewById(R.id.messageSticker);
-                messageStickerTime = itemView.findViewById(R.id.messageStickerTime);
-            } else {
-                messageStickerAvatar = itemView.findViewById(R.id.messageStickerAvatarLand);
-                messageStickerContainer = itemView.findViewById(R.id.messageStickerContainerLand);
-                messageSticker = itemView.findViewById(R.id.messageStickerLand);
-                messageStickerTime = itemView.findViewById(R.id.messageStickerTimeLand);
-            }
+            final boolean isPort = context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE;
+            messageStickerAvatar = (RoundedImageView) (isPort ? itemView.findViewById(R.id.messageStickerAvatar) : itemView.findViewById(R.id.messageStickerAvatarLand));
+            messageStickerContainer = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageStickerContainer) : itemView.findViewById(R.id.messageStickerContainerLand));
+            messageSticker = (ImageView) (isPort ? itemView.findViewById(R.id.messageSticker) : itemView.findViewById(R.id.messageStickerLand));
+            messageStickerTime = (TextView) (isPort ? itemView.findViewById(R.id.messageStickerTime) : itemView.findViewById(R.id.messageStickerTimeLand));
         }
     }
 
