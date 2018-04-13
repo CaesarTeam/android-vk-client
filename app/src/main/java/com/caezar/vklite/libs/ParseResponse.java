@@ -1,7 +1,7 @@
 package com.caezar.vklite.libs;
 
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
@@ -13,7 +13,7 @@ public class ParseResponse {
     private static final ObjectMapper INSTANCE = new ObjectMapper();
 
     public static void initInstance() {
-        INSTANCE.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        INSTANCE.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     static public <T> T parseBody(Class<T> clazz, String body) {

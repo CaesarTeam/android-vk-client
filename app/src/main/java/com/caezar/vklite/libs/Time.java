@@ -2,7 +2,6 @@ package com.caezar.vklite.libs;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
 
 import com.caezar.vklite.R;
 
