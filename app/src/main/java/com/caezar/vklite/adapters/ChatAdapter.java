@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
+import static com.caezar.vklite.libs.Time.getDateTime;
 
 /**
  * Created by seva on 03.04.18 in 15:40.
@@ -111,7 +112,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         DialogMessage item = items.get(position);
 
-        final String time = Time.getTime(item.getDate());
+        final String time = getDateTime(item.getDate(), Time.Format.HOURS_MINUTES_SECONDS);
         final int userId = item.getFrom_id();
         final boolean side = getItemViewType(position) == RIGHT_MESSAGE || getItemViewType(position) == RIGHT_IMAGE;
         final boolean scrollUp = position > prevPosition;
