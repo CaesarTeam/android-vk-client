@@ -23,6 +23,8 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.caezar.vklite.libs.ChatHelper.getMessageImageUrl;
+import static com.caezar.vklite.libs.ChatHelper.getMessageStickerUrl;
 import static com.caezar.vklite.libs.ChatHelper.isNonDuplicatesAvatar;
 import static com.caezar.vklite.libs.ChatHelper.setAlignLayoutRight;
 import static com.caezar.vklite.libs.ChatHelper.setAvatar;
@@ -143,7 +145,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case IMAGE_MESSAGE_FAKE:
                 MessageImageViewHolder messageImageViewHolder = ((MessageImageViewHolder) holder);
                 messageImageViewHolder.position = position;
-                asyncImageLoad(item.getAttachments()[0].getPhoto().getPhoto_604(), messageImageViewHolder.messageImage);
+                asyncImageLoad(getMessageImageUrl(item), messageImageViewHolder.messageImage);
                 messageImageViewHolder.messageImageTime.setText(time);
                 messageImageViewHolder.messageImageTime.bringToFront();
                 if (side) {
@@ -156,7 +158,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case STICKER_MESSAGE:
             case STICKER_MESSAGE_FAKE:
                 MessageStickerViewHolder messageStickerViewHolder = ((MessageStickerViewHolder) holder);
-                asyncImageLoad(item.getAttachments()[0].getSticker().getImages()[2].getUrl(), messageStickerViewHolder.messageSticker);
+                asyncImageLoad(getMessageStickerUrl(item), messageStickerViewHolder.messageSticker);
                 messageStickerViewHolder.messageStickerTime.setText(time);
                 messageStickerViewHolder.messageStickerTime.bringToFront();
                 if (side) {

@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.caezar.vklite.models.network.DialogMessage;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
@@ -33,5 +34,13 @@ public class ChatHelper {
         } else {
             avatarView.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public static String getMessageImageUrl(DialogMessage item) {
+        return item.getAttachments()[0].getPhoto().getPhoto_604();
+    }
+
+    public static String getMessageStickerUrl(DialogMessage item) {
+        return item.getAttachments()[0].getSticker().getImages()[2].getUrl();
     }
 }
