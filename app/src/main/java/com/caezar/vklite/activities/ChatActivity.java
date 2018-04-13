@@ -2,10 +2,10 @@ package com.caezar.vklite.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +18,7 @@ import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.Config;
 import com.caezar.vklite.NetworkManager;
 import com.caezar.vklite.models.network.request.ChatRequest;
+import com.caezar.vklite.models.network.request.UsersChatRequest;
 import com.caezar.vklite.models.network.response.ChatResponse;
 import com.caezar.vklite.models.network.DialogMessage;
 import com.caezar.vklite.models.network.request.SendMessageRequest;
@@ -25,17 +26,17 @@ import com.caezar.vklite.models.network.request.UsersByIdRequest;
 import com.caezar.vklite.models.network.response.SendResponse;
 import com.caezar.vklite.models.network.response.UsersByIdResponse;
 import com.caezar.vklite.libs.urlBuilder;
+import com.caezar.vklite.models.network.response.UsersChatResponse;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.caezar.vklite.ErrorHandler.createErrorInternetToast;
 import static com.caezar.vklite.ErrorHandler.makeToastError;
 import static com.caezar.vklite.activities.DialogsActivity.PEER_ID;
-import static com.caezar.vklite.activities.DialogsActivity.PARTICIPANTS_ID;
 import static com.caezar.vklite.activities.DialogsActivity.TITLE;
+import static com.caezar.vklite.libs.DialogsHelper.getChatIdFromPeerId;
 import static com.caezar.vklite.libs.KeyBoard.hideKeyboard;
 import static com.caezar.vklite.libs.ParseResponse.parseBody;
 
@@ -45,6 +46,9 @@ import static com.caezar.vklite.libs.ParseResponse.parseBody;
 
 public class ChatActivity extends AppCompatActivity {
     public static final String PHOTO_URL = "photoUrl";
+    public static final String MESSAGES = "messages";
+    public static final String USERS_ID = "usersId";
+    public static final String AVATARS_URL = "avatarsUrl";
 
     private RecyclerView recyclerView;
     private ChatAdapter adapter;
@@ -52,17 +56,27 @@ public class ChatActivity extends AppCompatActivity {
 
     private int peer_id;
     private int myselfId;
-    private int[] participantsId;
     private boolean isPrivateDialog;
+    private boolean requestChatFinish = true;
+    private boolean requestAvatarsFinish = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getSerializable(MESSAGES) != null) {
+                requestChatFinish = false;
+            }
+
+            if (savedInstanceState.getSerializable(USERS_ID) != null) {
+                requestAvatarsFinish = false;
+            }
+        }
+
         peer_id = getIntent().getIntExtra(PEER_ID, 0);
         isPrivateDialog = peer_id < Config.peerIdConstant;
-        participantsId = getIntent().getIntArrayExtra(PARTICIPANTS_ID);
         myselfId = Config.getMyselfId();
 
         TextView textView = findViewById(R.id.messageTitle);
@@ -71,25 +85,23 @@ public class ChatActivity extends AppCompatActivity {
         editText = findViewById(R.id.messageForm);
 
         Button button = findViewById(R.id.buttonSendMessage);
-        button.setOnClickListener(onClickListener);
+        button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                final String message = editText.getText().toString();
+                editText.getText().clear();
+                sendMessage(message);
+                recyclerView.scrollToPosition(0);
+                hideKeyboard(editText);
+            }
+        });
 
         recyclerView = findViewById(R.id.messagesList);
         adapter = new ChatAdapter(this, isPrivateDialog);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setReverseLayout(true);
-        linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
-
-        final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.chatSwipeContainer);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(false);
-                int offset = adapter.getItemCount();
-                getChat(offset);
-            }
-        });
     }
 
     @Override
@@ -97,37 +109,96 @@ public class ChatActivity extends AppCompatActivity {
         super.onStart();
 
         if (!isPrivateDialog) {
-            getInfoAboutUsers(participantsId);
+            getParticipantsChat(getChatIdFromPeerId(peer_id));
         }
         getChat(0);
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if (savedInstanceState.getSerializable(MESSAGES) != null) {
+            List<DialogMessage> messages = savedInstanceState.getParcelableArrayList(MESSAGES);
+            addMessagesToAdapterTop(messages);
+        }
+
+        if (savedInstanceState.getSerializable(USERS_ID) != null) {
+            // todo: do something with this crazy
+            int[] usersId = savedInstanceState.getIntArray(USERS_ID);
+            ArrayList<String> avatarUrl = savedInstanceState.getStringArrayList(AVATARS_URL);
+            SparseArray<String> photoUsers = new SparseArray<>();
+            if (usersId != null) {
+                for (int i = 0; i < usersId.length; i++) {
+                    if (avatarUrl != null) {
+                        photoUsers.append(usersId[i], avatarUrl.get(i));
+                    }
+                }
+            }
+            setAvatarsToAdapter(photoUsers);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if (adapter.getItemCount() != 0) {
+            outState.putParcelableArrayList(MESSAGES, new ArrayList<>(adapter.getItems()));
+        }
+
+        if (adapter.getPhotoUsersSize() != 0) {
+            SparseArray<String> photoUsers = adapter.getPhotoUsers();
+            int[] usersId = new int[photoUsers.size()];
+            ArrayList<String> avatarUrl = new ArrayList<>();
+            for (int i = 0; i < photoUsers.size(); i++) {
+                final int key = photoUsers.keyAt(i);
+                usersId[i] = (key);
+                avatarUrl.add(photoUsers.get(key));
+            }
+            outState.putIntArray(USERS_ID, usersId);
+            outState.putStringArrayList(AVATARS_URL, avatarUrl);
+        }
+
+        super.onSaveInstanceState(outState);
+    }
+
+    public void getMessageCallback(int offset) {
+        getChat(offset);
+    }
+
+    private void getParticipantsChat(int chatId) {
+        if (requestAvatarsFinish) {
+            requestAvatarsFinish = false;
+            UsersChatRequest usersChatRequest = new UsersChatRequest();
+            usersChatRequest.setChat_id(chatId);
+            final String url = urlBuilder.constructGetUsersChat(usersChatRequest);
+            NetworkManager.getInstance().get(url, new OnGetUsersIdComplete());
+        }
     }
 
     private void getInfoAboutUsers(int[] userIds) {
         final UsersByIdRequest usersByIdRequest = new UsersByIdRequest();
         usersByIdRequest.setUser_ids(userIds);
         final String url = urlBuilder.constructGetUsersInfo(usersByIdRequest);
-        NetworkManager.getInstance().get(url, new OnGetUsersInfoComplete());
+        NetworkManager.getInstance().get(url, new OnGetUsersAvatarsComplete());
     }
 
     private void getChat(int offset) {
-        final ChatRequest chatRequest = new ChatRequest();
-        chatRequest.setOffset(offset);
-        chatRequest.setPeer_id(peer_id);
-        final String url = urlBuilder.constructGetChat(chatRequest);
-        NetworkManager.getInstance().get(url, new OnGetMessagesComplete());
+        if (requestChatFinish) {
+            requestChatFinish = false;
+            final ChatRequest chatRequest = new ChatRequest();
+            chatRequest.setOffset(offset);
+            chatRequest.setPeer_id(peer_id);
+            final String url = urlBuilder.constructGetChat(chatRequest);
+            NetworkManager.getInstance().get(url, new OnGetMessagesComplete());
+        }
     }
 
-    private void sendMessage(String message) {
+    private void sendMessage(final String message) {
         final SendMessageRequest sendMessageRequest = new SendMessageRequest();
         sendMessageRequest.setMessage(message);
         sendMessageRequest.setPeer_id(peer_id);
         final String url = urlBuilder.constructSendMessage(sendMessageRequest);
-        NetworkManager.getInstance().get(url, new OnSendMessageComplete());
+        NetworkManager.getInstance().get(url, new OnSendMessageComplete(message));
     }
 
     private void addMessageToAdapterEnd(final String message) {
@@ -139,13 +210,16 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void addMessagesToAdapterTop(List<DialogMessage> items) {
-        if (items != null) {
-            adapter.addItemsToTop(items);
+        adapter.addItemsToTop(items);
+        if (adapter.getItemCount() == new ChatRequest().getCount()) {
+            recyclerView.scrollToPosition(0);
         }
+        requestChatFinish = true;
     }
 
-    private void removeWrongMessage() {
-        adapter.removeLastItem();
+    private void setAvatarsToAdapter(SparseArray<String> photoUsers) {
+        adapter.setUsersAvatar(photoUsers);
+        requestAvatarsFinish = true;
     }
 
     public void createFragmentFullSizeImageMessage(String photoUrl) {
@@ -162,33 +236,91 @@ public class ChatActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    private final View.OnClickListener onClickListener = new View.OnClickListener(){
-        @Override
-        public void onClick(View v) {
-            final String message = editText.getText().toString();
-            editText.getText().clear();
-            sendMessage(message);
-            addMessageToAdapterEnd(message);
-            recyclerView.scrollToPosition(0);
-            hideKeyboard(editText);
+    private class OnGetUsersIdComplete implements NetworkManager.OnRequestCompleteListener {
+
+        public OnGetUsersIdComplete() {
         }
-    };
+
+        @Override
+        public void onResponse(final String body) {
+            UsersChatResponse usersChatResponse = parseBody(UsersChatResponse.class, body);
+
+            if (usersChatResponse.getResponse() == null) {
+                makeToastError(body, ChatActivity.this);
+                return;
+            }
+
+            final int[] usersId = usersChatResponse.getResponse().getUsers();
+            getInfoAboutUsers(usersId);
+        }
+
+        @Override
+        public void onError(String body) {
+            createErrorInternetToast(ChatActivity.this);
+        }
+
+        @Override
+        public void onErrorCode(int code) {
+        }
+    }
+
+    private class OnGetUsersAvatarsComplete implements NetworkManager.OnRequestCompleteListener {
+
+        public OnGetUsersAvatarsComplete() {
+        }
+
+        @Override
+        public void onResponse(final String body) {
+            UsersByIdResponse usersByIdResponse = parseBody(UsersByIdResponse.class, body);
+
+            if (usersByIdResponse.getResponse() == null) {
+                makeToastError(body, ChatActivity.this);
+                return;
+            }
+
+            final SparseArray<String> photoUsers = new SparseArray<>();
+
+            for (UsersByIdResponse.Response user: usersByIdResponse.getResponse()) {
+                photoUsers.append(user.getId(), user.getPhoto_50());
+            }
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setAvatarsToAdapter(photoUsers);
+                }
+            });
+
+        }
+
+        @Override
+        public void onError(String body) {
+            createErrorInternetToast(ChatActivity.this);
+        }
+
+        @Override
+        public void onErrorCode(int code) {
+
+        }
+    }
 
     private class OnGetMessagesComplete implements NetworkManager.OnRequestCompleteListener {
 
         @Override
         public void onResponse(final String body) {
-            // todo: check that is doing not in main thread
-            final List<DialogMessage> messages = buildMessageList(body);
+            ChatResponse chatResponse = parseBody(ChatResponse.class, body);
+
+            if (chatResponse.getResponse() == null) {
+                makeToastError(body, ChatActivity.this);
+                return;
+            }
+
+            final List<DialogMessage> messages = Arrays.asList(chatResponse.getResponse().getItems());
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     addMessagesToAdapterTop(messages);
-
-                    int itemCount = adapter.getItemCount();
-                    if (itemCount == new ChatRequest().getCount()) {
-                        recyclerView.scrollToPosition(0);
-                    }
                 }
             });
         }
@@ -202,20 +334,14 @@ public class ChatActivity extends AppCompatActivity {
         public void onErrorCode(int code) {
 
         }
-
-        private List<DialogMessage> buildMessageList(String body) {
-            ChatResponse chatResponse = parseBody(ChatResponse.class, body);
-
-            if (chatResponse.getResponse() == null) {
-                makeToastError(body, ChatActivity.this);
-                return null;
-            }
-
-            return Arrays.asList(chatResponse.getResponse().getItems());
-        }
     }
 
     private class OnSendMessageComplete implements NetworkManager.OnRequestCompleteListener {
+        private String message;
+
+        OnSendMessageComplete(final String message) {
+            this.message = message;
+        }
 
         @Override
         public void onResponse(final String body) {
@@ -223,43 +349,15 @@ public class ChatActivity extends AppCompatActivity {
 
             if (sendResponse.getResponse() == 0) {
                 makeToastError(body, ChatActivity.this);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        removeWrongMessage();
-                    }
-                });
+                return;
             }
-        }
-
-        @Override
-        public void onError(String body) {
-            createErrorInternetToast(ChatActivity.this);
-        }
-
-        @Override
-        public void onErrorCode(int code) {
-
-        }
-    }
-
-    private class OnGetUsersInfoComplete implements NetworkManager.OnRequestCompleteListener {
-
-        public OnGetUsersInfoComplete() {
-        }
-
-        @Override
-        public void onResponse(final String body) {
-            final Map<Integer, String> photoUsers = parseResponse(body);
 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    adapter.setUsersAvatar(photoUsers);
+                    addMessageToAdapterEnd(message);
                 }
             });
-
         }
 
         @Override
@@ -270,24 +368,6 @@ public class ChatActivity extends AppCompatActivity {
         @Override
         public void onErrorCode(int code) {
 
-        }
-
-        private Map<Integer, String> parseResponse(final String body) {
-            UsersByIdResponse usersByIdResponse = parseBody(UsersByIdResponse.class, body);
-
-            if (usersByIdResponse.getResponse() == null) {
-                makeToastError(body, ChatActivity.this);
-                return new HashMap<>();
-            }
-
-            //todo: do something with hashMap
-            Map<Integer, String> photoUsers = new HashMap<>();
-
-            for (UsersByIdResponse.Response user: usersByIdResponse.getResponse()) {
-                photoUsers.put(user.getId(), user.getPhoto_50());
-            }
-
-            return photoUsers;
         }
     }
 

@@ -7,7 +7,7 @@ package com.caezar.vklite.models.network.request;
 @SuppressWarnings({"unused"})
 public class ChatRequest {
     private int offset;
-    private int count = 20;
+    private int count = 80;
     private String user_id;
     private int peer_id;
     private int start_message_id;

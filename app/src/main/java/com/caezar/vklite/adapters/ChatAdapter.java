@@ -1,10 +1,10 @@
 package com.caezar.vklite.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +21,7 @@ import com.caezar.vklite.models.network.Photo;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
 
@@ -32,28 +30,6 @@ import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
  */
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<DialogMessage> items;
-    private int myselfId;
-    private boolean isPrivateDialog;
-    private Map<Integer, String> photoUsers;
-    private int prevUserId;
-    private int prevPosition;
-    private Context context;
-
-    // todo: SuppressLint
-    @SuppressLint("UseSparseArrays")
-    public ChatAdapter(Context context, boolean isPrivateDialog) {
-        items = new ArrayList<>();
-        photoUsers = new HashMap<>();
-        myselfId = Config.getMyselfId();
-        this.isPrivateDialog = isPrivateDialog;
-        this.context = context;
-    }
-
-    public void setUsersAvatar(Map<Integer, String> photoUsers) {
-        this.photoUsers = photoUsers;
-    }
-
     static final int MESSAGE_TEXT = R.layout.message_text;
     static final int MESSAGE_IMAGE = R.layout.message_image;
 
@@ -62,23 +38,57 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int RIGHT_MESSAGE = 3;
     private static final int RIGHT_IMAGE = 4;
 
-    public void addItemsToTop(List<DialogMessage> itemList) {
+    // todo: to config and new name!
+    private final int minDifferenceToRequest = 40;
+
+    private Context context;
+    private List<DialogMessage> items;
+    private SparseArray<String> photoUsers;
+    private int myselfId;
+    private boolean isPrivateDialog;
+    private int prevUserId;
+    private int prevPosition;
+
+    public ChatAdapter(Context context, boolean isPrivateDialog) {
+        items = new ArrayList<>();
+        photoUsers = new SparseArray<>();
+        myselfId = Config.getMyselfId();
+        this.isPrivateDialog = isPrivateDialog;
+        this.context = context;
+    }
+
+    public void setUsersAvatar(SparseArray<String> photoUsers) {
+        this.photoUsers = photoUsers;
+        notifyDataSetChanged();
+    }
+
+    public void addItemsToTop(@NonNull List<DialogMessage> itemList) {
         items.addAll(itemList);
         notifyDataSetChanged();
     }
 
-    public void addItemToEnd(DialogMessage dialogMessage) {
+    public void addItemToEnd(@NonNull DialogMessage dialogMessage) {
         items.add(0, dialogMessage);
         notifyDataSetChanged();
     }
 
-    public void removeLastItem() {
-        if (items.size() > 0) {
-            items.remove(0);
-            notifyDataSetChanged();
-        }
+    public List<DialogMessage> getItems() {
+        return items;
     }
 
+    public SparseArray<String> getPhotoUsers() {
+        return photoUsers;
+    }
+
+    public int getPhotoUsersSize() {
+        if (photoUsers == null) {
+            return 0;
+        }
+
+        return photoUsers.size();
+    }
+
+    @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
@@ -102,7 +112,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         DialogMessage item = items.get(position);
 
         final String time = Time.getTime(item.getDate());
-        final int userId = item.getUser_id();
+        final int userId = item.getFrom_id();
         final boolean side = getItemViewType(position) == RIGHT_MESSAGE || getItemViewType(position) == RIGHT_IMAGE;
         final boolean scrollUp = position > prevPosition;
 
@@ -118,16 +128,17 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
                     messageTextViewHolder.messageTextContainer.setLayoutParams(params);
-                } else {
-                    if (!isPrivateDialog && photoUsers.containsKey(item.getFrom_id())) {
+                } else if (!isPrivateDialog && photoUsers.get(item.getFrom_id()) != null) {
+                    int nextUserId = 0;
+                    if (items.size() > position + 1) {
+                        nextUserId = items.get(position + 1).getFrom_id();
+                    }
+
+                    if (isNonDuplicatesAvatar(items.size(), position, userId, prevUserId, nextUserId, scrollUp)) {
                         asyncImageLoad(photoUsers.get(item.getFrom_id()), messageTextViewHolder.messageAvatar);
-                        final int nextPosition = position + 1;
-                        boolean nextItemExist = items.size() == nextPosition;
-                        if ((userId != prevUserId && !scrollUp) || nextItemExist || (!nextItemExist && items.get(nextPosition).getUser_id() != userId)) {
-                            messageTextViewHolder.messageAvatar.setVisibility(View.VISIBLE);
-                        } else {
-                            messageTextViewHolder.messageAvatar.setVisibility(View.INVISIBLE);
-                        }
+                        messageTextViewHolder.messageAvatar.setVisibility(View.VISIBLE);
+                    } else {
+                        messageTextViewHolder.messageAvatar.setVisibility(View.INVISIBLE);
                     }
                 }
 
@@ -147,7 +158,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
                     messageImageViewHolder.messageTextContainer.setLayoutParams(params);
-                } else {
+                } else if (!isPrivateDialog && photoUsers.get(item.getFrom_id()) != null) {
                     asyncImageLoad(photoUsers.get(item.getFrom_id()), messageImageViewHolder.messageAvatar);
                     messageImageViewHolder.messageAvatar.setVisibility(View.VISIBLE);
                 }
@@ -159,6 +170,17 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         prevUserId = userId;
         prevPosition = position;
+
+        if (isTimeToRequestDialogs(position)) {
+            ((ChatActivity)context).getMessageCallback(getItemCount());
+        }
+    }
+
+    private boolean isNonDuplicatesAvatar(int itemSize, int position, int userId, int prevUserId, int nextUserId, boolean scrollUp) {
+        final boolean isLastItem = (itemSize - 1) == position;
+        final boolean isMessageSameAuthorBelow = userId != prevUserId && !scrollUp;
+        final boolean isMessageSameAuthorUp = nextUserId != userId && scrollUp;
+        return isLastItem || isMessageSameAuthorBelow || isMessageSameAuthorUp;
     }
 
     @Override
@@ -179,6 +201,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    private boolean isTimeToRequestDialogs(int position) {
+        return items.size() - position < minDifferenceToRequest;
     }
 
     class MessageTextViewHolder extends RecyclerView.ViewHolder {

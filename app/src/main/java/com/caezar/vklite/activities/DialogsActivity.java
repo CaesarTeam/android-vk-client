@@ -42,13 +42,13 @@ import static com.caezar.vklite.libs.Predicates.isPositiveUserId;
  */
 
 public class DialogsActivity extends AppCompatActivity {
-    public static final String PARTICIPANTS_ID = "participantsId";
     public static final String TITLE = "title";
     public static final String PEER_ID = "peer_id";
     public static final String DIALOGS = "dialogs";
 
     private DialogsAdapter adapter;
     private boolean requestDialogsFinish = true;
+    private boolean refresh = false;
 
     DbManager manager;
 
@@ -59,7 +59,7 @@ public class DialogsActivity extends AppCompatActivity {
 
         manager = DbManager.getInstance(this);
 
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null && savedInstanceState.getSerializable(DIALOGS) != null) {
             requestDialogsFinish = false;
         }
 
@@ -73,8 +73,8 @@ public class DialogsActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(false);
-                adapter.resetItems();
-                getDialogs();
+                refresh = true;
+                getDialogs(0);
             }
         });
     }
@@ -84,7 +84,7 @@ public class DialogsActivity extends AppCompatActivity {
         super.onStart();
 
         if (adapter.getItems().size() == 0) {
-            getDialogs();
+            getDialogs(0);
         }
     }
 
@@ -107,30 +107,34 @@ public class DialogsActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-    public void openChatCallback(int peer_id, String title, int[] chatActive) {
+    public void openChatCallback(int peer_id, String title) {
         Intent intent = new Intent(DialogsActivity.this, ChatActivity.class);
         intent.putExtra(PEER_ID, peer_id);
         intent.putExtra(TITLE, title);
-        intent.putExtra(PARTICIPANTS_ID, chatActive);
         startActivity(intent);
     }
 
-    public void getDialogsCallback() {
-        getDialogs();
+    public void getDialogsCallback(int offset) {
+        getDialogs(offset);
     }
 
-    private void getDialogs() {
+    private void getDialogs(int offset) {
         if (requestDialogsFinish) {
             requestDialogsFinish = false;
             DialogsRequest dialogsRequest = new DialogsRequest();
-            dialogsRequest.setOffset(adapter.getItemCount());
+            dialogsRequest.setOffset(offset);
             final String url = urlBuilder.constructGetDialogs(dialogsRequest);
             NetworkManager.getInstance().get(url, new OnGetDialogsComplete());
         }
     }
 
     private void setDialogs(List<DialogItem> dialogs) {
-        adapter.addItemsToEnd(dialogs);
+        if (refresh) {
+            adapter.setItems(dialogs);
+            refresh = false;
+        } else {
+            adapter.addItemsToEnd(dialogs);
+        }
         requestDialogsFinish = true;
     }
 

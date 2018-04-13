@@ -45,9 +45,12 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    public void resetItems() {
-        items = new ArrayList<>();
-        notifyDataSetChanged();
+    public void setItems(List<DialogItem> dialogItems) {
+        if (dialogItems != null) {
+            items = new ArrayList<>();
+            items.addAll(dialogItems);
+            notifyDataSetChanged();
+        }
     }
 
     @NonNull
@@ -83,7 +86,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         if (isTimeToRequestDialogs(position)) {
-            ((DialogsActivity)context).getDialogsCallback();
+            ((DialogsActivity)context).getDialogsCallback(getItemCount());
         }
     }
 
@@ -150,10 +153,9 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 DialogItem item = items.get(position);
                 int peer_id = getPeerId(item);
                 String title = item.getMessage().getTitle();
-                int[] chatActive = item.getMessage().getChat_active();
 
                 if (context instanceof DialogsActivity) {
-                    ((DialogsActivity)context).openChatCallback(peer_id, title, chatActive);
+                    ((DialogsActivity)context).openChatCallback(peer_id, title);
                 }
             }
         }
