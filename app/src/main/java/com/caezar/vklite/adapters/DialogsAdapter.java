@@ -19,7 +19,7 @@ import java.util.List;
 import static com.caezar.vklite.libs.DialogsHelper.getPeerId;
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
 import static com.caezar.vklite.libs.ImageLoader.getUrlForResource;
-import static com.caezar.vklite.libs.Time.getStringTime;
+import static com.caezar.vklite.libs.Time.getDateTimeForDialog;
 
 /**
  * Created by seva on 01.04.18 in 18:12.
@@ -135,7 +135,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             title.setText(item.getMessage().getTitle());
             message.setText(item.getMessage().getBody());
-            time.setText(getStringTime(item.getMessage().getDate()));
+            time.setText(getDateTimeForDialog(item.getMessage().getDate(), context));
         }
     }
 

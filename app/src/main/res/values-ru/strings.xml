@@ -1,6 +1,7 @@
 <resources>
     <string name="message_form_placeholder">Введите сообщение</string>
     <string name="error_internet_connection">Проверьте ваше подключение к интернету</string>
+    <string name="yesterday">вчера</string>
 
     <string name="error_API_Vk_1">Произошла неизвестная ошибка</string>
     <string name="error_API_Vk_2">Приложение выключено</string>
