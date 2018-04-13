@@ -18,8 +18,8 @@
         android:id="@+id/messageStickerContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_chat"
         android:layout_toEndOf="@id/messageStickerAvatar"
+        android:layout_marginBottom="@dimen/margin_chat"
         android:layout_marginLeft="@dimen/margin_chat"
         android:layout_marginRight="@dimen/margin_chat"
         xmlns:android="http://schemas.android.com/apk/res/android">
@@ -36,6 +36,5 @@
             android:layout_below="@id/messageSticker"
             android:layout_toEndOf="@id/messageSticker"
             android:layout_marginStart="@dimen/margin_left_time_in_chat"/>
-
     </RelativeLayout>
 </RelativeLayout>

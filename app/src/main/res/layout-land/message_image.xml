@@ -7,7 +7,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/messageAvatarLand"
+        android:id="@+id/messageImageAvatarLand"
         android:layout_width="@dimen/image_size_for_avatar_in_chat"
         android:layout_height="@dimen/image_size_for_avatar_in_chat"
         android:visibility="gone"
@@ -15,11 +15,11 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"/>
 
     <RelativeLayout
-        android:id="@+id/messageTextContainerLand"
+        android:id="@+id/messageImageContainerLand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_chat"
-        android:layout_toEndOf="@id/messageAvatarLand"
+        android:layout_toEndOf="@id/messageImageAvatarLand"
         android:layout_marginLeft="@dimen/margin_chat"
         android:layout_marginRight="@dimen/margin_chat"
         xmlns:android="http://schemas.android.com/apk/res/android">
@@ -31,7 +31,7 @@
             android:background="@drawable/chat_image_message_border"/>
 
         <TextView
-            android:id="@+id/messageTextTimeLand"
+            android:id="@+id/messageImageTimeLand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/messageImageLand"

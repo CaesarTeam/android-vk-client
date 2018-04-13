@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.caezar.vklite.libs.ChatHelper.isNonDuplicatesAvatar;
+import static com.caezar.vklite.libs.ChatHelper.setAlignLayoutRight;
+import static com.caezar.vklite.libs.ChatHelper.setAvatar;
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
 import static com.caezar.vklite.libs.Time.getDateTime;
 
@@ -32,16 +34,12 @@ import static com.caezar.vklite.libs.Time.getDateTime;
  */
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    static final int MESSAGE_TEXT = R.layout.message_text;
-    static final int MESSAGE_IMAGE = R.layout.message_image;
-    static final int MESSAGE_STICKER = R.layout.message_sticker;
-
-    private static final int LEFT_MESSAGE = 1;
-    private static final int RIGHT_MESSAGE = 2;
-    private static final int LEFT_IMAGE = 3;
-    private static final int RIGHT_IMAGE = 4;
-    private static final int LEFT_STICKER = 5;
-    private static final int RIGHT_STICKER = 6;
+    private static final int TEXT_MESSAGE = 1;
+    private static final int TEXT_MESSAGE_FAKE = 2;
+    private static final int IMAGE_MESSAGE = 3;
+    private static final int IMAGE_MESSAGE_FAKE = 4;
+    private static final int STICKER_MESSAGE = 5;
+    private static final int STICKER_MESSAGE_FAKE = 6;
 
     // todo: to config and new name!
     private final int minDifferenceToRequest = 40;
@@ -51,7 +49,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private SparseArray<String> photoUsers;
     private int myselfId;
     private boolean isPrivateDialog;
-    private int prevUserId;
+    private int prevUserIdFrom;
     private int prevPosition;
 
     public ChatAdapter(Context context, boolean isPrivateDialog) {
@@ -96,19 +94,18 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
         switch (viewType) {
-            case LEFT_MESSAGE:
-            case RIGHT_MESSAGE:
-                View messageTextView = LayoutInflater.from(context).inflate(MESSAGE_TEXT, parent, false);
+            case TEXT_MESSAGE:
+            case TEXT_MESSAGE_FAKE:
+                View messageTextView = LayoutInflater.from(context).inflate(R.layout.message_text, parent, false);
                 return new MessageTextViewHolder(messageTextView);
-            case LEFT_IMAGE:
-            case RIGHT_IMAGE:
-                View messageImageView = LayoutInflater.from(context).inflate(MESSAGE_IMAGE, parent, false);
+            case IMAGE_MESSAGE:
+            case IMAGE_MESSAGE_FAKE:
+                View messageImageView = LayoutInflater.from(context).inflate(R.layout.message_image, parent, false);
                 return new MessageImageViewHolder(messageImageView);
-            case LEFT_STICKER:
-            case RIGHT_STICKER:
-                View messageStickerView = LayoutInflater.from(context).inflate(MESSAGE_STICKER, parent, false);
+            case STICKER_MESSAGE:
+            case STICKER_MESSAGE_FAKE:
+                View messageStickerView = LayoutInflater.from(context).inflate(R.layout.message_sticker, parent, false);
                 return new MessageStickerViewHolder(messageStickerView);
             default:
                 throw new IllegalArgumentException("invalid view type");
@@ -116,90 +113,64 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         DialogMessage item = items.get(position);
-
+        final int userIdFrom = item.getFrom_id();
+        boolean side = userIdFrom == myselfId;
         final String time = getDateTime(item.getDate(), Time.Format.HOURS_MINUTES_SECONDS);
-        final int userId = item.getFrom_id();
         final boolean scrollUp = position > prevPosition;
-        int nextUserId = 0;
+        int nextUserIdFrom = 0;
         if (items.size() > position + 1) {
-            nextUserId = items.get(position + 1).getFrom_id();
+            nextUserIdFrom = items.get(position + 1).getFrom_id();
         }
-        final boolean isNonDuplicatesAvatar = isNonDuplicatesAvatar(items.size(), position, userId, prevUserId, nextUserId, scrollUp);
+        final boolean isNonDuplicatesAvatar = isNonDuplicatesAvatar(items.size(), position, userIdFrom, prevUserIdFrom, nextUserIdFrom, scrollUp);
+        String avatarUrl = photoUsers.get(userIdFrom);
 
         switch (getItemViewType(position)) {
-            case LEFT_MESSAGE:
-            case RIGHT_MESSAGE:
+            case TEXT_MESSAGE:
+            case TEXT_MESSAGE_FAKE:
                 MessageTextViewHolder messageTextViewHolder = ((MessageTextViewHolder) holder);
-                messageTextViewHolder.message.setText(item.getBody());
+                messageTextViewHolder.messageText.setText(item.getBody());
                 messageTextViewHolder.messageTextTime.setText(time);
-
-                if (getItemViewType(position) == RIGHT_MESSAGE) {
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) messageTextViewHolder.messageTextContainer.getLayoutParams();
-                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    messageTextViewHolder.messageTextContainer.setLayoutParams(params);
-                } else if (!isPrivateDialog && photoUsers.get(item.getFrom_id()) != null) {
-                    if (isNonDuplicatesAvatar) {
-                        asyncImageLoad(photoUsers.get(item.getFrom_id()), messageTextViewHolder.messageAvatar);
-                        messageTextViewHolder.messageAvatar.setVisibility(View.VISIBLE);
-                    } else {
-                        messageTextViewHolder.messageAvatar.setVisibility(View.INVISIBLE);
-                    }
+                if (side) {
+                    setAlignLayoutRight(messageTextViewHolder.messageTextContainer);
+                } else if (!isPrivateDialog && avatarUrl != null) {
+                    setAvatar(isNonDuplicatesAvatar, messageTextViewHolder.messageTextAvatar, avatarUrl);
                 }
 
                 break;
-            case LEFT_IMAGE:
-            case RIGHT_IMAGE:
+            case IMAGE_MESSAGE:
+            case IMAGE_MESSAGE_FAKE:
                 MessageImageViewHolder messageImageViewHolder = ((MessageImageViewHolder) holder);
                 messageImageViewHolder.position = position;
-
-                asyncImageLoad(item.getAttachments()[0].getPhoto().getPhoto_604(), messageImageViewHolder.imageMessage);
-
-                messageImageViewHolder.messageTextTime.setText(time);
-                messageImageViewHolder.messageTextTime.bringToFront();
-
-                if (getItemViewType(position) == RIGHT_IMAGE) {
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) messageImageViewHolder.messageTextContainer.getLayoutParams();
-                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    messageImageViewHolder.messageTextContainer.setLayoutParams(params);
-                } else if (!isPrivateDialog && photoUsers.get(item.getFrom_id()) != null) {
-                    if (isNonDuplicatesAvatar) {
-                        asyncImageLoad(photoUsers.get(item.getFrom_id()), messageImageViewHolder.messageAvatar);
-                        messageImageViewHolder.messageAvatar.setVisibility(View.VISIBLE);
-                    } else {
-                        messageImageViewHolder.messageAvatar.setVisibility(View.INVISIBLE);
-                    }
+                asyncImageLoad(item.getAttachments()[0].getPhoto().getPhoto_604(), messageImageViewHolder.messageImage);
+                messageImageViewHolder.messageImageTime.setText(time);
+                messageImageViewHolder.messageImageTime.bringToFront();
+                if (side) {
+                    setAlignLayoutRight(messageImageViewHolder.messageImageContainer);
+                } else if (!isPrivateDialog && avatarUrl != null) {
+                    setAvatar(isNonDuplicatesAvatar, messageImageViewHolder.messageImageAvatar, avatarUrl);
                 }
 
                 break;
-            case LEFT_STICKER:
-            case RIGHT_STICKER:
+            case STICKER_MESSAGE:
+            case STICKER_MESSAGE_FAKE:
                 MessageStickerViewHolder messageStickerViewHolder = ((MessageStickerViewHolder) holder);
-
-                asyncImageLoad(item.getAttachments()[0].getSticker().getImages()[2].getUrl(), messageStickerViewHolder.imageSticker);
-
+                asyncImageLoad(item.getAttachments()[0].getSticker().getImages()[2].getUrl(), messageStickerViewHolder.messageSticker);
                 messageStickerViewHolder.messageStickerTime.setText(time);
                 messageStickerViewHolder.messageStickerTime.bringToFront();
-
-                if (getItemViewType(position) == RIGHT_STICKER) {
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) messageStickerViewHolder.messageStickerContainer.getLayoutParams();
-                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    messageStickerViewHolder.messageStickerContainer.setLayoutParams(params);
-                } else if (!isPrivateDialog && photoUsers.get(item.getFrom_id()) != null) {
-                    if (isNonDuplicatesAvatar) {
-                        asyncImageLoad(photoUsers.get(item.getFrom_id()), messageStickerViewHolder.messageStickerAvatar);
-                        messageStickerViewHolder.messageStickerAvatar.setVisibility(View.VISIBLE);
-                    } else {
-                        messageStickerViewHolder.messageStickerAvatar.setVisibility(View.INVISIBLE);
-                    }
+                if (side) {
+                    setAlignLayoutRight(messageStickerViewHolder.messageStickerContainer);
+                } else if (!isPrivateDialog && avatarUrl != null) {
+                    setAvatar(isNonDuplicatesAvatar, messageStickerViewHolder.messageStickerAvatar, avatarUrl);
                 }
+
                 break;
             default:
                 throw new IllegalArgumentException("invalid view type");
         }
 
-        prevUserId = userId;
+        prevUserIdFrom = userIdFrom;
         prevPosition = position;
 
         if (isTimeToRequestDialogs(position)) {
@@ -215,15 +186,15 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (item.getAttachments() != null) {
             // todo: switch
             if (item.getAttachments()[0].getType().equals("photo")) {
-                return side ? RIGHT_IMAGE : LEFT_IMAGE;
+                return side ? IMAGE_MESSAGE : IMAGE_MESSAGE_FAKE;
             }
 
             if (item.getAttachments()[0].getType().equals("sticker")) {
-                return side ? RIGHT_STICKER : LEFT_STICKER;
+                return side ? STICKER_MESSAGE : STICKER_MESSAGE_FAKE;
             }
         }
 
-        return side ? RIGHT_MESSAGE : LEFT_MESSAGE;
+        return side ? TEXT_MESSAGE : TEXT_MESSAGE_FAKE;
     }
 
     @Override
@@ -237,24 +208,24 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     class MessageTextViewHolder extends RecyclerView.ViewHolder {
 
-        TextView message;
-        TextView messageTextTime;
+        RoundedImageView messageTextAvatar;
         RelativeLayout messageTextContainer;
-        RoundedImageView messageAvatar;
+        TextView messageText;
+        TextView messageTextTime;
 
         MessageTextViewHolder(final View itemView) {
             super(itemView);
 
             if (context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
-                message = itemView.findViewById(R.id.messageText);
-                messageTextTime = itemView.findViewById(R.id.messageTextTime);
+                messageTextAvatar = itemView.findViewById(R.id.messageTextAvatar);
                 messageTextContainer = itemView.findViewById(R.id.messageTextContainer);
-                messageAvatar = itemView.findViewById(R.id.messageAvatar);
+                messageText = itemView.findViewById(R.id.messageText);
+                messageTextTime = itemView.findViewById(R.id.messageTextTime);
             } else {
-                message = itemView.findViewById(R.id.messageTextLand);
-                messageTextTime = itemView.findViewById(R.id.messageTextTimeLand);
+                messageTextAvatar = itemView.findViewById(R.id.messageTextAvatarLand);
                 messageTextContainer = itemView.findViewById(R.id.messageTextContainerLand);
-                messageAvatar = itemView.findViewById(R.id.messageAvatarLand);
+                messageText = itemView.findViewById(R.id.messageTextLand);
+                messageTextTime = itemView.findViewById(R.id.messageTextTimeLand);
             }
 
         }
@@ -262,29 +233,29 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     class MessageImageViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageMessage;
-        TextView messageTextTime;
-        RelativeLayout messageTextContainer;
-        RoundedImageView messageAvatar;
+        RoundedImageView messageImageAvatar;
+        RelativeLayout messageImageContainer;
+        ImageView messageImage;
+        TextView messageImageTime;
         int position;
 
         MessageImageViewHolder(final View itemView) {
             super(itemView);
 
             if (context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
-                imageMessage = itemView.findViewById(R.id.messageImage);
-                messageTextTime = itemView.findViewById(R.id.messageTextTime);
-                messageTextContainer = itemView.findViewById(R.id.messageTextContainer);
-                messageAvatar = itemView.findViewById(R.id.messageAvatar);
+                messageImageAvatar = itemView.findViewById(R.id.messageImageAvatar);
+                messageImageContainer = itemView.findViewById(R.id.messageImageContainer);
+                messageImage = itemView.findViewById(R.id.messageImage);
+                messageImageTime = itemView.findViewById(R.id.messageImageTime);
             } else {
-                imageMessage = itemView.findViewById(R.id.messageImageLand);
-                messageTextTime = itemView.findViewById(R.id.messageTextTimeLand);
-                messageTextContainer = itemView.findViewById(R.id.messageTextContainerLand);
-                messageAvatar = itemView.findViewById(R.id.messageAvatarLand);
+                messageImageAvatar = itemView.findViewById(R.id.messageImageAvatarLand);
+                messageImageContainer = itemView.findViewById(R.id.messageImageContainerLand);
+                messageImage = itemView.findViewById(R.id.messageImageLand);
+                messageImageTime = itemView.findViewById(R.id.messageImageTimeLand);
             }
 
 
-            imageMessage.setOnClickListener(new View.OnClickListener() {
+            messageImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Photo photo = items.get(position).getAttachments()[0].getPhoto();
@@ -308,7 +279,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         RoundedImageView messageStickerAvatar;
         RelativeLayout messageStickerContainer;
-        ImageView imageSticker;
+        ImageView messageSticker;
         TextView messageStickerTime;
 
         MessageStickerViewHolder(final View itemView) {
@@ -317,12 +288,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             if (context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
                 messageStickerAvatar = itemView.findViewById(R.id.messageStickerAvatar);
                 messageStickerContainer = itemView.findViewById(R.id.messageStickerContainer);
-                imageSticker = itemView.findViewById(R.id.messageSticker);
+                messageSticker = itemView.findViewById(R.id.messageSticker);
                 messageStickerTime = itemView.findViewById(R.id.messageStickerTime);
             } else {
                 messageStickerAvatar = itemView.findViewById(R.id.messageStickerAvatarLand);
                 messageStickerContainer = itemView.findViewById(R.id.messageStickerContainerLand);
-                imageSticker = itemView.findViewById(R.id.messageStickerLand);
+                messageSticker = itemView.findViewById(R.id.messageStickerLand);
                 messageStickerTime = itemView.findViewById(R.id.messageStickerTimeLand);
             }
         }

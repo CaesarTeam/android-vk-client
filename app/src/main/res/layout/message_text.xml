@@ -7,7 +7,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/messageAvatar"
+        android:id="@+id/messageTextAvatar"
         android:layout_width="@dimen/image_size_for_avatar_in_chat"
         android:layout_height="@dimen/image_size_for_avatar_in_chat"
         android:visibility="gone"
@@ -22,7 +22,7 @@
         android:layout_marginRight="@dimen/margin_chat"
         android:padding="@dimen/padding_chat"
         android:background="@color/colorMessageFromYourSelf"
-        android:layout_toEndOf="@id/messageAvatar"
+        android:layout_toEndOf="@id/messageTextAvatar"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
         <TextView
@@ -39,5 +39,4 @@
             android:layout_below="@id/messageText"
             android:layout_toEndOf="@id/messageText"/>
     </RelativeLayout>
-
 </RelativeLayout>

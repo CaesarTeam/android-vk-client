@@ -7,7 +7,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/messageAvatar"
+        android:id="@+id/messageImageAvatar"
         android:layout_width="@dimen/image_size_for_avatar_in_chat"
         android:layout_height="@dimen/image_size_for_avatar_in_chat"
         android:visibility="gone"
@@ -15,11 +15,11 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"/>
 
     <RelativeLayout
-        android:id="@+id/messageTextContainer"
+        android:id="@+id/messageImageContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/messageImageAvatar"
         android:layout_marginBottom="@dimen/margin_chat"
-        android:layout_toEndOf="@id/messageAvatar"
         android:layout_marginLeft="@dimen/margin_chat"
         android:layout_marginRight="@dimen/margin_chat"
         xmlns:android="http://schemas.android.com/apk/res/android">
@@ -31,14 +31,13 @@
             android:background="@drawable/chat_image_message_border"/>
 
         <TextView
-            android:id="@+id/messageTextTime"
+            android:id="@+id/messageImageTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/messageImage"
             android:layout_toEndOf="@id/messageImage"
             android:layout_marginTop="@dimen/margin_top_time_in_chat"
             android:layout_marginStart="@dimen/margin_left_time_in_chat"
-            android:background="@color/colorMessageImageTime" />
-
+            android:background="@color/colorMessageImageTime"/>
     </RelativeLayout>
 </RelativeLayout>

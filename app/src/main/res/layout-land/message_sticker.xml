@@ -36,6 +36,5 @@
             android:layout_below="@id/messageStickerLand"
             android:layout_toEndOf="@id/messageStickerLand"
             android:layout_marginStart="@dimen/margin_left_time_in_chat"/>
-
     </RelativeLayout>
 </RelativeLayout>
