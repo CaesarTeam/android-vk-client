@@ -16,6 +16,7 @@ import com.caezar.vklite.R;
 import com.caezar.vklite.activities.ChatActivity;
 import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.Config;
+import com.caezar.vklite.models.network.Attachments;
 import com.caezar.vklite.models.network.DialogMessage;
 import com.caezar.vklite.models.network.Photo;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -186,13 +187,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         boolean side = item.getFrom_id() == myselfId;
 
         if (item.getAttachments() != null) {
-            // todo: switch
-            if (item.getAttachments()[0].getType().equals("photo")) {
-                return side ? IMAGE_MESSAGE : IMAGE_MESSAGE_FAKE;
-            }
-
-            if (item.getAttachments()[0].getType().equals("sticker")) {
-                return side ? STICKER_MESSAGE : STICKER_MESSAGE_FAKE;
+            switch (item.getAttachments()[0].getType()) {
+                case PHOTO:
+                    return side ? IMAGE_MESSAGE : IMAGE_MESSAGE_FAKE;
+                case STICKER:
+                    return side ? STICKER_MESSAGE : STICKER_MESSAGE_FAKE;
+                default:
+                    break;
             }
         }
 
