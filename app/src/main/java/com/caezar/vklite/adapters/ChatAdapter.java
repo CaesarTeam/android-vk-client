@@ -23,6 +23,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.caezar.vklite.libs.ChatHelper.isNonDuplicatesAvatar;
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
 import static com.caezar.vklite.libs.Time.getDateTime;
 
@@ -33,11 +34,14 @@ import static com.caezar.vklite.libs.Time.getDateTime;
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     static final int MESSAGE_TEXT = R.layout.message_text;
     static final int MESSAGE_IMAGE = R.layout.message_image;
+    static final int MESSAGE_STICKER = R.layout.message_sticker;
 
     private static final int LEFT_MESSAGE = 1;
-    private static final int LEFT_IMAGE = 2;
-    private static final int RIGHT_MESSAGE = 3;
+    private static final int RIGHT_MESSAGE = 2;
+    private static final int LEFT_IMAGE = 3;
     private static final int RIGHT_IMAGE = 4;
+    private static final int LEFT_STICKER = 5;
+    private static final int RIGHT_STICKER = 6;
 
     // todo: to config and new name!
     private final int minDifferenceToRequest = 40;
@@ -102,7 +106,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case RIGHT_IMAGE:
                 View messageImageView = LayoutInflater.from(context).inflate(MESSAGE_IMAGE, parent, false);
                 return new MessageImageViewHolder(messageImageView);
-
+            case LEFT_STICKER:
+            case RIGHT_STICKER:
+                View messageStickerView = LayoutInflater.from(context).inflate(MESSAGE_STICKER, parent, false);
+                return new MessageStickerViewHolder(messageStickerView);
             default:
                 throw new IllegalArgumentException("invalid view type");
         }
@@ -114,8 +121,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         final String time = getDateTime(item.getDate(), Time.Format.HOURS_MINUTES_SECONDS);
         final int userId = item.getFrom_id();
-        final boolean side = getItemViewType(position) == RIGHT_MESSAGE || getItemViewType(position) == RIGHT_IMAGE;
         final boolean scrollUp = position > prevPosition;
+        int nextUserId = 0;
+        if (items.size() > position + 1) {
+            nextUserId = items.get(position + 1).getFrom_id();
+        }
+        final boolean isNonDuplicatesAvatar = isNonDuplicatesAvatar(items.size(), position, userId, prevUserId, nextUserId, scrollUp);
 
         switch (getItemViewType(position)) {
             case LEFT_MESSAGE:
@@ -124,18 +135,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 messageTextViewHolder.message.setText(item.getBody());
                 messageTextViewHolder.messageTextTime.setText(time);
 
-                if (side) {
+                if (getItemViewType(position) == RIGHT_MESSAGE) {
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) messageTextViewHolder.messageTextContainer.getLayoutParams();
                     params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-
                     messageTextViewHolder.messageTextContainer.setLayoutParams(params);
                 } else if (!isPrivateDialog && photoUsers.get(item.getFrom_id()) != null) {
-                    int nextUserId = 0;
-                    if (items.size() > position + 1) {
-                        nextUserId = items.get(position + 1).getFrom_id();
-                    }
-
-                    if (isNonDuplicatesAvatar(items.size(), position, userId, prevUserId, nextUserId, scrollUp)) {
+                    if (isNonDuplicatesAvatar) {
                         asyncImageLoad(photoUsers.get(item.getFrom_id()), messageTextViewHolder.messageAvatar);
                         messageTextViewHolder.messageAvatar.setVisibility(View.VISIBLE);
                     } else {
@@ -154,16 +159,41 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 messageImageViewHolder.messageTextTime.setText(time);
                 messageImageViewHolder.messageTextTime.bringToFront();
 
-                if (side) {
+                if (getItemViewType(position) == RIGHT_IMAGE) {
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) messageImageViewHolder.messageTextContainer.getLayoutParams();
                     params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-
                     messageImageViewHolder.messageTextContainer.setLayoutParams(params);
                 } else if (!isPrivateDialog && photoUsers.get(item.getFrom_id()) != null) {
-                    asyncImageLoad(photoUsers.get(item.getFrom_id()), messageImageViewHolder.messageAvatar);
-                    messageImageViewHolder.messageAvatar.setVisibility(View.VISIBLE);
+                    if (isNonDuplicatesAvatar) {
+                        asyncImageLoad(photoUsers.get(item.getFrom_id()), messageImageViewHolder.messageAvatar);
+                        messageImageViewHolder.messageAvatar.setVisibility(View.VISIBLE);
+                    } else {
+                        messageImageViewHolder.messageAvatar.setVisibility(View.INVISIBLE);
+                    }
                 }
 
+                break;
+            case LEFT_STICKER:
+            case RIGHT_STICKER:
+                MessageStickerViewHolder messageStickerViewHolder = ((MessageStickerViewHolder) holder);
+
+                asyncImageLoad(item.getAttachments()[0].getSticker().getImages()[2].getUrl(), messageStickerViewHolder.imageSticker);
+
+                messageStickerViewHolder.messageStickerTime.setText(time);
+                messageStickerViewHolder.messageStickerTime.bringToFront();
+
+                if (getItemViewType(position) == RIGHT_STICKER) {
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) messageStickerViewHolder.messageStickerContainer.getLayoutParams();
+                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                    messageStickerViewHolder.messageStickerContainer.setLayoutParams(params);
+                } else if (!isPrivateDialog && photoUsers.get(item.getFrom_id()) != null) {
+                    if (isNonDuplicatesAvatar) {
+                        asyncImageLoad(photoUsers.get(item.getFrom_id()), messageStickerViewHolder.messageStickerAvatar);
+                        messageStickerViewHolder.messageStickerAvatar.setVisibility(View.VISIBLE);
+                    } else {
+                        messageStickerViewHolder.messageStickerAvatar.setVisibility(View.INVISIBLE);
+                    }
+                }
                 break;
             default:
                 throw new IllegalArgumentException("invalid view type");
@@ -177,13 +207,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    private boolean isNonDuplicatesAvatar(int itemSize, int position, int userId, int prevUserId, int nextUserId, boolean scrollUp) {
-        final boolean isLastItem = (itemSize - 1) == position;
-        final boolean isMessageSameAuthorBelow = userId != prevUserId && !scrollUp;
-        final boolean isMessageSameAuthorUp = nextUserId != userId && scrollUp;
-        return isLastItem || isMessageSameAuthorBelow || isMessageSameAuthorUp;
-    }
-
     @Override
     public int getItemViewType(int position) {
         DialogMessage item = items.get(position);
@@ -193,6 +216,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             // todo: switch
             if (item.getAttachments()[0].getType().equals("photo")) {
                 return side ? RIGHT_IMAGE : LEFT_IMAGE;
+            }
+
+            if (item.getAttachments()[0].getType().equals("sticker")) {
+                return side ? RIGHT_STICKER : LEFT_STICKER;
             }
         }
 
@@ -274,6 +301,30 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
                 }
             });
+        }
+    }
+
+    class MessageStickerViewHolder extends RecyclerView.ViewHolder {
+
+        RoundedImageView messageStickerAvatar;
+        RelativeLayout messageStickerContainer;
+        ImageView imageSticker;
+        TextView messageStickerTime;
+
+        MessageStickerViewHolder(final View itemView) {
+            super(itemView);
+
+            if (context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
+                messageStickerAvatar = itemView.findViewById(R.id.messageStickerAvatar);
+                messageStickerContainer = itemView.findViewById(R.id.messageStickerContainer);
+                imageSticker = itemView.findViewById(R.id.messageSticker);
+                messageStickerTime = itemView.findViewById(R.id.messageStickerTime);
+            } else {
+                messageStickerAvatar = itemView.findViewById(R.id.messageStickerAvatarLand);
+                messageStickerContainer = itemView.findViewById(R.id.messageStickerContainerLand);
+                imageSticker = itemView.findViewById(R.id.messageStickerLand);
+                messageStickerTime = itemView.findViewById(R.id.messageStickerTimeLand);
+            }
         }
     }
 

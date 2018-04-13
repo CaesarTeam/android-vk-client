@@ -9,6 +9,7 @@ public class Attachments {
     // todo: enum
     private String type;
     private Photo photo;
+    private Sticker sticker;
 
     public String getType() {
         return type;
@@ -24,6 +25,14 @@ public class Attachments {
 
     public void setPhoto(Photo photo) {
         this.photo = photo;
+    }
+
+    public Sticker getSticker() {
+        return sticker;
+    }
+
+    public void setSticker(Sticker sticker) {
+        this.sticker = sticker;
     }
 
     public Attachments() {
