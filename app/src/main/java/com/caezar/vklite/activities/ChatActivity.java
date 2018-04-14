@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.ChatAdapter;
 import com.caezar.vklite.fragments.ImageMessageFullScreenFragment;
-import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.Config;
 import com.caezar.vklite.NetworkManager;
 import com.caezar.vklite.models.network.request.ChatRequest;
@@ -193,6 +192,14 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    private void getLastMessage() {
+        final ChatRequest chatRequest = new ChatRequest();
+        chatRequest.setCount(1);
+        chatRequest.setPeer_id(peer_id);
+        final String url = urlBuilder.constructGetChat(chatRequest);
+        NetworkManager.getInstance().get(url, new OnGetLastMessageComplete());
+    }
+
     private void sendMessage(final String message) {
         final SendMessageRequest sendMessageRequest = new SendMessageRequest();
         sendMessageRequest.setMessage(message);
@@ -201,11 +208,7 @@ public class ChatActivity extends AppCompatActivity {
         NetworkManager.getInstance().get(url, new OnSendMessageComplete(message));
     }
 
-    private void addMessageToAdapterEnd(final String message) {
-        DialogMessage dialogMessage = new DialogMessage();
-        dialogMessage.setFrom_id(myselfId);
-        dialogMessage.setBody(message);
-        dialogMessage.setDate(Time.currentDate());
+    private void addMessageToAdapterEnd(DialogMessage dialogMessage) {
         adapter.addItemToEnd(dialogMessage);
     }
 
@@ -352,10 +355,37 @@ public class ChatActivity extends AppCompatActivity {
                 return;
             }
 
+            getLastMessage();
+        }
+
+        @Override
+        public void onError(String body) {
+            createErrorInternetToast(ChatActivity.this);
+        }
+
+        @Override
+        public void onErrorCode(int code) {
+
+        }
+    }
+
+    private class OnGetLastMessageComplete implements NetworkManager.OnRequestCompleteListener {
+
+        @Override
+        public void onResponse(final String body) {
+            ChatResponse chatResponse = parseBody(ChatResponse.class, body);
+
+            if (chatResponse.getResponse() == null) {
+                makeToastError(body, ChatActivity.this);
+                return;
+            }
+
+            final List<DialogMessage> messages = Arrays.asList(chatResponse.getResponse().getItems());
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    addMessageToAdapterEnd(message);
+                    addMessageToAdapterEnd(messages.get(0));
                 }
             });
         }
@@ -370,6 +400,5 @@ public class ChatActivity extends AppCompatActivity {
 
         }
     }
-
 }
 
