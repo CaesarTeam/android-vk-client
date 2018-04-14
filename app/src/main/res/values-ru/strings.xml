@@ -25,6 +25,8 @@
     <string name="messageTypeUnpinMessage">Откреплено сообщение"</string>
     <string name="messageTypeInviteUserByLink">Пользователь присоединился к беседе по ссылке</string>
 
+    <string name="messageTypeForwardMessage">Пересланое сообщение</string>
+
     <string name="error_API_Vk_1">Произошла неизвестная ошибка</string>
     <string name="error_API_Vk_2">Приложение выключено</string>
     <string name="error_API_Vk_3">Передан неизвестный метод</string>

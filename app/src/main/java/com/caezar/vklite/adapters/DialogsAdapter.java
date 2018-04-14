@@ -17,6 +17,8 @@ import com.caezar.vklite.models.network.DialogItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.caezar.vklite.libs.DialogsHelper.getActionMessage;
+import static com.caezar.vklite.libs.DialogsHelper.getAttachmentsMessage;
 import static com.caezar.vklite.libs.DialogsHelper.getPeerId;
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
 import static com.caezar.vklite.libs.ImageLoader.getUrlForResource;
@@ -126,7 +128,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         private void bind(DialogItem item) {
-            // todo: remove костыль
+            // todo: remove костыль спросить, думаю проблема та же что в chatAdapter с фейками
             message.setTextColor(ContextCompat.getColor(context, R.color.colorDefaultForTextView));
 
             String imageUrl = item.getMessage().getPhoto_100();
@@ -136,81 +138,23 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             } else {
                 asyncImageLoad(getUrlForResource(R.drawable.default_avatar), avatar);
             }
-
+            
             String messageDialog = item.getMessage().getBody();
-            if (item.getMessage().getAttachments() != null) {
-                switch (item.getMessage().getAttachments()[0].getType()) {
-                    case STICKER:
-                        messageDialog = context.getString(R.string.messageTypeSticker);
-                        break;
-                    case PHOTO:
-                        messageDialog = context.getString(R.string.messageTypePhoto);
-                        break;
-                    case DOC:
-                        messageDialog = context.getString(R.string.messageTypeDoc);
-                        break;
-                    case GIFT:
-                        messageDialog = context.getString(R.string.messageTypeGift);
-                        break;
-                    case LINK:
-                        messageDialog = context.getString(R.string.messageTypeLink);
-                        break;
-                    case WALL:
-                        messageDialog = context.getString(R.string.messageTypeWall);
-                        break;
-                    case WALL_REPLY:
-                        messageDialog = context.getString(R.string.messageTypeWallReply);
-                        break;
-                    case AUDIO:
-                        messageDialog = context.getString(R.string.messageTypeAudio);
-                        break;
-                    case VIDEO:
-                        messageDialog = context.getString(R.string.messageTypeVideo);
-                        break;
-                    case MARKET:
-                        messageDialog = context.getString(R.string.messageTypeMarket);
-                        break;
-                    case MARKET_ALBUM:
-                        messageDialog = context.getString(R.string.messageTypeMarketAlbum);
-                        break;
-                    default:
-                        break;
-                }
+
+            String attachmentTypeMessage = getAttachmentsMessage(item.getMessage(), context);
+            if (attachmentTypeMessage != null) {
+                messageDialog = attachmentTypeMessage;
                 message.setTextColor(ContextCompat.getColor(context, R.color.colorDialogNotMessageText));
             }
 
-            if (item.getMessage().getAction() != null) {
-                switch (item.getMessage().getAction()) {
-                    case CHAT_CREATE:
-                        messageDialog = context.getString(R.string.messageTypeChatCreate);
-                        break;
-                    case CHAT_KICK_USER:
-                        messageDialog = context.getString(R.string.messageTypeKickUser);
-                        break;
-                    case CHAT_INVITE_USER:
-                        messageDialog = context.getString(R.string.messageTypeInviteUser);
-                        break;
-                    case CHAT_PIN_MESSAGE:
-                        messageDialog = context.getString(R.string.messageTypePinMessage);
-                        break;
-                    case CHAT_PHOTO_REMOVE:
-                        messageDialog = context.getString(R.string.messageTypeChatPhotoRemove);
-                        break;
-                    case CHAT_PHOTO_UPDATE:
-                        messageDialog = context.getString(R.string.messageTypeChatPhotoUpdate);
-                        break;
-                    case CHAT_TITLE_UPDATE:
-                        messageDialog = context.getString(R.string.messageTypeTitleUpdate);
-                        break;
-                    case CHAT_UNPIN_MESSAGE:
-                        messageDialog = context.getString(R.string.messageTypeUnpinMessage);
-                        break;
-                    case CHAT_INVITE_USER_BY_LINK:
-                        messageDialog = context.getString(R.string.messageTypeInviteUserByLink);
-                        break;
-                    default:
-                        break;
-                }
+            String actionTypeMessage = getActionMessage(item.getMessage(), context);
+            if (actionTypeMessage != null) {
+                messageDialog = actionTypeMessage;
+                message.setTextColor(ContextCompat.getColor(context, R.color.colorDialogNotMessageText));
+            }
+
+            if (item.getMessage().getFwd_messages() != null) {
+                messageDialog = context.getString(R.string.messageTypeForwardMessage);
                 message.setTextColor(ContextCompat.getColor(context, R.color.colorDialogNotMessageText));
             }
 

@@ -27,6 +27,8 @@
     <string name="messageTypeUnpinMessage">Unpin message"</string>
     <string name="messageTypeInviteUserByLink">Invite user by link</string>
 
+    <string name="messageTypeForwardMessage">Forward message</string>
+
     <string name = "error_API_Vk_1">An unknown error occurred</string>
     <string name = "error_API_Vk_2">Application is disabled</string>
     <string name = "error_API_Vk_3">An unknown method was passed</string>
