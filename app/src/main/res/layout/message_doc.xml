@@ -54,7 +54,7 @@
             android:id="@+id/messageDocTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/messageDocSize"
+            android:layout_below="@id/messageDocName"
             android:layout_toEndOf="@id/messageDocName"/>
     </RelativeLayout>
 </RelativeLayout>
