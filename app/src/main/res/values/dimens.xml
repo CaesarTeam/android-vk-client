@@ -19,6 +19,7 @@
     <dimen name="land_max_width_for_message_in_chat">400dp</dimen>
     <dimen name="margin_top_time_in_chat">-30dp</dimen>
     <dimen name="margin_left_time_in_chat">-60dp</dimen>
+    <dimen name="margin_doc_icon_in_chat">20dp</dimen>
     <dimen name="border_width_image_message_in_chat">1dp</dimen>
     <dimen name="margin_chat">10dp</dimen>
     <dimen name="padding_chat">5dp</dimen>
