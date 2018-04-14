@@ -133,18 +133,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 messageTextViewHolder.messageText.setText(item.getBody());
                 messageTextViewHolder.messageTextTime.setText(time);
 
-                if (side) {
-                    setAlignLayoutRight(messageTextViewHolder.messageTextContainer);
-                    unsetAvatar(messageTextViewHolder.messageTextAvatar);
-
-                } else {
-                    unsetAlignLayoutRight(messageTextViewHolder.messageTextContainer);
-
-                    if (!isPrivateDialog && avatarUrl != null) {
-                        setAvatar(isNonDuplicatesAvatar, messageTextViewHolder.messageTextAvatar, avatarUrl);
-                    }
-                }
-
                 break;
             case IMAGE_MESSAGE:
                 MessageImageViewHolder messageImageViewHolder = ((MessageImageViewHolder) holder);
@@ -152,16 +140,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 asyncImageLoad(getMessageImageUrl(item), messageImageViewHolder.messageImage);
                 messageImageViewHolder.messageImageTime.setText(time);
                 messageImageViewHolder.messageImageTime.bringToFront();
-                if (side) {
-                    setAlignLayoutRight(messageImageViewHolder.messageImageContainer);
-                    unsetAvatar(messageImageViewHolder.messageImageAvatar);
-                } else {
-                    unsetAlignLayoutRight(messageImageViewHolder.messageImageContainer);
-
-                    if (!isPrivateDialog && avatarUrl != null) {
-                        setAvatar(isNonDuplicatesAvatar, messageImageViewHolder.messageImageAvatar, avatarUrl);
-                    }
-                }
 
                 break;
             case STICKER_MESSAGE:
@@ -169,17 +147,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 asyncImageLoad(getMessageStickerUrl(item), messageStickerViewHolder.messageSticker);
                 messageStickerViewHolder.messageStickerTime.setText(time);
                 messageStickerViewHolder.messageStickerTime.bringToFront();
-                if (side) {
-                    setAlignLayoutRight(messageStickerViewHolder.messageStickerContainer);
-                    unsetAvatar(messageStickerViewHolder.messageStickerAvatar);
-
-                } else {
-                    unsetAlignLayoutRight(messageStickerViewHolder.messageStickerContainer);
-
-                    if (!isPrivateDialog && avatarUrl != null) {
-                        setAvatar(isNonDuplicatesAvatar, messageStickerViewHolder.messageStickerAvatar, avatarUrl);
-                    }
-                }
 
                 break;
             case DOC_MESSAGE:
@@ -188,21 +155,23 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 messageDocViewHolder.messageDocSize.setText(getDocSize(item.getAttachments()[0].getDoc().getSize(), context));
                 messageDocViewHolder.messageDocTime.setText(time);
                 messageDocViewHolder.messageDocTime.bringToFront();
-                if (side) {
-                    setAlignLayoutRight(messageDocViewHolder.messageDocContainer);
-                    unsetAvatar(messageDocViewHolder.messageDocAvatar);
-
-                } else {
-                    unsetAlignLayoutRight(messageDocViewHolder.messageDocContainer);
-
-                    if (!isPrivateDialog && avatarUrl != null) {
-                        setAvatar(isNonDuplicatesAvatar, messageDocViewHolder.messageDocAvatar, avatarUrl);
-                    }
-                }
 
                 break;
             default:
                 throw new IllegalArgumentException("invalid view type");
+        }
+
+        ChatViewHolder chatViewHolder = ((ChatViewHolder) holder);
+        if (side) {
+            setAlignLayoutRight(chatViewHolder.container);
+            unsetAvatar(chatViewHolder.avatar);
+
+        } else {
+            unsetAlignLayoutRight(chatViewHolder.container);
+
+            if (!isPrivateDialog && avatarUrl != null) {
+                setAvatar(isNonDuplicatesAvatar, chatViewHolder.avatar, avatarUrl);
+            }
         }
 
         prevUserIdFrom = userIdFrom;
@@ -242,10 +211,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return items.size() - position < minItemsToRequestChat;
     }
 
-    class MessageTextViewHolder extends RecyclerView.ViewHolder {
+    class MessageTextViewHolder  extends ChatViewHolder {
 
-        RoundedImageView messageTextAvatar;
-        RelativeLayout messageTextContainer;
         TextView messageText;
         TextView messageTextTime;
 
@@ -253,17 +220,15 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             super(itemView);
 
             final boolean isPort = context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE;
-            messageTextAvatar = (RoundedImageView) (isPort ? itemView.findViewById(R.id.messageTextAvatar) : itemView.findViewById(R.id.messageTextAvatarLand));
-            messageTextContainer = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageTextContainer) : itemView.findViewById(R.id.messageTextContainerLand));
+            avatar = (RoundedImageView) (isPort ? itemView.findViewById(R.id.messageTextAvatar) : itemView.findViewById(R.id.messageTextAvatarLand));
+            container = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageTextContainer) : itemView.findViewById(R.id.messageTextContainerLand));
             messageText = (TextView) (isPort ? itemView.findViewById(R.id.messageText) : itemView.findViewById(R.id.messageTextLand));
             messageTextTime = (TextView) (isPort ? itemView.findViewById(R.id.messageTextTime) : itemView.findViewById(R.id.messageTextTimeLand));
         }
     }
 
-    class MessageImageViewHolder extends RecyclerView.ViewHolder {
+    class MessageImageViewHolder extends ChatViewHolder {
 
-        RoundedImageView messageImageAvatar;
-        RelativeLayout messageImageContainer;
         ImageView messageImage;
         TextView messageImageTime;
         int position;
@@ -272,8 +237,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             super(itemView);
 
             final boolean isPort = context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE;
-            messageImageAvatar = (RoundedImageView) (isPort ? itemView.findViewById(R.id.messageImageAvatar) : itemView.findViewById(R.id.messageImageAvatarLand));
-            messageImageContainer = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageImageContainer) : itemView.findViewById(R.id.messageImageContainerLand));
+            avatar = (RoundedImageView) (isPort ? itemView.findViewById(R.id.messageImageAvatar) : itemView.findViewById(R.id.messageImageAvatarLand));
+            container = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageImageContainer) : itemView.findViewById(R.id.messageImageContainerLand));
             messageImage = (ImageView) (isPort ? itemView.findViewById(R.id.messageImage) : itemView.findViewById(R.id.messageImageLand));
             messageImageTime = (TextView) (isPort ? itemView.findViewById(R.id.messageImageTime) : itemView.findViewById(R.id.messageImageTimeLand));
 
@@ -297,10 +262,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    class MessageStickerViewHolder extends RecyclerView.ViewHolder {
+    class MessageStickerViewHolder extends ChatViewHolder {
 
-        RoundedImageView messageStickerAvatar;
-        RelativeLayout messageStickerContainer;
         ImageView messageSticker;
         TextView messageStickerTime;
 
@@ -308,17 +271,15 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             super(itemView);
 
             final boolean isPort = context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE;
-            messageStickerAvatar = (RoundedImageView) (isPort ? itemView.findViewById(R.id.messageStickerAvatar) : itemView.findViewById(R.id.messageStickerAvatarLand));
-            messageStickerContainer = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageStickerContainer) : itemView.findViewById(R.id.messageStickerContainerLand));
+            avatar = (RoundedImageView) (isPort ? itemView.findViewById(R.id.messageStickerAvatar) : itemView.findViewById(R.id.messageStickerAvatarLand));
+            container = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageStickerContainer) : itemView.findViewById(R.id.messageStickerContainerLand));
             messageSticker = (ImageView) (isPort ? itemView.findViewById(R.id.messageSticker) : itemView.findViewById(R.id.messageStickerLand));
             messageStickerTime = (TextView) (isPort ? itemView.findViewById(R.id.messageStickerTime) : itemView.findViewById(R.id.messageStickerTimeLand));
         }
     }
 
-    class MessageDocViewHolder extends RecyclerView.ViewHolder {
+    class MessageDocViewHolder extends ChatViewHolder {
 
-        RoundedImageView messageDocAvatar;
-        RelativeLayout messageDocContainer;
         RoundedImageView messageDocDownload;
         TextView messageDocName;
         TextView messageDocSize;
@@ -327,8 +288,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         MessageDocViewHolder(final View itemView) {
             super(itemView);
 
-            messageDocAvatar = itemView.findViewById(R.id.messageDocAvatar);
-            messageDocContainer = itemView.findViewById(R.id.messageDocContainer);
+            avatar = itemView.findViewById(R.id.messageDocAvatar);
+            container = itemView.findViewById(R.id.messageDocContainer);
             messageDocDownload = itemView.findViewById(R.id.messageDocDownload);
             messageDocName = itemView.findViewById(R.id.messageDocName);
             messageDocSize = itemView.findViewById(R.id.messageDocSize);
@@ -336,4 +297,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    class ChatViewHolder extends RecyclerView.ViewHolder {
+        RoundedImageView avatar;
+        RelativeLayout container;
+
+        public ChatViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
 }
