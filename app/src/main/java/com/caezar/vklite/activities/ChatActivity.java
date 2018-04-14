@@ -107,10 +107,13 @@ public class ChatActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        if (!isPrivateDialog) {
+        if (!isPrivateDialog && adapter.getPhotoUsersSize() == 0) {
             getParticipantsChat(getChatIdFromPeerId(peer_id));
         }
-        getChat(0);
+
+        if (adapter.getItemCount() == 0) {
+            getChat(0);
+        }
     }
 
     @Override
