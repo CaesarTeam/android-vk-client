@@ -1,5 +1,8 @@
 package com.caezar.vklite.models.network;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Arrays;
 
 /**
@@ -12,43 +15,42 @@ public class DialogMessage extends Message {
     private int[] chat_active;
     private int users_count;
     private int admin_id;
-
-    // todo: enum
-    private String action;
+    private Action action;
     private int action_mid;
     private String action_email;
     private String action_text;
     private String photo_50;
     private String photo_100;
     private String photo_200;
-
     private PushSettings push_settings;
 
-//                public enum Action {
-//                    CHAT_PHOTO_UPDATE("chat_photo_update"), // обновлена фотография беседы
-//                    CHAT_PHOTO_REMOVE("chat_photo_remove"), // удалена фотография беседы
-//                    CHAT_CREATE("chat_create"), // создана беседа
-//                    CHAT_TITLE_UPDATE("chat_title_update"), // обновлено название беседы
-//                    CHAT_INVITE_USER("chat_invite_user"), // приглашен пользователь
-//                    CHAT_KICK_USER("chat_kick_user"), // исключен пользователь
-//                    CHAT_PIN_MESSAGE("chat_pin_message"), // закреплено сообщение
-//                    CHAT_UNPIN_MESSAGE("chat_unpin_message"),// откреплено сообщение
-//                    CHAT_INVITE_USER_BY_LINK("chat_invite_user_by_link"); // пользователь присоединился к беседе по ссылке
-//
-//                    private String action;
-//
-//                    Action(String action) {
-//                        this.action = action;
-//                    }
-//
-//                    public String getAction() {
-//                        return action;
-//                    }
-//
-//                    public void setAction(String action) {
-//                        this.action = action;
-//                    }
-//                }
+    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
+    public enum Action {
+        @JsonProperty("chat_photo_update")
+        CHAT_PHOTO_UPDATE("chat_photo_update"), // обновлена фотография беседы
+        @JsonProperty("chat_photo_remove")
+        CHAT_PHOTO_REMOVE("chat_photo_remove"), // удалена фотография беседы
+        @JsonProperty("chat_create")
+        CHAT_CREATE("chat_create"), // создана беседа
+        @JsonProperty("chat_title_update")
+        CHAT_TITLE_UPDATE("chat_title_update"), // обновлено название беседы
+        @JsonProperty("chat_invite_user")
+        CHAT_INVITE_USER("chat_invite_user"), // приглашен пользователь
+        @JsonProperty("chat_kick_user")
+        CHAT_KICK_USER("chat_kick_user"), // исключен пользователь
+        @JsonProperty("chat_pin_message")
+        CHAT_PIN_MESSAGE("chat_pin_message"), // закреплено сообщение
+        @JsonProperty("chat_unpin_message")
+        CHAT_UNPIN_MESSAGE("chat_unpin_message"),// откреплено сообщение
+        @JsonProperty("chat_invite_user_by_link")
+        CHAT_INVITE_USER_BY_LINK("chat_invite_user_by_link"); // пользователь присоединился к беседе по ссылке
+
+        private String action;
+
+        Action(String action) {
+            this.action = action;
+        }
+    }
 
     public PushSettings getPush_settings() {
         return push_settings;
@@ -90,11 +92,11 @@ public class DialogMessage extends Message {
         this.admin_id = admin_id;
     }
 
-    public String getAction() {
+    public Action getAction() {
         return action;
     }
 
-    public void setAction(String action) {
+    public void setAction(Action action) {
         this.action = action;
     }
 

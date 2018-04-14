@@ -5,6 +5,28 @@
     <string name="error_internet_connection">Check you internet connection</string>
     <string name="yesterday">yesterday</string>
 
+    <string name="messageTypeSticker">Sticker</string>
+    <string name="messageTypePhoto">Photo</string>
+    <string name="messageTypeVideo">Video</string>
+    <string name="messageTypeDoc">Document</string>
+    <string name="messageTypeAudio">Audio</string>
+    <string name="messageTypeLink">Link</string>
+    <string name="messageTypeMarket">Market</string>
+    <string name="messageTypeMarketAlbum">MarketAlbum</string>
+    <string name="messageTypeWall">Wall</string>
+    <string name="messageTypeWallReply">WallReply</string>
+    <string name="messageTypeGift">Gift</string>
+
+    <string name="messageTypeChatPhotoUpdate">Chat photo update</string>
+    <string name="messageTypeChatPhotoRemove">Chat photo remove</string>
+    <string name="messageTypeChatCreate">Chat create</string>
+    <string name="messageTypeTitleUpdate">Title update</string>
+    <string name="messageTypeInviteUser">Invite user</string>
+    <string name="messageTypeKickUser">Kick user</string>
+    <string name="messageTypePinMessage">Pin message</string>
+    <string name="messageTypeUnpinMessage">Unpin message"</string>
+    <string name="messageTypeInviteUserByLink">Invite user by link</string>
+
     <string name = "error_API_Vk_1">An unknown error occurred</string>
     <string name = "error_API_Vk_2">Application is disabled</string>
     <string name = "error_API_Vk_3">An unknown method was passed</string>

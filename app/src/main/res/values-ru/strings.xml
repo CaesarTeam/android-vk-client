@@ -3,6 +3,28 @@
     <string name="error_internet_connection">Проверьте ваше подключение к интернету</string>
     <string name="yesterday">вчера</string>
 
+    <string name="messageTypeSticker">Стикер</string>
+    <string name="messageTypePhoto">Фотография</string>
+    <string name="messageTypeVideo">Видео</string>
+    <string name="messageTypeDoc">Документ</string>
+    <string name="messageTypeAudio">Аудио</string>
+    <string name="messageTypeLink">Ссылка</string>
+    <string name="messageTypeMarket">Товар</string>
+    <string name="messageTypeMarketAlbum">Подборка товаров</string>
+    <string name="messageTypeWall">Запись на стене</string>
+    <string name="messageTypeWallReply">Комментарий на стене</string>
+    <string name="messageTypeGift">Подарок</string>
+
+    <string name="messageTypeChatPhotoUpdate">Обновлена фотография беседы</string>
+    <string name="messageTypeChatPhotoRemove">Удалена фотография беседы</string>
+    <string name="messageTypeChatCreate">Создана беседа</string>
+    <string name="messageTypeTitleUpdate">Обновлено название беседы</string>
+    <string name="messageTypeInviteUser">Приглашен пользователь</string>
+    <string name="messageTypeKickUser">Исключен пользователь</string>
+    <string name="messageTypePinMessage">Закреплено сообщение</string>
+    <string name="messageTypeUnpinMessage">Откреплено сообщение"</string>
+    <string name="messageTypeInviteUserByLink">Пользователь присоединился к беседе по ссылке</string>
+
     <string name="error_API_Vk_1">Произошла неизвестная ошибка</string>
     <string name="error_API_Vk_2">Приложение выключено</string>
     <string name="error_API_Vk_3">Передан неизвестный метод</string>
