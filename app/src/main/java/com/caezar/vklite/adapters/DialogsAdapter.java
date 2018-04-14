@@ -17,6 +17,7 @@ import com.caezar.vklite.models.network.DialogItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.caezar.vklite.Config.minItemsToRequestDialogs;
 import static com.caezar.vklite.libs.DialogsHelper.getActionMessage;
 import static com.caezar.vklite.libs.DialogsHelper.getAttachmentsMessage;
 import static com.caezar.vklite.libs.DialogsHelper.getPeerId;
@@ -29,12 +30,10 @@ import static com.caezar.vklite.libs.Time.getDateTimeForDialog;
  */
 
 public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final int ITEM_DIALOGS = R.layout.dialog;
+    private final int ITEM_DIALOG = 1;
 
     @NonNull private List<DialogItem> items;
     private Context context;
-    // todo: to config and new name!
-    private final int minDifferenceToRequest = 5;
 
     public DialogsAdapter(Context context) {
         items = new ArrayList<>();
@@ -65,8 +64,8 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         switch (viewType) {
-            case ITEM_DIALOGS:
-                View dialogView = LayoutInflater.from(context).inflate(ITEM_DIALOGS, parent, false);
+            case ITEM_DIALOG:
+                View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog, parent, false);
                 return new DialogViewHolder(dialogView);
 
             default:
@@ -79,7 +78,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         DialogItem item = items.get(position);
 
         switch (getItemViewType(position)) {
-            case ITEM_DIALOGS:
+            case ITEM_DIALOG:
                 DialogViewHolder dialogViewHolder = ((DialogViewHolder) holder);
                 dialogViewHolder.bind(item);
                 break;
@@ -94,12 +93,12 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private boolean isTimeToRequestDialogs(int position) {
-        return items.size() - position < minDifferenceToRequest;
+        return items.size() - position < minItemsToRequestDialogs;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return ITEM_DIALOGS;
+        return ITEM_DIALOG;
     }
 
     @Override
@@ -138,7 +137,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             } else {
                 asyncImageLoad(getUrlForResource(R.drawable.default_avatar), avatar);
             }
-            
+
             String messageDialog = item.getMessage().getBody();
 
             String attachmentTypeMessage = getAttachmentsMessage(item.getMessage(), context);

@@ -24,6 +24,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.caezar.vklite.Config.minItemsToRequestChat;
 import static com.caezar.vklite.libs.ChatHelper.getMessageImageUrl;
 import static com.caezar.vklite.libs.ChatHelper.getMessageStickerUrl;
 import static com.caezar.vklite.libs.ChatHelper.isNonDuplicatesAvatar;
@@ -39,13 +40,12 @@ import static com.caezar.vklite.libs.Time.getDateTime;
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TEXT_MESSAGE = 1;
     private static final int TEXT_MESSAGE_FAKE = 2;
+
     private static final int IMAGE_MESSAGE = 3;
     private static final int IMAGE_MESSAGE_FAKE = 4;
+
     private static final int STICKER_MESSAGE = 5;
     private static final int STICKER_MESSAGE_FAKE = 6;
-
-    // todo: to config and new name!
-    private final int minDifferenceToRequest = 40;
 
     private Context context;
     private List<DialogMessage> items;
@@ -206,7 +206,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private boolean isTimeToRequestDialogs(int position) {
-        return items.size() - position < minDifferenceToRequest;
+        return items.size() - position < minItemsToRequestChat;
     }
 
     class MessageTextViewHolder extends RecyclerView.ViewHolder {

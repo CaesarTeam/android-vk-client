@@ -1,11 +1,16 @@
 package com.caezar.vklite;
 
+import com.caezar.vklite.models.network.request.ChatRequest;
+import com.caezar.vklite.models.network.request.DialogsRequest;
+
 /**
  * Created by seva on 25.03.18 in 22:00.
  */
 
 public class Config {
     public static int peerIdConstant = 2000000000;
+    public static int minItemsToRequestChat = new ChatRequest().getCount() / 2;
+    public static int minItemsToRequestDialogs = new DialogsRequest().getCount() / 10;
     private static int myselfId;
     private static String token;
 
