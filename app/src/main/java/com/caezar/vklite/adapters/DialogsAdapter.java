@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.caezar.vklite.R;
 import com.caezar.vklite.activities.DialogsActivity;
 import com.caezar.vklite.models.network.DialogItem;
+import com.caezar.vklite.models.network.DialogMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,28 +139,32 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 asyncImageLoad(getUrlForResource(R.drawable.default_avatar), avatar);
             }
 
-            String messageDialog = item.getMessage().getBody();
-
-            String attachmentTypeMessage = getAttachmentsMessage(item.getMessage(), context);
-            if (attachmentTypeMessage != null) {
-                messageDialog = attachmentTypeMessage;
+            String body = getBody(item.getMessage());
+            if (!body.equals(item.getMessage().getBody())) {
                 message.setTextColor(ContextCompat.getColor(context, R.color.colorDialogNotMessageText));
             }
-
-            String actionTypeMessage = getActionMessage(item.getMessage(), context);
-            if (actionTypeMessage != null) {
-                messageDialog = actionTypeMessage;
-                message.setTextColor(ContextCompat.getColor(context, R.color.colorDialogNotMessageText));
-            }
-
-            if (item.getMessage().getFwd_messages() != null) {
-                messageDialog = context.getString(R.string.messageTypeForwardMessage);
-                message.setTextColor(ContextCompat.getColor(context, R.color.colorDialogNotMessageText));
-            }
-
-            message.setText(messageDialog);
+            message.setText(body);
             title.setText(item.getMessage().getTitle());
             time.setText(getDateTimeForDialog(item.getMessage().getDate(), context));
+        }
+
+        private String getBody(DialogMessage dialogMessage) {
+
+            String attachmentTypeMessage = getAttachmentsMessage(dialogMessage, context);
+            if (attachmentTypeMessage != null) {
+                return attachmentTypeMessage;
+            }
+
+            String actionTypeMessage = getActionMessage(dialogMessage, context);
+            if (actionTypeMessage != null) {
+                return actionTypeMessage;
+            }
+
+            if (dialogMessage.getFwd_messages() != null) {
+                return context.getString(R.string.messageTypeForwardMessage);
+            }
+
+            return dialogMessage.getBody();
         }
     }
 
