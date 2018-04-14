@@ -36,7 +36,7 @@ public class Application extends android.app.Application {
     public void onCreate() {
         super.onCreate();
 
-        ParseResponse.initInstance();
+        ParseResponse.configureInstance();
         vkAccessTokenTracker.startTracking();
         VKSdk.initialize(this);
     }

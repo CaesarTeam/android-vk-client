@@ -12,7 +12,7 @@ import java.io.IOException;
 public class ParseResponse {
     private static final ObjectMapper INSTANCE = new ObjectMapper();
 
-    public static void initInstance() {
+    public static void configureInstance() {
         INSTANCE.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         INSTANCE.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
     }

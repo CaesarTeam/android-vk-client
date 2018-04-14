@@ -50,7 +50,6 @@ public class Attachments {
 
     }
 
-    // todo: сделать дефолтное значение
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     public enum MessageType {
         @JsonProperty("doc")
