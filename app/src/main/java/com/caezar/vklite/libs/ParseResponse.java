@@ -14,6 +14,7 @@ public class ParseResponse {
 
     public static void initInstance() {
         INSTANCE.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//        INSTANCE.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, false);
     }
 
     static public <T> T parseBody(Class<T> clazz, String body) {

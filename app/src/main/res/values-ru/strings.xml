@@ -2,6 +2,11 @@
     <string name="message_form_placeholder">Введите сообщение</string>
     <string name="error_internet_connection">Проверьте ваше подключение к интернету</string>
     <string name="yesterday">вчера</string>
+    <string name="bytes">Б</string>
+    <string name="kilobytes">Кб</string>
+    <string name="megabytes">Мб</string>
+    <string name="gigabytes">Гб</string>
+    <string name="terabytes">Тб</string>
 
     <string name="messageTypeSticker">Стикер</string>
     <string name="messageTypePhoto">Фотография</string>

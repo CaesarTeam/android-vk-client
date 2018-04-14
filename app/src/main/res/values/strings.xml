@@ -4,6 +4,11 @@
     <string name="message_form_placeholder">Enter message</string>
     <string name="error_internet_connection">Check you internet connection</string>
     <string name="yesterday">yesterday</string>
+    <string name="bytes">B</string>
+    <string name="kilobytes">Kb</string>
+    <string name="megabytes">Mb</string>
+    <string name="gigabytes">Gb</string>
+    <string name="terabytes">Tb</string>
 
     <string name="messageTypeSticker">Sticker</string>
     <string name="messageTypePhoto">Photo</string>

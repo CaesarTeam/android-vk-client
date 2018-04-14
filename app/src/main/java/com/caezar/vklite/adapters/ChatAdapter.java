@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.caezar.vklite.Config.minItemsToRequestChat;
+import static com.caezar.vklite.libs.ChatHelper.getDocSize;
 import static com.caezar.vklite.libs.ChatHelper.getMessageImageUrl;
 import static com.caezar.vklite.libs.ChatHelper.getMessageStickerUrl;
 import static com.caezar.vklite.libs.ChatHelper.isNonDuplicatesAvatar;
@@ -46,6 +47,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int STICKER_MESSAGE = 5;
     private static final int STICKER_MESSAGE_FAKE = 6;
+
+    private static final int DOC_MESSAGE = 7;
+    private static final int DOC_MESSAGE_FAKE = 8;
 
     private Context context;
     private List<DialogMessage> items;
@@ -110,6 +114,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case STICKER_MESSAGE_FAKE:
                 View messageStickerView = LayoutInflater.from(context).inflate(R.layout.message_sticker, parent, false);
                 return new MessageStickerViewHolder(messageStickerView);
+            case DOC_MESSAGE:
+            case DOC_MESSAGE_FAKE:
+                View messageDocView = LayoutInflater.from(context).inflate(R.layout.message_doc, parent, false);
+                return new MessageDocViewHolder(messageDocView);
             default:
                 throw new IllegalArgumentException("invalid view type");
         }
@@ -169,6 +177,20 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
                 break;
+            case DOC_MESSAGE:
+            case DOC_MESSAGE_FAKE:
+                MessageDocViewHolder messageDocViewHolder = ((MessageDocViewHolder) holder);
+                messageDocViewHolder.messageDocName.setText(item.getAttachments()[0].getDoc().getTitle());
+                messageDocViewHolder.messageDocSize.setText(getDocSize(item.getAttachments()[0].getDoc().getSize(), context));
+                messageDocViewHolder.messageDocTime.setText(time);
+                messageDocViewHolder.messageDocTime.bringToFront();
+                if (side) {
+                    setAlignLayoutRight(messageDocViewHolder.messageDocContainer);
+                } else if (!isPrivateDialog && avatarUrl != null) {
+                    setAvatar(isNonDuplicatesAvatar, messageDocViewHolder.messageDocAvatar, avatarUrl);
+                }
+
+                break;
             default:
                 throw new IllegalArgumentException("invalid view type");
         }
@@ -192,6 +214,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     return side ? IMAGE_MESSAGE : IMAGE_MESSAGE_FAKE;
                 case STICKER:
                     return side ? STICKER_MESSAGE : STICKER_MESSAGE_FAKE;
+                case DOC:
+                    return side ? DOC_MESSAGE : DOC_MESSAGE_FAKE;
                 default:
                     break;
             }
@@ -279,6 +303,27 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             messageStickerContainer = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageStickerContainer) : itemView.findViewById(R.id.messageStickerContainerLand));
             messageSticker = (ImageView) (isPort ? itemView.findViewById(R.id.messageSticker) : itemView.findViewById(R.id.messageStickerLand));
             messageStickerTime = (TextView) (isPort ? itemView.findViewById(R.id.messageStickerTime) : itemView.findViewById(R.id.messageStickerTimeLand));
+        }
+    }
+
+    class MessageDocViewHolder extends RecyclerView.ViewHolder {
+
+        RoundedImageView messageDocAvatar;
+        RelativeLayout messageDocContainer;
+        RoundedImageView messageDocDownload;
+        TextView messageDocName;
+        TextView messageDocSize;
+        TextView messageDocTime;
+
+        MessageDocViewHolder(final View itemView) {
+            super(itemView);
+
+            messageDocAvatar = itemView.findViewById(R.id.messageDocAvatar);
+            messageDocContainer = itemView.findViewById(R.id.messageDocContainer);
+            messageDocDownload = itemView.findViewById(R.id.messageDocDownload);
+            messageDocName = itemView.findViewById(R.id.messageDocName);
+            messageDocSize = itemView.findViewById(R.id.messageDocSize);
+            messageDocTime = itemView.findViewById(R.id.messageDocTime);
         }
     }
 

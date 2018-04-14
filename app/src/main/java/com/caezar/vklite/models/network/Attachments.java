@@ -1,9 +1,7 @@
 package com.caezar.vklite.models.network;
 
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 
 /**
  * Created by seva on 11.04.18 in 11:56.
@@ -14,6 +12,7 @@ public class Attachments {
     private MessageType type;
     private Photo photo;
     private Sticker sticker;
+    private Document doc;
 
     public MessageType getType() {
         return type;
@@ -37,6 +36,14 @@ public class Attachments {
 
     public void setSticker(Sticker sticker) {
         this.sticker = sticker;
+    }
+
+    public Document getDoc() {
+        return doc;
+    }
+
+    public void setDoc(Document doc) {
+        this.doc = doc;
     }
 
     public Attachments() {
