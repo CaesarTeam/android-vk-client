@@ -128,9 +128,6 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         private void bind(DialogItem item) {
-            // todo: remove костыль спросить, думаю проблема та же что в chatAdapter с фейками
-            message.setTextColor(ContextCompat.getColor(context, R.color.colorDefaultForTextView));
-
             String imageUrl = item.getMessage().getPhoto_100();
 
             if (imageUrl != null) {
@@ -142,6 +139,8 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             String body = getBody(item.getMessage());
             if (!body.equals(item.getMessage().getBody())) {
                 message.setTextColor(ContextCompat.getColor(context, R.color.colorDialogNotMessageText));
+            } else {
+                message.setTextColor(ContextCompat.getColor(context, R.color.colorDefaultForTextView));
             }
             message.setText(body);
             title.setText(item.getMessage().getTitle());

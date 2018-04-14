@@ -38,6 +38,16 @@ public class ChatHelper {
         }
     }
 
+    public static void unsetAlignLayoutRight(RelativeLayout container) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) container.getLayoutParams();
+        params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        container.setLayoutParams(params);
+    }
+
+    public static void unsetAvatar(RoundedImageView avatarView) {
+        avatarView.setVisibility(View.GONE);
+    }
+
     public static String getMessageImageUrl(DialogMessage item) {
         return item.getAttachments()[0].getPhoto().getPhoto_604();
     }

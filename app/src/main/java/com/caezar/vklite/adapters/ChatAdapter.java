@@ -16,7 +16,6 @@ import com.caezar.vklite.R;
 import com.caezar.vklite.activities.ChatActivity;
 import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.Config;
-import com.caezar.vklite.models.network.Attachments;
 import com.caezar.vklite.models.network.DialogMessage;
 import com.caezar.vklite.models.network.Photo;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -29,8 +28,10 @@ import static com.caezar.vklite.libs.ChatHelper.getDocSize;
 import static com.caezar.vklite.libs.ChatHelper.getMessageImageUrl;
 import static com.caezar.vklite.libs.ChatHelper.getMessageStickerUrl;
 import static com.caezar.vklite.libs.ChatHelper.isNonDuplicatesAvatar;
+import static com.caezar.vklite.libs.ChatHelper.unsetAlignLayoutRight;
 import static com.caezar.vklite.libs.ChatHelper.setAlignLayoutRight;
 import static com.caezar.vklite.libs.ChatHelper.setAvatar;
+import static com.caezar.vklite.libs.ChatHelper.unsetAvatar;
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
 import static com.caezar.vklite.libs.Time.getDateTime;
 
@@ -40,16 +41,9 @@ import static com.caezar.vklite.libs.Time.getDateTime;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TEXT_MESSAGE = 1;
-    private static final int TEXT_MESSAGE_FAKE = 2;
-
-    private static final int IMAGE_MESSAGE = 3;
-    private static final int IMAGE_MESSAGE_FAKE = 4;
-
-    private static final int STICKER_MESSAGE = 5;
-    private static final int STICKER_MESSAGE_FAKE = 6;
-
-    private static final int DOC_MESSAGE = 7;
-    private static final int DOC_MESSAGE_FAKE = 8;
+    private static final int IMAGE_MESSAGE = 2;
+    private static final int STICKER_MESSAGE = 3;
+    private static final int DOC_MESSAGE = 4;
 
     private Context context;
     private List<DialogMessage> items;
@@ -103,19 +97,15 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case TEXT_MESSAGE:
-            case TEXT_MESSAGE_FAKE:
                 View messageTextView = LayoutInflater.from(context).inflate(R.layout.message_text, parent, false);
                 return new MessageTextViewHolder(messageTextView);
             case IMAGE_MESSAGE:
-            case IMAGE_MESSAGE_FAKE:
                 View messageImageView = LayoutInflater.from(context).inflate(R.layout.message_image, parent, false);
                 return new MessageImageViewHolder(messageImageView);
             case STICKER_MESSAGE:
-            case STICKER_MESSAGE_FAKE:
                 View messageStickerView = LayoutInflater.from(context).inflate(R.layout.message_sticker, parent, false);
                 return new MessageStickerViewHolder(messageStickerView);
             case DOC_MESSAGE:
-            case DOC_MESSAGE_FAKE:
                 View messageDocView = LayoutInflater.from(context).inflate(R.layout.message_doc, parent, false);
                 return new MessageDocViewHolder(messageDocView);
             default:
@@ -139,19 +129,24 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         switch (getItemViewType(position)) {
             case TEXT_MESSAGE:
-            case TEXT_MESSAGE_FAKE:
                 MessageTextViewHolder messageTextViewHolder = ((MessageTextViewHolder) holder);
                 messageTextViewHolder.messageText.setText(item.getBody());
                 messageTextViewHolder.messageTextTime.setText(time);
+
                 if (side) {
                     setAlignLayoutRight(messageTextViewHolder.messageTextContainer);
-                } else if (!isPrivateDialog && avatarUrl != null) {
-                    setAvatar(isNonDuplicatesAvatar, messageTextViewHolder.messageTextAvatar, avatarUrl);
+                    unsetAvatar(messageTextViewHolder.messageTextAvatar);
+
+                } else {
+                    unsetAlignLayoutRight(messageTextViewHolder.messageTextContainer);
+
+                    if (!isPrivateDialog && avatarUrl != null) {
+                        setAvatar(isNonDuplicatesAvatar, messageTextViewHolder.messageTextAvatar, avatarUrl);
+                    }
                 }
 
                 break;
             case IMAGE_MESSAGE:
-            case IMAGE_MESSAGE_FAKE:
                 MessageImageViewHolder messageImageViewHolder = ((MessageImageViewHolder) holder);
                 messageImageViewHolder.position = position;
                 asyncImageLoad(getMessageImageUrl(item), messageImageViewHolder.messageImage);
@@ -159,26 +154,35 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 messageImageViewHolder.messageImageTime.bringToFront();
                 if (side) {
                     setAlignLayoutRight(messageImageViewHolder.messageImageContainer);
-                } else if (!isPrivateDialog && avatarUrl != null) {
-                    setAvatar(isNonDuplicatesAvatar, messageImageViewHolder.messageImageAvatar, avatarUrl);
+                    unsetAvatar(messageImageViewHolder.messageImageAvatar);
+                } else {
+                    unsetAlignLayoutRight(messageImageViewHolder.messageImageContainer);
+
+                    if (!isPrivateDialog && avatarUrl != null) {
+                        setAvatar(isNonDuplicatesAvatar, messageImageViewHolder.messageImageAvatar, avatarUrl);
+                    }
                 }
 
                 break;
             case STICKER_MESSAGE:
-            case STICKER_MESSAGE_FAKE:
                 MessageStickerViewHolder messageStickerViewHolder = ((MessageStickerViewHolder) holder);
                 asyncImageLoad(getMessageStickerUrl(item), messageStickerViewHolder.messageSticker);
                 messageStickerViewHolder.messageStickerTime.setText(time);
                 messageStickerViewHolder.messageStickerTime.bringToFront();
                 if (side) {
                     setAlignLayoutRight(messageStickerViewHolder.messageStickerContainer);
-                } else if (!isPrivateDialog && avatarUrl != null) {
-                    setAvatar(isNonDuplicatesAvatar, messageStickerViewHolder.messageStickerAvatar, avatarUrl);
+                    unsetAvatar(messageStickerViewHolder.messageStickerAvatar);
+
+                } else {
+                    unsetAlignLayoutRight(messageStickerViewHolder.messageStickerContainer);
+
+                    if (!isPrivateDialog && avatarUrl != null) {
+                        setAvatar(isNonDuplicatesAvatar, messageStickerViewHolder.messageStickerAvatar, avatarUrl);
+                    }
                 }
 
                 break;
             case DOC_MESSAGE:
-            case DOC_MESSAGE_FAKE:
                 MessageDocViewHolder messageDocViewHolder = ((MessageDocViewHolder) holder);
                 messageDocViewHolder.messageDocName.setText(item.getAttachments()[0].getDoc().getTitle());
                 messageDocViewHolder.messageDocSize.setText(getDocSize(item.getAttachments()[0].getDoc().getSize(), context));
@@ -186,8 +190,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 messageDocViewHolder.messageDocTime.bringToFront();
                 if (side) {
                     setAlignLayoutRight(messageDocViewHolder.messageDocContainer);
-                } else if (!isPrivateDialog && avatarUrl != null) {
-                    setAvatar(isNonDuplicatesAvatar, messageDocViewHolder.messageDocAvatar, avatarUrl);
+                    unsetAvatar(messageDocViewHolder.messageDocAvatar);
+
+                } else {
+                    unsetAlignLayoutRight(messageDocViewHolder.messageDocContainer);
+
+                    if (!isPrivateDialog && avatarUrl != null) {
+                        setAvatar(isNonDuplicatesAvatar, messageDocViewHolder.messageDocAvatar, avatarUrl);
+                    }
                 }
 
                 break;
@@ -206,22 +216,21 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         DialogMessage item = items.get(position);
-        boolean side = item.getFrom_id() == myselfId;
 
         if (item.getAttachments() != null && item.getAttachments()[0].getType() != null) {
             switch (item.getAttachments()[0].getType()) {
                 case PHOTO:
-                    return side ? IMAGE_MESSAGE : IMAGE_MESSAGE_FAKE;
+                    return IMAGE_MESSAGE;
                 case STICKER:
-                    return side ? STICKER_MESSAGE : STICKER_MESSAGE_FAKE;
+                    return STICKER_MESSAGE;
                 case DOC:
-                    return side ? DOC_MESSAGE : DOC_MESSAGE_FAKE;
+                    return DOC_MESSAGE;
                 default:
                     break;
             }
         }
 
-        return side ? TEXT_MESSAGE : TEXT_MESSAGE_FAKE;
+        return TEXT_MESSAGE;
     }
 
     @Override
