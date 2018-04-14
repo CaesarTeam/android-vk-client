@@ -208,7 +208,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         DialogMessage item = items.get(position);
         boolean side = item.getFrom_id() == myselfId;
 
-        if (item.getAttachments() != null) {
+        if (item.getAttachments() != null && item.getAttachments()[0].getType() != null) {
             switch (item.getAttachments()[0].getType()) {
                 case PHOTO:
                     return side ? IMAGE_MESSAGE : IMAGE_MESSAGE_FAKE;

@@ -55,7 +55,7 @@ public class DialogsHelper {
 
     public static String getAttachmentsMessage(DialogMessage dialogMessage, Context context) {
         Attachments[] attachments = dialogMessage.getAttachments();
-        if (attachments != null) {
+        if (attachments != null && attachments[0].getType() != null) {
             switch (attachments[0].getType()) {
                 case STICKER:
                     return context.getString(R.string.messageTypeSticker);
