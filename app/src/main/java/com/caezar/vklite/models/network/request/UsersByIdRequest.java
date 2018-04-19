@@ -34,7 +34,7 @@ public class UsersByIdRequest {
         StringBuilder builder = new StringBuilder();
 
         for (int value: user_ids) {
-            builder.append(value + ",");
+            builder.append(value).append(",");
         }
 
         if (builder.length() > 0) {

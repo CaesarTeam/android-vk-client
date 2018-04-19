@@ -13,7 +13,6 @@
         android:maxWidth="@dimen/max_width_for_message_in_chat"
         android:textColor="@color/vk_light_color"
         android:layout_centerHorizontal="true"
-        android:text="14 апреля"
         android:layout_marginBottom="@dimen/margin_between_message_and_time"/>
 
 </RelativeLayout>

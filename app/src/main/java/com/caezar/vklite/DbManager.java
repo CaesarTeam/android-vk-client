@@ -55,7 +55,7 @@ public class DbManager {
     }
 
     public void clean() {
-        executor.execute(() -> cleanInternal());
+        executor.execute(this::cleanInternal);
     }
 
     private void checkInitialized() {
