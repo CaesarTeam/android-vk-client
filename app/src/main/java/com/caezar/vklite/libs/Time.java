@@ -61,6 +61,14 @@ public class Time {
         return getDateTime(unixTimestamp, Format.HOURS_MINUTES);
     }
 
+    public static boolean isDifferentDates(long date1, long date2) {
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.setTimeInMillis(unixTimestampToMilliseconds(date1));
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.setTimeInMillis(unixTimestampToMilliseconds(date2));
+        return calendar1.get(Calendar.DAY_OF_YEAR) != calendar2.get(Calendar.DAY_OF_YEAR) && calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR);
+    }
+
     public static int currentDate() {
         return (int) millisecondsToUnixTimestamp(System.currentTimeMillis());
     }

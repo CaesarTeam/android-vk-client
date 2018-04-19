@@ -242,21 +242,18 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             messageImage = (ImageView) (isPort ? itemView.findViewById(R.id.messageImage) : itemView.findViewById(R.id.messageImageLand));
             messageImageTime = (TextView) (isPort ? itemView.findViewById(R.id.messageImageTime) : itemView.findViewById(R.id.messageImageTimeLand));
 
-            messageImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Photo photo = items.get(position).getAttachments()[0].getPhoto();
-                    String maxPhotoSize = photo.getPhoto_1280();
-                    if (maxPhotoSize == null) {
-                        maxPhotoSize = photo.getPhoto_807();
-                    }
-                    if (maxPhotoSize == null) {
-                        maxPhotoSize = photo.getPhoto_604();
-                    }
+            messageImage.setOnClickListener(v -> {
+                Photo photo = items.get(position).getAttachments()[0].getPhoto();
+                String maxPhotoSize = photo.getPhoto_1280();
+                if (maxPhotoSize == null) {
+                    maxPhotoSize = photo.getPhoto_807();
+                }
+                if (maxPhotoSize == null) {
+                    maxPhotoSize = photo.getPhoto_604();
+                }
 
-                    if (context instanceof ChatActivity){
-                        ((ChatActivity)context).createFragmentFullSizeImageMessage(maxPhotoSize);
-                    }
+                if (context instanceof ChatActivity){
+                    ((ChatActivity)context).createFragmentFullSizeImageMessage(maxPhotoSize);
                 }
             });
         }

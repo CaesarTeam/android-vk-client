@@ -6,6 +6,7 @@
     android:orientation="vertical"
     tools:context=".activities.DialogsActivity"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/vk_grey_color"
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView

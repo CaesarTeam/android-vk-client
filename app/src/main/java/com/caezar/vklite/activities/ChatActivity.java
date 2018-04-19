@@ -54,7 +54,6 @@ public class ChatActivity extends AppCompatActivity {
     private EditText editText;
 
     private int peer_id;
-    private int myselfId;
     private boolean isPrivateDialog;
     private boolean requestChatFinish = true;
     private boolean requestAvatarsFinish = true;
@@ -76,7 +75,6 @@ public class ChatActivity extends AppCompatActivity {
 
         peer_id = getIntent().getIntExtra(PEER_ID, 0);
         isPrivateDialog = peer_id < Config.peerIdConstant;
-        myselfId = Config.getMyselfId();
 
         TextView textView = findViewById(R.id.messageTitle);
         textView.setText(getIntent().getStringExtra(TITLE));
@@ -84,15 +82,12 @@ public class ChatActivity extends AppCompatActivity {
         editText = findViewById(R.id.messageForm);
 
         Button button = findViewById(R.id.buttonSendMessage);
-        button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
+        button.setOnClickListener(v -> {
                 final String message = editText.getText().toString();
                 editText.getText().clear();
                 sendMessage(message);
                 recyclerView.scrollToPosition(0);
                 hideKeyboard(editText);
-            }
         });
 
         recyclerView = findViewById(R.id.messagesList);
