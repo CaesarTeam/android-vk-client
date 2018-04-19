@@ -69,13 +69,10 @@ public class DialogsActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_container);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(false);
-                refresh = true;
-                getDialogs(0);
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            swipeRefreshLayout.setRefreshing(false);
+            refresh = true;
+            getDialogs(0);
         });
     }
 
@@ -141,12 +138,7 @@ public class DialogsActivity extends AppCompatActivity {
     private void setDialogsFromListener(final List<DialogItem> dialogs) {
         insertDialogs(manager, dialogs);
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                setDialogs(dialogs);
-            }
-        });
+        runOnUiThread(() -> setDialogs(dialogs));
     }
 
     private class OnGetDialogsComplete implements NetworkManager.OnRequestCompleteListener {
@@ -242,11 +234,7 @@ public class DialogsActivity extends AppCompatActivity {
             for (DialogItem item: privateDialogs) {
                 final int userId = item.getMessage().getUser_id();
 
-                UsersByIdResponse.Response user = Iterables.find(users, new Predicate<UsersByIdResponse.Response> () {
-                    public boolean apply(@NonNull UsersByIdResponse.Response user) {
-                        return user.getId() == userId;
-                    }
-                });
+                UsersByIdResponse.Response user = Iterables.find(users, _user -> _user.getId() == userId);
 
                 item.getMessage().setTitle(user.getFirst_name() + " " + user.getLast_name());
                 item.getMessage().setPhoto_50(user.getPhoto_50());

@@ -47,30 +47,15 @@ public class DbManager {
     private SQLiteDatabase database;
 
     public <T extends BaseModel> void insert(final T model) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                insertInternal(model);
-            }
-        });
+        executor.execute(() -> insertInternal(model));
     }
 
     public void readAll(final ReadAllListener<String> listener) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                readAllInternal(listener);
-            }
-        });
+        executor.execute(() -> readAllInternal(listener));
     }
 
     public void clean() {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                cleanInternal();
-            }
-        });
+        executor.execute(() -> cleanInternal());
     }
 
     private void checkInitialized() {

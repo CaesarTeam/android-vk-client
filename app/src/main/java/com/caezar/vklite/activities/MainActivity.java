@@ -119,12 +119,7 @@ public class MainActivity extends AppCompatActivity {
             editor.putString(TOKEN, token);
             editor.apply();
 
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    startActivity(new Intent(MainActivity.this, DialogsActivity.class));
-                }
-            });
+            runOnUiThread(() -> startActivity(new Intent(MainActivity.this, DialogsActivity.class)));
         }
 
         private int getMyselfId(String body) {

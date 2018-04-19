@@ -10,17 +10,7 @@ import com.google.common.base.Predicate;
  */
 
 public class Predicates {
-    public final static Predicate<DialogItem> isEmptyTitle = new Predicate<DialogItem>() {
-        @Override
-        public boolean apply(DialogItem dialogItem) {
-            return TextUtils.isEmpty(dialogItem.getMessage().getTitle());
-        }
-    };
+    public final static Predicate<DialogItem> isEmptyTitle = dialogItem -> TextUtils.isEmpty(dialogItem.getMessage().getTitle());
 
-    public final static Predicate<DialogItem> isPositiveUserId = new Predicate<DialogItem>() {
-        @Override
-        public boolean apply(DialogItem dialogItem) {
-            return dialogItem.getMessage().getUser_id() > 0;
-        }
-    };
+    public final static Predicate<DialogItem> isPositiveUserId = dialogItem -> dialogItem.getMessage().getUser_id() > 0;
 }

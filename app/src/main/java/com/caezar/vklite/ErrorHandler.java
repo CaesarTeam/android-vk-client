@@ -95,21 +95,11 @@ public class ErrorHandler {
     public static void makeToastError(String body, final Activity activity) {
         final int stringRes = errorParse(body);
         if (stringRes != -1) {
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(activity, stringRes, Toast.LENGTH_SHORT).show();
-                }
-            });
+            activity.runOnUiThread(() -> Toast.makeText(activity, stringRes, Toast.LENGTH_SHORT).show());
         }
     }
 
     public static void createErrorInternetToast(final Activity activity) {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(activity, R.string.error_internet_connection, Toast.LENGTH_SHORT).show();
-            }
-        });
+        activity.runOnUiThread(() -> Toast.makeText(activity, R.string.error_internet_connection, Toast.LENGTH_SHORT).show());
     }
 }

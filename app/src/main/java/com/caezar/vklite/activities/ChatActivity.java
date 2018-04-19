@@ -285,12 +285,7 @@ public class ChatActivity extends AppCompatActivity {
                 photoUsers.append(user.getId(), user.getPhoto_50());
             }
 
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    setAvatarsToAdapter(photoUsers);
-                }
-            });
+            runOnUiThread(() -> setAvatarsToAdapter(photoUsers));
 
         }
 
@@ -318,12 +313,7 @@ public class ChatActivity extends AppCompatActivity {
 
             final List<DialogMessage> messages = Arrays.asList(chatResponse.getResponse().getItems());
 
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    addMessagesToAdapterTop(messages);
-                }
-            });
+            runOnUiThread(() -> addMessagesToAdapterTop(messages));
         }
 
         @Override
@@ -380,12 +370,7 @@ public class ChatActivity extends AppCompatActivity {
 
             final List<DialogMessage> messages = Arrays.asList(chatResponse.getResponse().getItems());
 
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    addMessageToAdapterEnd(messages.get(0));
-                }
-            });
+            runOnUiThread(() -> addMessageToAdapterEnd(messages.get(0)));
         }
 
         @Override

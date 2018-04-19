@@ -39,28 +39,25 @@ public class NetworkManager {
     }
 
     private void performRequest(final Request request, final OnRequestCompleteListener listener) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final Response response = client.newCall(request).execute();
-                    if (!response.isSuccessful()) {
-                        if (LOG_ENABLE) Log.d("code error", String.valueOf(response.code()));
-                        listener.onErrorCode(response.code());
-                        return;
-                    }
-
-                    try (ResponseBody body = response.body()) {
-                        if (body != null) {
-                            String responseString = body.string();
-                            if (LOG_ENABLE) Log.d("response", responseString);
-                            listener.onResponse(responseString);
-                        }
-                    }
-                } catch (IOException e) {
-                    if (LOG_ENABLE) Log.e(TAG, "Fail to perform request", e);
-                    listener.onError(e.toString());
+        executor.execute(() -> {
+            try {
+                final Response response = client.newCall(request).execute();
+                if (!response.isSuccessful()) {
+                    if (LOG_ENABLE) Log.d("code error", String.valueOf(response.code()));
+                    listener.onErrorCode(response.code());
+                    return;
                 }
+
+                try (ResponseBody body = response.body()) {
+                    if (body != null) {
+                        String responseString = body.string();
+                        if (LOG_ENABLE) Log.d("response", responseString);
+                        listener.onResponse(responseString);
+                    }
+                }
+            } catch (IOException e) {
+                if (LOG_ENABLE) Log.e(TAG, "Fail to perform request", e);
+                listener.onError(e.toString());
             }
         });
     }
