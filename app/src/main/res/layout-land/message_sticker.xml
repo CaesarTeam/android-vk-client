@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:layout_width="match_parent"
+<RelativeLayout android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginLeft="@dimen/margin_chat"
     android:layout_marginRight="@dimen/margin_chat"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -27,7 +27,8 @@
         <ImageView
             android:id="@+id/messageStickerLand"
             android:layout_width="@dimen/land_sticker_size_in_chat"
-            android:layout_height="@dimen/land_sticker_size_in_chat"/>
+            android:layout_height="@dimen/land_sticker_size_in_chat"
+            tools:ignore="ContentDescription"/>
 
         <TextView
             android:id="@+id/messageStickerTimeLand"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/margin_chat"
@@ -28,7 +28,8 @@
             android:id="@+id/messageImageLand"
             android:layout_width="@dimen/land_image_size_in_chat"
             android:layout_height="@dimen/land_image_size_in_chat"
-            android:background="@drawable/chat_image_message_border"/>
+            android:background="@drawable/chat_image_message_border"
+            tools:ignore="ContentDescription"/>
 
         <TextView
             android:id="@+id/messageImageTimeLand"

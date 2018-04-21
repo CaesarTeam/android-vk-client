@@ -140,6 +140,34 @@ public class Message implements Parcelable {
 
     }
 
+    protected Message(Parcel in) {
+        id = in.readInt();
+        user_id = in.readInt();
+        from_id = in.readInt();
+        date = in.readInt();
+        read_state = in.readByte() != 0;
+        out = in.readByte() != 0;
+        title = in.readString();
+        body = in.readString();
+        fwd_messages = in.createTypedArray(Message.CREATOR);
+        emoji = in.readByte() != 0;
+        important = in.readByte() != 0;
+        deleted = in.readByte() != 0;
+        random_id = in.readInt();
+    }
+
+    public static final Creator<Message> CREATOR = new Creator<Message>() {
+        @Override
+        public Message createFromParcel(Parcel in) {
+            return new Message(in);
+        }
+
+        @Override
+        public Message[] newArray(int size) {
+            return new Message[size];
+        }
+    };
+
     @Override
     public int describeContents() {
         return 0;
@@ -147,6 +175,18 @@ public class Message implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeInt(id);
+        dest.writeInt(user_id);
+        dest.writeInt(from_id);
+        dest.writeInt(date);
+        dest.writeByte((byte) (read_state ? 1 : 0));
+        dest.writeByte((byte) (out ? 1 : 0));
+        dest.writeString(title);
+        dest.writeString(body);
+        dest.writeTypedArray(fwd_messages, flags);
+        dest.writeByte((byte) (emoji ? 1 : 0));
+        dest.writeByte((byte) (important ? 1 : 0));
+        dest.writeByte((byte) (deleted ? 1 : 0));
+        dest.writeInt(random_id);
     }
 }

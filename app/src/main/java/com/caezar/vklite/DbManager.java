@@ -89,23 +89,22 @@ public class DbManager {
 
         switch (model.getType()) {
             case DIALOG:
-                insertDialog(model);
+                insertDialog((DialogModel) model);
                 break;
             case MESSAGE:
                 break;
         }
     }
 
-    private <T extends BaseModel> void insertDialog(T model) {
+    private void insertDialog(DialogModel model) {
         // todo: to config
         int limit = 100;
-        DialogModel dialogModel = (DialogModel) model;
-        String title = dialogModel.getTitle();
-        String message = dialogModel.getMessage();
+        String title = model.getTitle();
+        String message = model.getMessage();
         message = message.length() > limit ? message.substring(0, limit) : message;
-        String imageUrl = dialogModel.getImageUrl();
-        int date = dialogModel.getDate();
-        int peerId = dialogModel.getPeerId();
+        String imageUrl = model.getImageUrl();
+        int date = model.getDate();
+        int peerId = model.getPeerId();
         ContentValues values = new ContentValues();
         values.put(DIALOGS_COLUMN_PEER_ID, peerId);
         values.put(DIALOGS_COLUMN_TITLE, title);

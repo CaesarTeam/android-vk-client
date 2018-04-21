@@ -33,11 +33,10 @@ import static com.caezar.vklite.libs.Time.getDateTimeForDialog;
 public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int ITEM_DIALOG = 1;
 
-    @NonNull private List<DialogItem> items;
+    @NonNull private final List<DialogItem> items = new ArrayList<>();
     private Context context;
 
     public DialogsAdapter(Context context) {
-        items = new ArrayList<>();
         this.context = context;
     }
 
@@ -50,7 +49,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public void setItems(List<DialogItem> dialogItems) {
         if (dialogItems != null) {
-            items = new ArrayList<>();
+            items.clear();
             items.addAll(dialogItems);
             notifyDataSetChanged();
         }
@@ -104,9 +103,6 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        if (items == null) {
-            return 0;
-        }
         return items.size();
     }
 

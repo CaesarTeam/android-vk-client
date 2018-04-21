@@ -60,6 +60,25 @@ public class DialogItem implements Parcelable {
                 '}';
     }
 
+    protected DialogItem(Parcel in) {
+        unread = in.readInt();
+        in_read = in.readInt();
+        out_read = in.readInt();
+        message = in.readParcelable(DialogMessage.class.getClassLoader());
+    }
+
+    public static final Creator<DialogItem> CREATOR = new Creator<DialogItem>() {
+        @Override
+        public DialogItem createFromParcel(Parcel in) {
+            return new DialogItem(in);
+        }
+
+        @Override
+        public DialogItem[] newArray(int size) {
+            return new DialogItem[size];
+        }
+    };
+
     @Override
     public int describeContents() {
         return 0;
@@ -67,6 +86,9 @@ public class DialogItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeInt(unread);
+        dest.writeInt(in_read);
+        dest.writeInt(out_read);
+        dest.writeParcelable(message, flags);
     }
 }

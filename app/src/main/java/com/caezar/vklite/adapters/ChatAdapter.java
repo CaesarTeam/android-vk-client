@@ -46,23 +46,24 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int DOC_MESSAGE = 4;
 
     private Context context;
-    private List<DialogMessage> items;
-    private SparseArray<String> photoUsers;
+    @NonNull private final List<DialogMessage> items = new ArrayList<>();
+    @NonNull private final SparseArray<String> photoUsers = new SparseArray<>();
     private int myselfId;
     private boolean isPrivateDialog;
     private int prevUserIdFrom;
     private int prevPosition;
 
     public ChatAdapter(Context context, boolean isPrivateDialog) {
-        items = new ArrayList<>();
-        photoUsers = new SparseArray<>();
         myselfId = Config.getMyselfId();
         this.isPrivateDialog = isPrivateDialog;
         this.context = context;
     }
 
-    public void setUsersAvatar(SparseArray<String> photoUsers) {
-        this.photoUsers = photoUsers;
+    public void setUsersAvatar(@NonNull SparseArray<String> photoUsers) {
+        for (int i = 0; i < photoUsers.size(); i++) {
+            final int key = photoUsers.keyAt(i);
+            this.photoUsers.put(key, photoUsers.get(key));
+        }
         notifyDataSetChanged();
     }
 
@@ -85,10 +86,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public int getPhotoUsersSize() {
-        if (photoUsers == null) {
-            return 0;
-        }
-
         return photoUsers.size();
     }
 

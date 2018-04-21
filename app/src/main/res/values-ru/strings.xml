@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_name">VkLite</string>
     <string name="message_form_placeholder">Введите сообщение</string>
     <string name="error_internet_connection">Проверьте ваше подключение к интернету</string>
     <string name="yesterday">вчера</string>
