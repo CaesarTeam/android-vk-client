@@ -2,7 +2,6 @@ package com.caezar.vklite.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +15,7 @@ import com.caezar.vklite.models.network.request.DialogsRequest;
 import com.caezar.vklite.models.network.response.DialogsResponse;
 import com.caezar.vklite.models.network.request.UsersByIdRequest;
 import com.caezar.vklite.models.network.response.UsersByIdResponse;
-import com.caezar.vklite.libs.urlBuilder;
+import com.caezar.vklite.libs.UrlBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +23,6 @@ import java.util.Collection;
 import java.util.List;
 
 import com.caezar.vklite.models.network.DialogItem;
-import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
@@ -44,13 +42,13 @@ import static com.caezar.vklite.libs.Predicates.isPositiveUserId;
 public class DialogsActivity extends AppCompatActivity {
     public static final String TITLE = "title";
     public static final String PEER_ID = "peer_id";
-    public static final String DIALOGS = "dialogs";
+    private static final String DIALOGS = "dialogs";
 
     private DialogsAdapter adapter;
     private boolean requestDialogsFinish = true;
     private boolean refresh = false;
 
-    DbManager manager;
+    private DbManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +118,7 @@ public class DialogsActivity extends AppCompatActivity {
             requestDialogsFinish = false;
             DialogsRequest dialogsRequest = new DialogsRequest();
             dialogsRequest.setOffset(offset);
-            final String url = urlBuilder.constructGetDialogs(dialogsRequest);
+            final String url = UrlBuilder.constructGetDialogs(dialogsRequest);
             NetworkManager.getInstance().get(url, new OnGetDialogsComplete());
         }
     }
@@ -190,7 +188,7 @@ public class DialogsActivity extends AppCompatActivity {
         private void requestGetUsers(int[] userIds, List<DialogItem> dialogs) {
             final UsersByIdRequest usersByIdRequest = new UsersByIdRequest();
             usersByIdRequest.setUser_ids(userIds);
-            final String url = urlBuilder.constructGetUsersInfo(usersByIdRequest);
+            final String url = UrlBuilder.constructGetUsersInfo(usersByIdRequest);
             NetworkManager.getInstance().get(url, new OnGetUsersComplete(dialogs));
         }
     }

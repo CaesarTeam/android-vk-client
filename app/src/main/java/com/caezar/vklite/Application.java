@@ -16,7 +16,7 @@ import static com.caezar.vklite.activities.MainActivity.TOKEN;
 
 public class Application extends android.app.Application {
 
-    VKAccessTokenTracker vkAccessTokenTracker = new VKAccessTokenTracker() {
+    private final VKAccessTokenTracker vkAccessTokenTracker = new VKAccessTokenTracker() {
         @Override
         public void onVKAccessTokenChanged(VKAccessToken oldToken, VKAccessToken newToken) {
             if (newToken == null) {

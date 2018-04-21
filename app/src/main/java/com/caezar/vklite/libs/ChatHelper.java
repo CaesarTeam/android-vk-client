@@ -1,7 +1,6 @@
 package com.caezar.vklite.libs;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -59,7 +58,6 @@ public class ChatHelper {
     public static String getDocSize(long byteSize, Context context) {
         final double oneKilobyte = 1024.0;
 
-        double bytes = byteSize;
         double kilobytes = byteSize / Math.pow(oneKilobyte, 1);
         double megabytes = byteSize / Math.pow(oneKilobyte, 2);
         double gigabytes = byteSize / Math.pow(oneKilobyte, 3);
@@ -81,7 +79,7 @@ public class ChatHelper {
             return sizeToString(kilobytes).concat(context.getString(R.string.kilobytes));
         }
 
-        return sizeToString(bytes).concat(context.getString(R.string.bytes));
+        return sizeToString((double) byteSize).concat(context.getString(R.string.bytes));
     }
 
     private static String sizeToString(double size) {

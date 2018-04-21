@@ -45,11 +45,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int STICKER_MESSAGE = 3;
     private static final int DOC_MESSAGE = 4;
 
-    private Context context;
+    private final Context context;
     @NonNull private final List<DialogMessage> items = new ArrayList<>();
     @NonNull private final SparseArray<String> photoUsers = new SparseArray<>();
-    private int myselfId;
-    private boolean isPrivateDialog;
+    final private int myselfId;
+    final private boolean isPrivateDialog;
     private int prevUserIdFrom;
     private int prevPosition;
 
@@ -77,10 +77,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         notifyDataSetChanged();
     }
 
+    @NonNull
     public List<DialogMessage> getItems() {
         return items;
     }
 
+    @NonNull
     public SparseArray<String> getPhotoUsers() {
         return photoUsers;
     }
@@ -91,7 +93,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case TEXT_MESSAGE:
                 View messageTextView = LayoutInflater.from(context).inflate(R.layout.message_text, parent, false);
@@ -208,10 +210,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return items.size() - position < minItemsToRequestChat;
     }
 
-    class MessageTextViewHolder  extends ChatViewHolder {
+    class MessageTextViewHolder extends ChatViewHolder {
 
-        TextView messageText;
-        TextView messageTextTime;
+        final TextView messageText;
+        final TextView messageTextTime;
 
         MessageTextViewHolder(final View itemView) {
             super(itemView);
@@ -226,8 +228,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     class MessageImageViewHolder extends ChatViewHolder {
 
-        ImageView messageImage;
-        TextView messageImageTime;
+        final ImageView messageImage;
+        final TextView messageImageTime;
         int position;
 
         MessageImageViewHolder(final View itemView) {
@@ -258,8 +260,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     class MessageStickerViewHolder extends ChatViewHolder {
 
-        ImageView messageSticker;
-        TextView messageStickerTime;
+        final ImageView messageSticker;
+        final TextView messageStickerTime;
 
         MessageStickerViewHolder(final View itemView) {
             super(itemView);
@@ -274,10 +276,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     class MessageDocViewHolder extends ChatViewHolder {
 
-        RoundedImageView messageDocDownload;
-        TextView messageDocName;
-        TextView messageDocSize;
-        TextView messageDocTime;
+        final RoundedImageView messageDocDownload;
+        final TextView messageDocName;
+        final TextView messageDocSize;
+        final TextView messageDocTime;
 
         MessageDocViewHolder(final View itemView) {
             super(itemView);

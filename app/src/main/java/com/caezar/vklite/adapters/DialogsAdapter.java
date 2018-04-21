@@ -34,7 +34,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private final int ITEM_DIALOG = 1;
 
     @NonNull private final List<DialogItem> items = new ArrayList<>();
-    private Context context;
+    private final Context context;
 
     public DialogsAdapter(Context context) {
         this.context = context;
@@ -60,8 +60,9 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return items;
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         switch (viewType) {
             case ITEM_DIALOG:
@@ -74,7 +75,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         DialogItem item = items.get(position);
 
         switch (getItemViewType(position)) {
@@ -108,10 +109,10 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     class DialogViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView avatar;
-        TextView title;
-        TextView message;
-        TextView time;
+        final ImageView avatar;
+        final TextView title;
+        final TextView message;
+        final TextView time;
 
         DialogViewHolder(final View itemView) {
             super(itemView);
@@ -164,7 +165,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     class onDialogClickListener implements View.OnClickListener {
-        DialogViewHolder holder;
+        final DialogViewHolder holder;
 
         onDialogClickListener(DialogViewHolder holder) {
             this.holder = holder;

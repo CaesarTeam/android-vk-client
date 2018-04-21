@@ -11,7 +11,7 @@ import com.caezar.vklite.models.network.request.UsersChatRequest;
  * Created by seva on 25.03.18 in 18:11.
  */
 
-public class urlBuilder {
+public class UrlBuilder {
     private final static String version = "5.74";
     private final static String APIServiceAddressHost = "https://api.vk.com/method/";
 
@@ -55,7 +55,7 @@ public class urlBuilder {
         MESSAGES_GET_CHAT("messages.getChat"),
         USERS_GET("users.get");
 
-        private String method;
+        private final String method;
 
         Method(String method) {
             this.method = method;

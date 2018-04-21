@@ -10,7 +10,7 @@ import com.caezar.vklite.R;
 import com.caezar.vklite.Config;
 import com.caezar.vklite.NetworkManager;
 import com.caezar.vklite.models.network.response.UsersByIdResponse;
-import com.caezar.vklite.libs.urlBuilder;
+import com.caezar.vklite.libs.UrlBuilder;
 
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKCallback;
@@ -25,7 +25,7 @@ import static com.caezar.vklite.libs.ParseResponse.parseBody;
 public class MainActivity extends AppCompatActivity {
     public static final String PREFS_NAME = "Vk";
     public static final String TOKEN = "token";
-    public static final String MYSELF_ID = "myselfId";
+    private static final String MYSELF_ID = "myselfId";
 
     private final int WRONG_ID = -1;
 
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         public void onResult(VKAccessToken res) {
             final String token = res.accessToken;
 
-            final String url = urlBuilder.constructGetMyselfId();
+            final String url = UrlBuilder.constructGetMyselfId();
             NetworkManager.getInstance().get(url, new OnLogInComplete(token));
         }
         @Override
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private class OnLogInComplete implements NetworkManager.OnRequestCompleteListener {
-        private String token;
+        private final String token;
 
         public OnLogInComplete(String token) {
             this.token = token;

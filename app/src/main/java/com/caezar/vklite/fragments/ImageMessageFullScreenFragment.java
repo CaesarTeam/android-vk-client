@@ -1,6 +1,7 @@
 package com.caezar.vklite.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +26,7 @@ public class ImageMessageFullScreenFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (getArguments() != null) {
             urlPhoto = getArguments().getString(PHOTO_URL);
         }
@@ -34,7 +35,7 @@ public class ImageMessageFullScreenFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         if (urlPhoto != null) {
             ImageView imageView = view.findViewById(R.id.fullSizeImage);
             asyncImageLoad(urlPhoto, imageView);

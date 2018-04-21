@@ -3,16 +3,12 @@ package com.caezar.vklite;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.caezar.vklite.models.db.*;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -139,13 +135,13 @@ public class DbManager {
 //        listener.onReadAll(result);
     }
 
-    public void cleanInternal() {
+    private void cleanInternal() {
         checkInitialized();
 
         database.execSQL("DELETE FROM " + TABLE_DIALOGS);
     }
 
-    public interface ReadAllListener<T> {
+    private interface ReadAllListener<T> {
         void onReadAll(final Collection<T> allItems);
     }
 }

@@ -45,7 +45,7 @@ public class DialogMessage extends Message {
         @JsonProperty("chat_invite_user_by_link")
         CHAT_INVITE_USER_BY_LINK("chat_invite_user_by_link"); // пользователь присоединился к беседе по ссылке
 
-        private String action;
+        private final String action;
 
         Action(String action) {
             this.action = action;

@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,7 +23,7 @@ import com.caezar.vklite.models.network.request.SendMessageRequest;
 import com.caezar.vklite.models.network.request.UsersByIdRequest;
 import com.caezar.vklite.models.network.response.SendResponse;
 import com.caezar.vklite.models.network.response.UsersByIdResponse;
-import com.caezar.vklite.libs.urlBuilder;
+import com.caezar.vklite.libs.UrlBuilder;
 import com.caezar.vklite.models.network.response.UsersChatResponse;
 
 import java.util.ArrayList;
@@ -45,9 +44,9 @@ import static com.caezar.vklite.libs.ParseResponse.parseBody;
 
 public class ChatActivity extends AppCompatActivity {
     public static final String PHOTO_URL = "photoUrl";
-    public static final String MESSAGES = "messages";
-    public static final String USERS_ID = "usersId";
-    public static final String AVATARS_URL = "avatarsUrl";
+    private static final String MESSAGES = "messages";
+    private static final String USERS_ID = "usersId";
+    private static final String AVATARS_URL = "avatarsUrl";
 
     private RecyclerView recyclerView;
     private ChatAdapter adapter;
@@ -167,7 +166,7 @@ public class ChatActivity extends AppCompatActivity {
             requestAvatarsFinish = false;
             UsersChatRequest usersChatRequest = new UsersChatRequest();
             usersChatRequest.setChat_id(chatId);
-            final String url = urlBuilder.constructGetUsersChat(usersChatRequest);
+            final String url = UrlBuilder.constructGetUsersChat(usersChatRequest);
             NetworkManager.getInstance().get(url, new OnGetUsersIdComplete());
         }
     }
@@ -175,7 +174,7 @@ public class ChatActivity extends AppCompatActivity {
     private void getInfoAboutUsers(int[] userIds) {
         final UsersByIdRequest usersByIdRequest = new UsersByIdRequest();
         usersByIdRequest.setUser_ids(userIds);
-        final String url = urlBuilder.constructGetUsersInfo(usersByIdRequest);
+        final String url = UrlBuilder.constructGetUsersInfo(usersByIdRequest);
         NetworkManager.getInstance().get(url, new OnGetUsersAvatarsComplete());
     }
 
@@ -185,7 +184,7 @@ public class ChatActivity extends AppCompatActivity {
             final ChatRequest chatRequest = new ChatRequest();
             chatRequest.setOffset(offset);
             chatRequest.setPeer_id(peer_id);
-            final String url = urlBuilder.constructGetChat(chatRequest);
+            final String url = UrlBuilder.constructGetChat(chatRequest);
             NetworkManager.getInstance().get(url, new OnGetMessagesComplete());
         }
     }
@@ -194,7 +193,7 @@ public class ChatActivity extends AppCompatActivity {
         final ChatRequest chatRequest = new ChatRequest();
         chatRequest.setCount(1);
         chatRequest.setPeer_id(peer_id);
-        final String url = urlBuilder.constructGetChat(chatRequest);
+        final String url = UrlBuilder.constructGetChat(chatRequest);
         NetworkManager.getInstance().get(url, new OnGetLastMessageComplete());
     }
 
@@ -202,7 +201,7 @@ public class ChatActivity extends AppCompatActivity {
         final SendMessageRequest sendMessageRequest = new SendMessageRequest();
         sendMessageRequest.setMessage(message);
         sendMessageRequest.setPeer_id(peer_id);
-        final String url = urlBuilder.constructSendMessage(sendMessageRequest);
+        final String url = UrlBuilder.constructSendMessage(sendMessageRequest);
         NetworkManager.getInstance().get(url, new OnSendMessageComplete(message));
     }
 
@@ -328,7 +327,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private class OnSendMessageComplete implements NetworkManager.OnRequestCompleteListener {
-        private String message;
+        private final String message;
 
         OnSendMessageComplete(final String message) {
             this.message = message;
