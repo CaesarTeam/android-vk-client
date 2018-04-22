@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 return WRONG_ID;
             }
 
-            return usersByIdResponse.getResponse()[0].getId();
+            return usersByIdResponse.getUsers()[0].getId();
         }
     }
 }

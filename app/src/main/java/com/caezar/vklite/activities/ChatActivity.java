@@ -15,6 +15,7 @@ import com.caezar.vklite.adapters.ChatAdapter;
 import com.caezar.vklite.fragments.ImageMessageFullScreenFragment;
 import com.caezar.vklite.Config;
 import com.caezar.vklite.NetworkManager;
+import com.caezar.vklite.models.network.User;
 import com.caezar.vklite.models.network.request.ChatRequest;
 import com.caezar.vklite.models.network.request.UsersChatRequest;
 import com.caezar.vklite.models.network.response.ChatResponse;
@@ -273,14 +274,14 @@ public class ChatActivity extends AppCompatActivity {
         public void onResponse(final String body) {
             UsersByIdResponse usersByIdResponse = parseBody(UsersByIdResponse.class, body);
 
-            if (usersByIdResponse.getResponse() == null) {
+            if (usersByIdResponse.getUsers() == null) {
                 makeToastError(body, ChatActivity.this);
                 return;
             }
 
             final SparseArray<String> photoUsers = new SparseArray<>();
 
-            for (UsersByIdResponse.Response user: usersByIdResponse.getResponse()) {
+            for (User user: usersByIdResponse.getUsers()) {
                 photoUsers.append(user.getId(), user.getPhoto_50());
             }
 

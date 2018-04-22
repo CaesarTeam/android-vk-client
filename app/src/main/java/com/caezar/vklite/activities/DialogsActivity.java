@@ -11,14 +11,19 @@ import com.caezar.vklite.DbManager;
 import com.caezar.vklite.DialogManager;
 import com.caezar.vklite.Listener;
 import com.caezar.vklite.R;
+import com.caezar.vklite.UserManager;
 import com.caezar.vklite.adapters.DialogsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.caezar.vklite.models.network.DialogItem;
+import com.caezar.vklite.models.network.User;
+import com.caezar.vklite.models.network.response.UsersByIdResponse;
+
 import static com.caezar.vklite.libs.Db.insertDialogs;
+import static com.caezar.vklite.libs.DialogsHelper.addDataToDialogsList;
+import static com.caezar.vklite.libs.DialogsHelper.getUsersIdFromPrivateDialogs;
 
 /**
  * Created by seva on 01.04.18 in 17:56.
@@ -121,14 +126,29 @@ public class DialogsActivity extends AppCompatActivity {
         runOnUiThread(() -> setDialogs(dialogs));
     }
 
-    public class GetDialogs implements Listener {
-
+    public class GetDialogs implements DialogManager.GetDialogs {
+        @Override
         public void callback(List<DialogItem> dialogs) {
-            setDialogsFromListener(dialogs);
+            final int[] userIds = getUsersIdFromPrivateDialogs(dialogs);
+            UserManager.getInstance().requestGetUsers(userIds, new GetUsersDialogs(dialogs), DialogsActivity.this);
         }
 
         public GetDialogs() {
         }
 
+    }
+
+    public class GetUsersDialogs implements UserManager.GetUsers {
+        List<DialogItem> dialogs;
+
+        @Override
+        public void callback(User[] users) {
+            dialogs = addDataToDialogsList(dialogs, users);
+            setDialogsFromListener(dialogs);
+        }
+
+        public GetUsersDialogs(List<DialogItem> dialogs) {
+            this.dialogs = dialogs;
+        }
     }
 }

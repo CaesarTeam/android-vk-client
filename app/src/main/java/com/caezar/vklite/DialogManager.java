@@ -3,7 +3,6 @@ package com.caezar.vklite;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.caezar.vklite.activities.DialogsActivity;
 import com.caezar.vklite.libs.UrlBuilder;
 import com.caezar.vklite.models.network.DialogItem;
 import com.caezar.vklite.models.network.request.DialogsRequest;
@@ -15,7 +14,6 @@ import java.util.List;
 import static com.caezar.vklite.Config.ONLINE_MODE;
 import static com.caezar.vklite.ErrorHandler.createErrorInternetToast;
 import static com.caezar.vklite.ErrorHandler.makeToastError;
-import static com.caezar.vklite.libs.DialogsHelper.getUsersIdFromPrivateDialogs;
 import static com.caezar.vklite.libs.ParseResponse.parseBody;
 
 /**
@@ -38,17 +36,17 @@ public final class DialogManager {
             DialogsRequest dialogsRequest = new DialogsRequest();
             dialogsRequest.setOffset(offset);
             final String url = UrlBuilder.constructGetDialogs(dialogsRequest);
-            NetworkManager.getInstance().get(url, new OnGetDialogsComplete(listener, context));
+            NetworkManager.getInstance().get(url, new OnGetDialogsComplete((GetDialogs)listener, context));
         } else {
             // todo: grub some beers and data from db
         }
     }
 
     private class OnGetDialogsComplete implements NetworkManager.OnRequestCompleteListener {
-        private final Listener listenerCallback;
+        private final GetDialogs listenerCallback;
         private final Context context;
 
-        public OnGetDialogsComplete(Listener listenerCallback, Context context) {
+        public OnGetDialogsComplete(GetDialogs listenerCallback, Context context) {
             this.listenerCallback = listenerCallback;
             this.context = context;
         }
@@ -72,15 +70,12 @@ public final class DialogManager {
             }
 
             final List<DialogItem> dialogs = Arrays.asList(dialogsResponse.getResponse().getItems());
-
-            final int[] userIds = getUsersIdFromPrivateDialogs(dialogs);
-            if (userIds.length > 0) {
-                UserManager.getInstance().requestGetUsers(userIds, dialogs, listenerCallback, context);
-            } else {
-                DialogsActivity.GetDialogs getDialogs = (DialogsActivity.GetDialogs) listenerCallback;
-                getDialogs.callback(dialogs);
-            }
+            listenerCallback.callback(dialogs);
         }
+    }
+
+    public interface GetDialogs extends Listener {
+        void callback(List<DialogItem> dialogs);
     }
 
 }
