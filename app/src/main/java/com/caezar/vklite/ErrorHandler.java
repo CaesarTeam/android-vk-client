@@ -1,6 +1,9 @@
 package com.caezar.vklite;
 
 import android.app.Activity;
+import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
 
 import com.caezar.vklite.models.network.response.ErrorVkApiResponse;
@@ -92,11 +95,24 @@ public class ErrorHandler {
         return -1;
     }
 
+    public static void makeToastError(String body, final Context context) {
+        final int stringRes = errorParse(body);
+        if (stringRes != -1) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(() -> Toast.makeText(context, stringRes, Toast.LENGTH_SHORT).show());
+        }
+    }
+
     public static void makeToastError(String body, final Activity activity) {
         final int stringRes = errorParse(body);
         if (stringRes != -1) {
             activity.runOnUiThread(() -> Toast.makeText(activity, stringRes, Toast.LENGTH_SHORT).show());
         }
+    }
+
+    public static void createErrorInternetToast(final Context context) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(() -> Toast.makeText(context, R.string.error_internet_connection, Toast.LENGTH_SHORT).show());
     }
 
     public static void createErrorInternetToast(final Activity activity) {

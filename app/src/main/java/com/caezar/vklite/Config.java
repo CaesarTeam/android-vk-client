@@ -12,6 +12,7 @@ public class Config {
     public static final int minItemsToRequestChat = new ChatRequest().getCount() / 2;
     public static final int minItemsToRequestDialogs = new DialogsRequest().getCount() / 10;
     public static final boolean LOG_ENABLE = true;
+    public static final boolean ONLINE_MODE = true;
     private static int myselfId;
     private static String token;
 

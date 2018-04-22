@@ -6,8 +6,17 @@ import com.caezar.vklite.R;
 import com.caezar.vklite.models.network.Attachments;
 import com.caezar.vklite.models.network.DialogItem;
 import com.caezar.vklite.models.network.DialogMessage;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
+import com.google.common.primitives.Ints;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static com.caezar.vklite.Config.peerIdConstant;
+import static com.caezar.vklite.libs.Predicates.isEmptyTitle;
+import static com.caezar.vklite.libs.Predicates.isPositiveUserId;
 
 /**
  * Created by seva on 12.04.18 in 13:38.
@@ -85,5 +94,16 @@ public class DialogsHelper {
         }
 
         return null;
+    }
+
+    public static int[] getUsersIdFromPrivateDialogs(List<DialogItem> dialogs) {
+        Collection<DialogItem> privateDialogs = Collections2.filter(dialogs, Predicates.and(isEmptyTitle, isPositiveUserId));
+
+        List<Integer> userIds = new ArrayList<>(privateDialogs.size());
+        for (DialogItem item: privateDialogs) {
+            userIds.add(item.getMessage().getUser_id());
+        }
+
+        return Ints.toArray(userIds);
     }
 }
