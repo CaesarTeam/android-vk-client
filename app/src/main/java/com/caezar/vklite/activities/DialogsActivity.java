@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 
 import com.caezar.vklite.DbManager;
 import com.caezar.vklite.DialogManager;
-import com.caezar.vklite.Listener;
 import com.caezar.vklite.R;
 import com.caezar.vklite.UserManager;
 import com.caezar.vklite.adapters.DialogsAdapter;
@@ -19,7 +18,6 @@ import java.util.List;
 
 import com.caezar.vklite.models.network.DialogItem;
 import com.caezar.vklite.models.network.User;
-import com.caezar.vklite.models.network.response.UsersByIdResponse;
 
 import static com.caezar.vklite.libs.Db.insertDialogs;
 import static com.caezar.vklite.libs.DialogsHelper.addDataToDialogsList;
@@ -130,7 +128,7 @@ public class DialogsActivity extends AppCompatActivity {
         @Override
         public void callback(List<DialogItem> dialogs) {
             final int[] userIds = getUsersIdFromPrivateDialogs(dialogs);
-            UserManager.getInstance().requestGetUsers(userIds, new GetUsersDialogs(dialogs), DialogsActivity.this);
+            UserManager.getInstance().requestGetUsers(userIds, new GetUsers(dialogs), DialogsActivity.this);
         }
 
         public GetDialogs() {
@@ -138,16 +136,16 @@ public class DialogsActivity extends AppCompatActivity {
 
     }
 
-    public class GetUsersDialogs implements UserManager.GetUsers {
+    public class GetUsers implements UserManager.GetUsers {
         List<DialogItem> dialogs;
 
         @Override
         public void callback(User[] users) {
-            dialogs = addDataToDialogsList(dialogs, users);
+            addDataToDialogsList(dialogs, users);
             setDialogsFromListener(dialogs);
         }
 
-        public GetUsersDialogs(List<DialogItem> dialogs) {
+        public GetUsers(List<DialogItem> dialogs) {
             this.dialogs = dialogs;
         }
     }

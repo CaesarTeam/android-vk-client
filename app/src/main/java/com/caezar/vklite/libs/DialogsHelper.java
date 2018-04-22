@@ -110,21 +110,17 @@ public class DialogsHelper {
         return Ints.toArray(userIds);
     }
 
-    public static List<DialogItem> addDataToDialogsList(List<DialogItem> dialogs, User[] users) {
+    public static void addDataToDialogsList(List<DialogItem> dialogs, User[] users) {
         Collection<DialogItem> privateDialogs = Collections2.filter(dialogs, Predicates.and(isEmptyTitle, isPositiveUserId));
         List<User> usersList = Arrays.asList(users);
 
         for (DialogItem item: privateDialogs) {
             final int userId = item.getMessage().getUser_id();
-
             User user = Iterables.find(usersList, _user -> _user.getId() == userId);
-
             item.getMessage().setTitle(user.getFirst_name() + " " + user.getLast_name());
             item.getMessage().setPhoto_50(user.getPhoto_50());
             item.getMessage().setPhoto_100(user.getPhoto_100());
             item.getMessage().setPhoto_200(user.getPhoto_200());
         }
-
-        return dialogs;
     }
 }

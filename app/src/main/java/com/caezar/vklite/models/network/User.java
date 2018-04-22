@@ -4,6 +4,7 @@ package com.caezar.vklite.models.network;
  * Created by seva on 22.04.18 in 16:14.
  */
 
+@SuppressWarnings({"unused"})
 public class User {
     private int id;
     private String first_name;
