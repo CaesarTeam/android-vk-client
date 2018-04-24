@@ -13,7 +13,7 @@ import static com.caezar.vklite.libs.DialogsHelper.getPeerId;
  */
 
 public class Db {
-
+// todo: DbManager manager in this class
     public static void insertDialogs(DbManager manager, List<DialogItem> dialogs) {
         for (DialogItem dialogItem: dialogs) {
             DialogModel dialogModel = new DialogModel();

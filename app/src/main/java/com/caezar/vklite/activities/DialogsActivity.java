@@ -2,6 +2,7 @@ package com.caezar.vklite.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.caezar.vklite.DbManager;
 import com.caezar.vklite.DialogManager;
+import com.caezar.vklite.ListenerHandler;
 import com.caezar.vklite.R;
 import com.caezar.vklite.UserManager;
 import com.caezar.vklite.adapters.DialogsAdapter;
@@ -36,14 +38,12 @@ public class DialogsActivity extends AppCompatActivity {
     private boolean requestDialogsFinish = true;
     private boolean refresh = false;
 
-    private DbManager manager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialogs);
 
-        manager = DbManager.getInstance(this);
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectActivityLeaks().build());
 
         if (savedInstanceState != null && savedInstanceState.getSerializable(DIALOGS) != null) {
             requestDialogsFinish = false;
@@ -90,6 +90,22 @@ public class DialogsActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onBackPressed() {
+//        moveTaskToBack(true);
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (getDialogs != null) {
+            getDialogs.unregister();
+        }
+    }
+
     public void openChatCallback(int peer_id, String title) {
         Intent intent = new Intent(DialogsActivity.this, ChatActivity.class);
         intent.putExtra(PEER_ID, peer_id);
@@ -104,7 +120,12 @@ public class DialogsActivity extends AppCompatActivity {
     private void getDialogs(int offset) {
         if (requestDialogsFinish) {
             requestDialogsFinish = false;
-            DialogManager.getInstance().getDialogs(offset, new GetDialogs(), this);
+            if (getDialogs != null) {
+                getDialogs.unregister();
+            }
+            GetDialogs dialogsListener = new GetDialogs();
+            getDialogs = new ListenerHandler<>(dialogsListener);
+            DialogManager.getInstance().getDialogs(offset, dialogsListener, this);
         }
     }
 
@@ -119,14 +140,15 @@ public class DialogsActivity extends AppCompatActivity {
     }
 
     private void setDialogsFromListener(List<DialogItem> dialogs) {
-        insertDialogs(manager, dialogs);
-
         runOnUiThread(() -> setDialogs(dialogs));
     }
 
-    public class GetDialogs implements DialogManager.GetDialogs {
+    private ListenerHandler<GetDialogs> getDialogs;
+
+    private class GetDialogs implements DialogManager.GetDialogs {
         @Override
         public void callback(List<DialogItem> dialogs) {
+            setDialogsFromListener(dialogs);
             final int[] userIds = getUsersIdFromPrivateDialogs(dialogs);
             UserManager.getInstance().requestGetUsers(userIds, new GetUsers(dialogs), DialogsActivity.this);
         }
@@ -136,7 +158,7 @@ public class DialogsActivity extends AppCompatActivity {
 
     }
 
-    public class GetUsers implements UserManager.GetUsers {
+    private class GetUsers implements UserManager.GetUsers {
         List<DialogItem> dialogs;
 
         @Override

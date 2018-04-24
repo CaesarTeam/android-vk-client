@@ -14,6 +14,7 @@ import java.util.List;
 import static com.caezar.vklite.Config.ONLINE_MODE;
 import static com.caezar.vklite.ErrorHandler.createErrorInternetToast;
 import static com.caezar.vklite.ErrorHandler.makeToastError;
+import static com.caezar.vklite.libs.Db.insertDialogs;
 import static com.caezar.vklite.libs.ParseResponse.parseBody;
 
 /**
@@ -70,6 +71,7 @@ public final class DialogManager {
             }
 
             final List<DialogItem> dialogs = Arrays.asList(dialogsResponse.getResponse().getItems());
+            insertDialogs(DbManager.getInstance(context), dialogs);
             listenerCallback.callback(dialogs);
         }
     }

@@ -26,9 +26,9 @@ public class MainActivity extends AppCompatActivity {
     public static final String PREFS_NAME = "Vk";
     public static final String TOKEN = "token";
     private static final String MYSELF_ID = "myselfId";
+    private static final int DIALOG_ACTIVITY_REQUEST_CODE = 0;
 
     private final int WRONG_ID = -1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +47,9 @@ public class MainActivity extends AppCompatActivity {
             logIn();
         } else {
             initMetaInfo(token, myselfId);
-            startActivity(new Intent(MainActivity.this, DialogsActivity.class));
+            Intent intent = new Intent(MainActivity.this, DialogsActivity.class);
+            startActivityForResult(intent, DIALOG_ACTIVITY_REQUEST_CODE);
+//            startActivity(new Intent(MainActivity.this, DialogsActivity.class));
         }
     }
 
@@ -67,6 +69,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == DIALOG_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                finish();
+            }
+        }
         if (!VKSdk.onActivityResult(requestCode, resultCode, data, vkAccessTokenVKCallback)) {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -119,7 +126,10 @@ public class MainActivity extends AppCompatActivity {
             editor.putString(TOKEN, token);
             editor.apply();
 
-            runOnUiThread(() -> startActivity(new Intent(MainActivity.this, DialogsActivity.class)));
+            runOnUiThread(() -> {
+                Intent intent = new Intent(MainActivity.this, DialogsActivity.class);
+                startActivityForResult(intent, DIALOG_ACTIVITY_REQUEST_CODE);
+            });
         }
 
         private int getMyselfId(String body) {
