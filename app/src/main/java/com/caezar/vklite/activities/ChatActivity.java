@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.caezar.vklite.ChatManager;
 import com.caezar.vklite.R;
 import com.caezar.vklite.adapters.ChatAdapter;
 import com.caezar.vklite.fragments.ImageMessageFullScreenFragment;
@@ -182,11 +183,8 @@ public class ChatActivity extends AppCompatActivity {
     private void getChat(int offset) {
         if (requestChatFinish) {
             requestChatFinish = false;
-            final ChatRequest chatRequest = new ChatRequest();
-            chatRequest.setOffset(offset);
-            chatRequest.setPeer_id(peer_id);
-            final String url = UrlBuilder.constructGetChat(chatRequest);
-            NetworkManager.getInstance().get(url, new OnGetMessagesComplete());
+            int defaultCount = new ChatRequest().getCount(); //todo: fix it
+            ChatManager.getInstance().getChat(offset, peer_id, defaultCount, new GetMessages(), this);
         }
     }
 
@@ -211,11 +209,13 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void addMessagesToAdapterTop(List<DialogMessage> items) {
-        adapter.addItemsToTop(items);
-        if (adapter.getItemCount() == new ChatRequest().getCount()) {
-            recyclerView.scrollToPosition(0);
-        }
-        requestChatFinish = true;
+        runOnUiThread(() -> {
+            adapter.addItemsToTop(items);
+            if (adapter.getItemCount() == new ChatRequest().getCount()) {
+                recyclerView.scrollToPosition(0);
+            }
+            requestChatFinish = true;
+        });
     }
 
     private void setAvatarsToAdapter(SparseArray<String> photoUsers) {
@@ -300,33 +300,6 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    private class OnGetMessagesComplete implements NetworkManager.OnRequestCompleteListener {
-
-        @Override
-        public void onResponse(final String body) {
-            ChatResponse chatResponse = parseBody(ChatResponse.class, body);
-
-            if (chatResponse.getResponse() == null) {
-                makeToastError(body, ChatActivity.this);
-                return;
-            }
-
-            final List<DialogMessage> messages = Arrays.asList(chatResponse.getResponse().getItems());
-
-            runOnUiThread(() -> addMessagesToAdapterTop(messages));
-        }
-
-        @Override
-        public void onError(String body) {
-            createErrorInternetToast(ChatActivity.this);
-        }
-
-        @Override
-        public void onErrorCode(int code) {
-
-        }
-    }
-
     private class OnSendMessageComplete implements NetworkManager.OnRequestCompleteListener {
         private final String message;
 
@@ -382,6 +355,17 @@ public class ChatActivity extends AppCompatActivity {
         public void onErrorCode(int code) {
 
         }
+    }
+
+    private class GetMessages implements ChatManager.GetMessages {
+        @Override
+        public void callback(List<DialogMessage> messages) {
+            addMessagesToAdapterTop(messages);
+        }
+
+        public GetMessages() {
+        }
+
     }
 }
 
