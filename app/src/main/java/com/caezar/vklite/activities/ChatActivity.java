@@ -12,29 +12,21 @@ import android.widget.TextView;
 
 import com.caezar.vklite.ChatManager;
 import com.caezar.vklite.R;
+import com.caezar.vklite.UserManager;
 import com.caezar.vklite.adapters.ChatAdapter;
 import com.caezar.vklite.fragments.ImageMessageFullScreenFragment;
 import com.caezar.vklite.Config;
-import com.caezar.vklite.NetworkManager;
 import com.caezar.vklite.models.network.User;
 import com.caezar.vklite.models.network.request.ChatRequest;
-import com.caezar.vklite.models.network.request.UsersChatRequest;
 import com.caezar.vklite.models.network.DialogMessage;
-import com.caezar.vklite.models.network.request.UsersByIdRequest;
-import com.caezar.vklite.models.network.response.UsersByIdResponse;
-import com.caezar.vklite.libs.UrlBuilder;
-import com.caezar.vklite.models.network.response.UsersChatResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.caezar.vklite.ErrorHandler.createErrorInternetToast;
-import static com.caezar.vklite.ErrorHandler.makeToastError;
 import static com.caezar.vklite.activities.DialogsActivity.PEER_ID;
 import static com.caezar.vklite.activities.DialogsActivity.TITLE;
 import static com.caezar.vklite.libs.DialogsHelper.getChatIdFromPeerId;
 import static com.caezar.vklite.libs.KeyBoard.hideKeyboard;
-import static com.caezar.vklite.libs.ParseResponse.parseBody;
 
 /**
  * Created by seva on 03.04.18 in 15:40.
@@ -162,18 +154,8 @@ public class ChatActivity extends AppCompatActivity {
     private void getParticipantsChat(int chatId) {
         if (requestAvatarsFinish) {
             requestAvatarsFinish = false;
-            UsersChatRequest usersChatRequest = new UsersChatRequest();
-            usersChatRequest.setChat_id(chatId);
-            final String url = UrlBuilder.constructGetUsersChat(usersChatRequest);
-            NetworkManager.getInstance().get(url, new OnGetUsersIdComplete());
+            UserManager.getInstance().getUsersChat(chatId, new GetUserIds(), this);
         }
-    }
-
-    private void getInfoAboutUsers(int[] userIds) {
-        final UsersByIdRequest usersByIdRequest = new UsersByIdRequest();
-        usersByIdRequest.setUser_ids(userIds);
-        final String url = UrlBuilder.constructGetUsersInfo(usersByIdRequest);
-        NetworkManager.getInstance().get(url, new OnGetUsersAvatarsComplete());
     }
 
     private void getChat(int offset) {
@@ -199,8 +181,10 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void setAvatarsToAdapter(SparseArray<String> photoUsers) {
-        adapter.setUsersAvatar(photoUsers);
-        requestAvatarsFinish = true;
+        runOnUiThread(() -> {
+            adapter.setUsersAvatar(photoUsers);
+            requestAvatarsFinish = true;
+        });
     }
 
     public void createFragmentFullSizeImageMessage(String photoUrl) {
@@ -215,69 +199,6 @@ public class ChatActivity extends AppCompatActivity {
         transaction.addToBackStack(null);
 
         transaction.commit();
-    }
-
-    private class OnGetUsersIdComplete implements NetworkManager.OnRequestCompleteListener {
-
-        public OnGetUsersIdComplete() {
-        }
-
-        @Override
-        public void onResponse(final String body) {
-            UsersChatResponse usersChatResponse = parseBody(UsersChatResponse.class, body);
-
-            if (usersChatResponse.getResponse() == null) {
-                makeToastError(body, ChatActivity.this);
-                return;
-            }
-
-            final int[] usersId = usersChatResponse.getResponse().getUsers();
-            getInfoAboutUsers(usersId);
-        }
-
-        @Override
-        public void onError(String body) {
-            createErrorInternetToast(ChatActivity.this);
-        }
-
-        @Override
-        public void onErrorCode(int code) {
-        }
-    }
-
-    private class OnGetUsersAvatarsComplete implements NetworkManager.OnRequestCompleteListener {
-
-        public OnGetUsersAvatarsComplete() {
-        }
-
-        @Override
-        public void onResponse(final String body) {
-            UsersByIdResponse usersByIdResponse = parseBody(UsersByIdResponse.class, body);
-
-            if (usersByIdResponse.getUsers() == null) {
-                makeToastError(body, ChatActivity.this);
-                return;
-            }
-
-            final SparseArray<String> photoUsers = new SparseArray<>();
-
-            for (User user: usersByIdResponse.getUsers()) {
-                photoUsers.append(user.getId(), user.getPhoto_50());
-            }
-
-            runOnUiThread(() -> setAvatarsToAdapter(photoUsers));
-
-        }
-
-        @Override
-        public void onError(String body) {
-            createErrorInternetToast(ChatActivity.this);
-        }
-
-        @Override
-        public void onErrorCode(int code) {
-
-        }
     }
 
     private class GetMessages implements ChatManager.GetMessages {
@@ -307,6 +228,33 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         public GetLastMessage() {
+        }
+    }
+
+    private class GetUserIds implements UserManager.GetUserIds {
+        @Override
+        public void callback(int[] userIds) {
+            UserManager.getInstance().getUsers(userIds, new GetUsers(), ChatActivity.this);
+        }
+
+        public GetUserIds() {
+        }
+    }
+
+    private class GetUsers implements UserManager.GetUsers {
+        @Override
+        public void callback(User[] users) {
+            final SparseArray<String> photoUsers = new SparseArray<>();
+
+            for (User user: users) {
+                photoUsers.append(user.getId(), user.getPhoto_50());
+            }
+
+            setAvatarsToAdapter(photoUsers);
+        }
+
+        public GetUsers() {
+
         }
     }
 }
