@@ -19,17 +19,13 @@ import com.caezar.vklite.NetworkManager;
 import com.caezar.vklite.models.network.User;
 import com.caezar.vklite.models.network.request.ChatRequest;
 import com.caezar.vklite.models.network.request.UsersChatRequest;
-import com.caezar.vklite.models.network.response.ChatResponse;
 import com.caezar.vklite.models.network.DialogMessage;
-import com.caezar.vklite.models.network.request.SendMessageRequest;
 import com.caezar.vklite.models.network.request.UsersByIdRequest;
-import com.caezar.vklite.models.network.response.SendResponse;
 import com.caezar.vklite.models.network.response.UsersByIdResponse;
 import com.caezar.vklite.libs.UrlBuilder;
 import com.caezar.vklite.models.network.response.UsersChatResponse;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.caezar.vklite.ErrorHandler.createErrorInternetToast;
@@ -86,7 +82,7 @@ public class ChatActivity extends AppCompatActivity {
         button.setOnClickListener(v -> {
                 final String message = editText.getText().toString();
                 editText.getText().clear();
-                sendMessage(message);
+                ChatManager.getInstance().sendMessage(message, peer_id, new SendMessage(), this);
                 recyclerView.scrollToPosition(0);
                 hideKeyboard(editText);
         });
@@ -188,24 +184,8 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    private void getLastMessage() {
-        final ChatRequest chatRequest = new ChatRequest();
-        chatRequest.setCount(1);
-        chatRequest.setPeer_id(peer_id);
-        final String url = UrlBuilder.constructGetChat(chatRequest);
-        NetworkManager.getInstance().get(url, new OnGetLastMessageComplete());
-    }
-
-    private void sendMessage(final String message) {
-        final SendMessageRequest sendMessageRequest = new SendMessageRequest();
-        sendMessageRequest.setMessage(message);
-        sendMessageRequest.setPeer_id(peer_id);
-        final String url = UrlBuilder.constructSendMessage(sendMessageRequest);
-        NetworkManager.getInstance().get(url, new OnSendMessageComplete(message));
-    }
-
     private void addMessageToAdapterEnd(DialogMessage dialogMessage) {
-        adapter.addItemToEnd(dialogMessage);
+        runOnUiThread(() -> adapter.addItemToEnd(dialogMessage));
     }
 
     private void addMessagesToAdapterTop(List<DialogMessage> items) {
@@ -300,63 +280,6 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    private class OnSendMessageComplete implements NetworkManager.OnRequestCompleteListener {
-        private final String message;
-
-        OnSendMessageComplete(final String message) {
-            this.message = message;
-        }
-
-        @Override
-        public void onResponse(final String body) {
-            SendResponse sendResponse = parseBody(SendResponse.class, body);
-
-            if (sendResponse.getResponse() == 0) {
-                makeToastError(body, ChatActivity.this);
-                return;
-            }
-
-            getLastMessage();
-        }
-
-        @Override
-        public void onError(String body) {
-            createErrorInternetToast(ChatActivity.this);
-        }
-
-        @Override
-        public void onErrorCode(int code) {
-
-        }
-    }
-
-    private class OnGetLastMessageComplete implements NetworkManager.OnRequestCompleteListener {
-
-        @Override
-        public void onResponse(final String body) {
-            ChatResponse chatResponse = parseBody(ChatResponse.class, body);
-
-            if (chatResponse.getResponse() == null) {
-                makeToastError(body, ChatActivity.this);
-                return;
-            }
-
-            final List<DialogMessage> messages = Arrays.asList(chatResponse.getResponse().getItems());
-
-            runOnUiThread(() -> addMessageToAdapterEnd(messages.get(0)));
-        }
-
-        @Override
-        public void onError(String body) {
-            createErrorInternetToast(ChatActivity.this);
-        }
-
-        @Override
-        public void onErrorCode(int code) {
-
-        }
-    }
-
     private class GetMessages implements ChatManager.GetMessages {
         @Override
         public void callback(List<DialogMessage> messages) {
@@ -365,7 +288,26 @@ public class ChatActivity extends AppCompatActivity {
 
         public GetMessages() {
         }
+    }
 
+    private class SendMessage implements ChatManager.SendMessage {
+        @Override
+        public void callback() {
+            ChatManager.getInstance().getChat(0, peer_id, 1, new GetLastMessage(), ChatActivity.this);
+        }
+
+        public SendMessage() {
+        }
+    }
+
+    private class GetLastMessage implements ChatManager.GetLastMessage {
+        @Override
+        public void callback(DialogMessage message) {
+            addMessageToAdapterEnd(message);
+        }
+
+        public GetLastMessage() {
+        }
     }
 }
 
