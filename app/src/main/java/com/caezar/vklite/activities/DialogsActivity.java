@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.caezar.vklite.DbManager;
 import com.caezar.vklite.DialogManager;
 import com.caezar.vklite.ListenerHandler;
 import com.caezar.vklite.R;
@@ -21,7 +20,6 @@ import java.util.List;
 import com.caezar.vklite.models.network.DialogItem;
 import com.caezar.vklite.models.network.User;
 
-import static com.caezar.vklite.libs.Db.insertDialogs;
 import static com.caezar.vklite.libs.DialogsHelper.addDataToDialogsList;
 import static com.caezar.vklite.libs.DialogsHelper.getUsersIdFromPrivateDialogs;
 
@@ -150,7 +148,7 @@ public class DialogsActivity extends AppCompatActivity {
         public void callback(List<DialogItem> dialogs) {
             setDialogsFromListener(dialogs);
             final int[] userIds = getUsersIdFromPrivateDialogs(dialogs);
-            UserManager.getInstance().requestGetUsers(userIds, new GetUsers(dialogs), DialogsActivity.this);
+            UserManager.getInstance().getUsers(userIds, new GetUsers(dialogs), DialogsActivity.this);
         }
 
         public GetDialogs() {

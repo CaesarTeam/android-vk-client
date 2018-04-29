@@ -28,7 +28,7 @@ public class UserManager {
         return INSTANCE;
     }
 
-    public void requestGetUsers(int[] userIds, GetUsers listenerCallback, Context context) {
+    public void getUsers(int[] userIds, GetUsers listenerCallback, Context context) {
         if (ONLINE_MODE) {
             final UsersByIdRequest usersByIdRequest = new UsersByIdRequest();
             usersByIdRequest.setUser_ids(userIds);
