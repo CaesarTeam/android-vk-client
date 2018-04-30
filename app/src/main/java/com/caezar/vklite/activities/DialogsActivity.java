@@ -17,6 +17,7 @@ import com.caezar.vklite.adapters.DialogsAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.caezar.vklite.libs.ChatInstanceState;
 import com.caezar.vklite.models.network.DialogItem;
 import com.caezar.vklite.models.network.User;
 
@@ -105,6 +106,7 @@ public class DialogsActivity extends AppCompatActivity {
     }
 
     public void openChatCallback(int peer_id, String title) {
+        ChatInstanceState.getInstance().resetChat();
         Intent intent = new Intent(DialogsActivity.this, ChatActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(TITLE, title);
