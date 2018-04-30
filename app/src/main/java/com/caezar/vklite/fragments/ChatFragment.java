@@ -36,6 +36,7 @@ import static com.caezar.vklite.fragments.DialogsFragment.PEER_ID;
 import static com.caezar.vklite.fragments.DialogsFragment.TITLE;
 import static com.caezar.vklite.fragments.ImageMessageFullScreenFragment.IMAGE_FULL_FRAGMENT_TAG;
 import static com.caezar.vklite.fragments.MessageActionDialog.MESSAGE_ACTION_FRAGMENT_TAG;
+import static com.caezar.vklite.libs.ChatHelper.swapButtonsVisibility;
 import static com.caezar.vklite.libs.DialogsHelper.getChatIdFromPeerId;
 import static com.caezar.vklite.libs.KeyBoard.hideKeyboard;
 import static com.caezar.vklite.libs.KeyBoard.showKeyboard;
@@ -85,7 +86,6 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         sendMessage = view.findViewById(R.id.buttonSendMessage);
         submitEditMessage = view.findViewById(R.id.buttonSubmitEdit);
 
-        sendMessage.setVisibility(View.VISIBLE);
         sendMessage.setOnClickListener(v -> {
             hideKeyboard(editText);
             final String message = editText.getText().toString();
@@ -94,7 +94,6 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             recyclerView.scrollToPosition(0);
         });
 
-        submitEditMessage.setVisibility(View.GONE);
         submitEditMessage.setOnClickListener(editMessageListener);
 
         recyclerView = view.findViewById(R.id.messagesList);
@@ -191,8 +190,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
 
     private void editMessage(String message, int messageId) {
         showKeyboard(editText);
-        sendMessage.setVisibility(View.GONE);
-        submitEditMessage.setVisibility(View.VISIBLE);
+        swapButtonsVisibility(sendMessage, submitEditMessage);
         editText.setText(message);
         editText.requestFocus();
         editText.setSelection(editText.getText().length());
@@ -311,8 +309,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             editText.getText().clear();
             ChatManager.getInstance().editMessage(message, peer_id, messageId, new MessageEdited(), getContext());
             hideKeyboard(editText);
-            sendMessage.setVisibility(View.VISIBLE);
-            submitEditMessage.setVisibility(View.GONE);
+            swapButtonsVisibility(sendMessage, submitEditMessage);
         }
 
 

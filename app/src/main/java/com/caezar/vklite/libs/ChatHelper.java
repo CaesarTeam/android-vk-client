@@ -2,6 +2,7 @@ package com.caezar.vklite.libs;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.caezar.vklite.R;
@@ -26,6 +27,13 @@ public class ChatHelper {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) container.getLayoutParams();
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         container.setLayoutParams(params);
+    }
+
+    public static void swapButtonsVisibility(Button button1, Button button2) {
+        int firstVisibility = button1.getVisibility();
+        int secondVisibility = button2.getVisibility();
+        button1.setVisibility(secondVisibility);
+        button2.setVisibility(firstVisibility);
     }
 
     public static void setAvatar(boolean isNonDuplicatesAvatar, RoundedImageView avatarView, String avatarUrl) {
