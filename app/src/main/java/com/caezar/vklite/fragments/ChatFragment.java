@@ -311,6 +311,8 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             editText.getText().clear();
             ChatManager.getInstance().editMessage(message, peer_id, messageId, new MessageEdited(), getContext());
             hideKeyboard(editText);
+            sendMessage.setVisibility(View.VISIBLE);
+            submitEditMessage.setVisibility(View.GONE);
         }
 
 

@@ -62,7 +62,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/margin_right_for_button_send_message"
             android:layout_alignParentEnd="true"
-            android:background="@drawable/send"/>
+            android:background="@drawable/submit_edit"/>
 
     </RelativeLayout>
 
