@@ -62,11 +62,11 @@ public class ChatActivity extends AppCompatActivity {
             }
         }
 
-        peer_id = getIntent().getIntExtra(PEER_ID, 0);
+        peer_id = getIntent().getExtras().getInt(PEER_ID, 0);
         isPrivateDialog = peer_id < Config.peerIdConstant;
 
         TextView textView = findViewById(R.id.messageTitle);
-        textView.setText(getIntent().getStringExtra(TITLE));
+        textView.setText(getIntent().getExtras().getString(TITLE));
 
         editText = findViewById(R.id.messageForm);
 

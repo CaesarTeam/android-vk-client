@@ -106,8 +106,10 @@ public class DialogsActivity extends AppCompatActivity {
 
     public void openChatCallback(int peer_id, String title) {
         Intent intent = new Intent(DialogsActivity.this, ChatActivity.class);
-        intent.putExtra(PEER_ID, peer_id);
-        intent.putExtra(TITLE, title);
+        Bundle bundle = new Bundle();
+        bundle.putString(TITLE, title);
+        bundle.putInt(PEER_ID, peer_id);
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 
