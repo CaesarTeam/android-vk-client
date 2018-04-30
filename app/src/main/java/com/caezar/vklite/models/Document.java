@@ -1,4 +1,4 @@
-package com.caezar.vklite.models.network;
+package com.caezar.vklite.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

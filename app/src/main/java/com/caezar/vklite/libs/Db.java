@@ -2,7 +2,7 @@ package com.caezar.vklite.libs;
 
 import com.caezar.vklite.DbManager;
 import com.caezar.vklite.models.db.DialogModel;
-import com.caezar.vklite.models.network.DialogItem;
+import com.caezar.vklite.models.DialogItem;
 
 import java.util.List;
 

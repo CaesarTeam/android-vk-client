@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.fragments.DialogsFragment;
-import com.caezar.vklite.models.network.DialogItem;
-import com.caezar.vklite.models.network.DialogMessage;
+import com.caezar.vklite.models.DialogItem;
+import com.caezar.vklite.models.DialogMessage;
 
 import java.util.ArrayList;
 import java.util.List;

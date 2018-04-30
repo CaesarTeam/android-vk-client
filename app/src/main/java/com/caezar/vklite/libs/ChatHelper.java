@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.caezar.vklite.R;
-import com.caezar.vklite.models.network.DialogMessage;
+import com.caezar.vklite.models.DialogMessage;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;

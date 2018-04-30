@@ -17,15 +17,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.caezar.vklite.ChatManager;
+import com.caezar.vklite.ChooseMessageTypeListener;
 import com.caezar.vklite.FragmentCallback;
 import com.caezar.vklite.R;
 import com.caezar.vklite.UserManager;
 import com.caezar.vklite.adapters.ChatAdapter;
 import com.caezar.vklite.Config;
 import com.caezar.vklite.libs.ChatInstanceState;
-import com.caezar.vklite.models.network.User;
+import com.caezar.vklite.models.MessageAction;
+import com.caezar.vklite.models.User;
 import com.caezar.vklite.models.network.request.ChatRequest;
-import com.caezar.vklite.models.network.DialogMessage;
+import com.caezar.vklite.models.DialogMessage;
 
 import java.util.List;
 
@@ -33,6 +35,7 @@ import static com.caezar.vklite.fragments.DialogsFragment.CHAT_FRAGMENT_TAG;
 import static com.caezar.vklite.fragments.DialogsFragment.PEER_ID;
 import static com.caezar.vklite.fragments.DialogsFragment.TITLE;
 import static com.caezar.vklite.fragments.ImageMessageFullScreenFragment.IMAGE_FULL_FRAGMENT_TAG;
+import static com.caezar.vklite.fragments.MessageActionDialog.MESSAGE_ACTION_FRAGMENT_TAG;
 import static com.caezar.vklite.libs.DialogsHelper.getChatIdFromPeerId;
 import static com.caezar.vklite.libs.KeyBoard.hideKeyboard;
 
@@ -40,8 +43,9 @@ import static com.caezar.vklite.libs.KeyBoard.hideKeyboard;
  * Created by seva on 03.04.18 in 15:40.
  */
 
-public class ChatFragment extends Fragment {
+public class ChatFragment extends Fragment implements ChooseMessageTypeListener {
     public static final String PHOTO_URL = "photoUrl";
+    public static final String DIALOG_MESSAGE = "dialogMessage";
 
     private RecyclerView recyclerView;
     private ChatAdapter adapter;
@@ -71,7 +75,7 @@ public class ChatFragment extends Fragment {
         button.setOnClickListener(v -> {
             final String message = editText.getText().toString();
             editText.getText().clear();
-            ChatManager.getInstance().sendMessage(message, peer_id, new SendMessage(), getContext());
+            ChatManager.getInstance().sendMessage(message, peer_id, new MessageSent(), getContext());
             recyclerView.scrollToPosition(0);
             hideKeyboard(editText);
         });
@@ -156,6 +160,26 @@ public class ChatFragment extends Fragment {
         getActivity().runOnUiThread(() -> adapter.setUsersAvatar(photoUsers));
     }
 
+    @Override
+    public void onFinishDialogMessageType(MessageAction messageAction, DialogMessage dialogMessage) {
+        Log.d("onFinishDialog", dialogMessage.getBody());
+
+        switch (messageAction) {
+            case REPLY:
+                break;
+            case FORWARD:
+                break;
+            case PIN:
+                break;
+            case COPY:
+                break;
+            case EDIT:
+                break;
+            case DELETE:
+                break;
+        }
+    }
+
     private class GetMessages implements ChatManager.GetMessages {
         @Override
         public void callback(List<DialogMessage> messages) {
@@ -166,13 +190,23 @@ public class ChatFragment extends Fragment {
         }
     }
 
-    private class SendMessage implements ChatManager.SendMessage {
+    private class MessageSent implements ChatManager.MessageActionDone {
         @Override
-        public void callback() {
+        public void callback(int messageId) {
             ChatManager.getInstance().getChat(0, peer_id, 1, new GetLastMessage(), getContext());
         }
 
-        public SendMessage() {
+        public MessageSent() {
+        }
+    }
+
+    private class MessageEdited implements ChatManager.MessageActionDone {
+        @Override
+        public void callback(int messageId) {
+            //ChatManager.getInstance().getChat(offset, peer_id, 1, new GetMessageById(), getContext());
+        }
+
+        public MessageEdited() {
         }
     }
 
@@ -234,6 +268,15 @@ public class ChatFragment extends Fragment {
             transaction.addToBackStack(CHAT_FRAGMENT_TAG);
 
             transaction.commit();
+        }
+
+        public void createFragmentDialogMessageType(DialogMessage dialogMessage) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(DIALOG_MESSAGE, dialogMessage);
+            MessageActionDialog messageActionDialog = new MessageActionDialog();
+            messageActionDialog.setTargetFragment(ChatFragment.this, 0);
+            messageActionDialog.setArguments(bundle);
+            messageActionDialog.show(getActivity().getSupportFragmentManager(), MESSAGE_ACTION_FRAGMENT_TAG);
         }
     }
 }

@@ -3,6 +3,14 @@
     <string name="message_form_placeholder">Введите сообщение</string>
     <string name="error_internet_connection">Проверьте ваше подключение к интернету</string>
     <string name="yesterday">вчера</string>
+
+    <string name="dialogMessageActionReply">Ответить</string>
+    <string name="dialogMessageActionForward">Переслать</string>
+    <string name="dialogMessageActionPin">Закрепить</string>
+    <string name="dialogMessageActionCopy">Скопировать</string>
+    <string name="dialogMessageActionEdit">Редактировать</string>
+    <string name="dialogMessageActionDelete">Удалить</string>
+
     <string name="bytes">Б</string>
     <string name="kilobytes">Кб</string>
     <string name="megabytes">Мб</string>

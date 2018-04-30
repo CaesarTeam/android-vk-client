@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.caezar.vklite.libs.UrlBuilder;
-import com.caezar.vklite.models.network.DialogItem;
+import com.caezar.vklite.models.DialogItem;
 import com.caezar.vklite.models.network.request.DialogsRequest;
 import com.caezar.vklite.models.network.response.DialogsResponse;
 

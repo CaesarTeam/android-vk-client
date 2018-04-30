@@ -3,10 +3,10 @@ package com.caezar.vklite.libs;
 import android.content.Context;
 
 import com.caezar.vklite.R;
-import com.caezar.vklite.models.network.Attachments;
-import com.caezar.vklite.models.network.DialogItem;
-import com.caezar.vklite.models.network.DialogMessage;
-import com.caezar.vklite.models.network.User;
+import com.caezar.vklite.models.Attachments;
+import com.caezar.vklite.models.DialogItem;
+import com.caezar.vklite.models.DialogMessage;
+import com.caezar.vklite.models.User;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;

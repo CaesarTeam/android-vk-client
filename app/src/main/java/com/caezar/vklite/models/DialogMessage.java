@@ -1,4 +1,7 @@
-package com.caezar.vklite.models.network;
+package com.caezar.vklite.models;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,7 +13,7 @@ import java.util.Arrays;
  */
 
 @SuppressWarnings({"unused"})
-public class DialogMessage extends Message {
+public class DialogMessage extends Message implements Parcelable {
     private int chat_id;
     private int[] chat_active;
     private int users_count;
@@ -165,5 +168,49 @@ public class DialogMessage extends Message {
                 ", photo_100=" + photo_100 +
                 ", photo_200=" + photo_200 +
                 ", push_settings=" + push_settings;
+    }
+
+    protected DialogMessage(Parcel in) {
+        chat_id = in.readInt();
+        chat_active = in.createIntArray();
+        users_count = in.readInt();
+        admin_id = in.readInt();
+        action_mid = in.readInt();
+        action_email = in.readString();
+        action_text = in.readString();
+        photo_50 = in.readString();
+        photo_100 = in.readString();
+        photo_200 = in.readString();
+    }
+
+    public static final Creator<DialogMessage> CREATOR = new Creator<DialogMessage>() {
+        @Override
+        public DialogMessage createFromParcel(Parcel in) {
+            return new DialogMessage(in);
+        }
+
+        @Override
+        public DialogMessage[] newArray(int size) {
+            return new DialogMessage[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(chat_id);
+        dest.writeIntArray(chat_active);
+        dest.writeInt(users_count);
+        dest.writeInt(admin_id);
+        dest.writeInt(action_mid);
+        dest.writeString(action_email);
+        dest.writeString(action_text);
+        dest.writeString(photo_50);
+        dest.writeString(photo_100);
+        dest.writeString(photo_200);
     }
 }

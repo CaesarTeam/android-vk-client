@@ -4,6 +4,14 @@
     <string name="message_form_placeholder">Enter message</string>
     <string name="error_internet_connection">Check you internet connection</string>
     <string name="yesterday">yesterday</string>
+
+    <string name="dialogMessageActionReply">Reply</string>
+    <string name="dialogMessageActionForward">Forward</string>
+    <string name="dialogMessageActionPin">Pin</string>
+    <string name="dialogMessageActionCopy">Copy</string>
+    <string name="dialogMessageActionEdit">Edit</string>
+    <string name="dialogMessageActionDelete">Delete</string>
+
     <string name="bytes">B</string>
     <string name="kilobytes">Kb</string>
     <string name="megabytes">Mb</string>

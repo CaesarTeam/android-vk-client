@@ -2,7 +2,7 @@ package com.caezar.vklite.libs;
 
 import android.text.TextUtils;
 
-import com.caezar.vklite.models.network.DialogItem;
+import com.caezar.vklite.models.DialogItem;
 import com.google.common.base.Predicate;
 
 /**

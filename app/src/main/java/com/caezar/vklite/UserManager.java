@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.caezar.vklite.libs.UrlBuilder;
-import com.caezar.vklite.models.network.User;
+import com.caezar.vklite.models.User;
 import com.caezar.vklite.models.network.request.UsersByIdRequest;
 import com.caezar.vklite.models.network.request.UsersChatRequest;
 import com.caezar.vklite.models.network.response.UsersByIdResponse;

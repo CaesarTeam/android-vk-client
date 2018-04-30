@@ -1,6 +1,6 @@
 package com.caezar.vklite.models.network.response;
 
-import com.caezar.vklite.models.network.User;
+import com.caezar.vklite.models.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**

@@ -16,8 +16,8 @@ import com.caezar.vklite.R;
 import com.caezar.vklite.fragments.ChatFragment;
 import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.Config;
-import com.caezar.vklite.models.network.DialogMessage;
-import com.caezar.vklite.models.network.Photo;
+import com.caezar.vklite.models.DialogMessage;
+import com.caezar.vklite.models.Photo;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
@@ -131,6 +131,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         switch (getItemViewType(position)) {
             case TEXT_MESSAGE:
                 MessageTextViewHolder messageTextViewHolder = ((MessageTextViewHolder) holder);
+                messageTextViewHolder.position = position;
                 messageTextViewHolder.messageText.setText(item.getBody());
                 messageTextViewHolder.messageTextTime.setText(time);
 
@@ -216,6 +217,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         final TextView messageText;
         final TextView messageTextTime;
+        int position;
 
         MessageTextViewHolder(final View itemView) {
             super(itemView);
@@ -225,6 +227,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             container = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageTextContainer) : itemView.findViewById(R.id.messageTextContainerLand));
             messageText = (TextView) (isPort ? itemView.findViewById(R.id.messageText) : itemView.findViewById(R.id.messageTextLand));
             messageTextTime = (TextView) (isPort ? itemView.findViewById(R.id.messageTextTime) : itemView.findViewById(R.id.messageTextTimeLand));
+
+            container.setOnClickListener(v -> {
+                chatCallbacks.createFragmentDialogMessageType(items.get(position));
+            });
         }
     }
 

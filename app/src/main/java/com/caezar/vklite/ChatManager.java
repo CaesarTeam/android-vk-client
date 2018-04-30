@@ -4,11 +4,13 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.caezar.vklite.libs.UrlBuilder;
-import com.caezar.vklite.models.network.DialogMessage;
+import com.caezar.vklite.models.DialogMessage;
+import com.caezar.vklite.models.MessageAction;
 import com.caezar.vklite.models.network.request.ChatRequest;
+import com.caezar.vklite.models.network.request.EditMessageRequest;
 import com.caezar.vklite.models.network.request.SendMessageRequest;
 import com.caezar.vklite.models.network.response.ChatResponse;
-import com.caezar.vklite.models.network.response.SendResponse;
+import com.caezar.vklite.models.network.response.MessageActionResponse;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,9 +41,22 @@ public class ChatManager {
             sendMessageRequest.setMessage(message);
             sendMessageRequest.setPeer_id(peer_id);
             final String url = UrlBuilder.constructSendMessage(sendMessageRequest);
-            NetworkManager.getInstance().get(url, new OnSendMessageComplete((ChatManager.SendMessage)listener, context));
+            NetworkManager.getInstance().get(url, new OnMessageActionComplete(MessageAction.SEND, (MessageActionDone)listener, context));
         } else {
             // todo: save to store to send when online
+        }
+    }
+
+    public void editMessage(String message, int peer_id, int message_id, Listener listener, Context context) {
+        if (ONLINE_MODE) {
+            final EditMessageRequest editMessageRequest = new EditMessageRequest();
+            editMessageRequest.setMessage(message);
+            editMessageRequest.setPeer_id(peer_id);
+            editMessageRequest.setMessage_id(message_id);
+            final String url = UrlBuilder.constructEditMessage(editMessageRequest);
+            NetworkManager.getInstance().get(url, new OnMessageActionComplete(MessageAction.EDIT, (MessageActionDone)listener, context));
+        } else {
+            // todo: save to store to edit message
         }
     }
 
@@ -52,17 +67,17 @@ public class ChatManager {
             chatRequest.setOffset(offset);
             chatRequest.setPeer_id(peer_id);
             final String url = UrlBuilder.constructGetChat(chatRequest);
-            NetworkManager.getInstance().get(url, new ChatManager.OnGetMessagesComplete(listener, context));
+            NetworkManager.getInstance().get(url, new OnGetMessagesChatComplete(listener, context));
         } else {
 
         }
     }
 
-    private class OnGetMessagesComplete implements NetworkManager.OnRequestCompleteListener {
+    private class OnGetMessagesChatComplete implements NetworkManager.OnRequestCompleteListener {
         private final Listener listenerCallback;
         private final Context context;
 
-        public OnGetMessagesComplete(Listener listenerCallback, Context context) {
+        public OnGetMessagesChatComplete(Listener listenerCallback, Context context) {
             this.listenerCallback = listenerCallback;
             this.context = context;
         }
@@ -95,11 +110,13 @@ public class ChatManager {
         }
     }
 
-    private class OnSendMessageComplete implements NetworkManager.OnRequestCompleteListener {
-        private final ChatManager.SendMessage listenerCallback;
+    private class OnMessageActionComplete implements NetworkManager.OnRequestCompleteListener {
+        private final MessageActionDone listenerCallback;
         private final Context context;
+        private final MessageAction messageAction;
 
-        public OnSendMessageComplete(ChatManager.SendMessage listenerCallback, Context context) {
+        public OnMessageActionComplete(MessageAction messageAction, MessageActionDone listenerCallback, Context context) {
+            this.messageAction = messageAction;
             this.listenerCallback = listenerCallback;
             this.context = context;
         }
@@ -115,14 +132,21 @@ public class ChatManager {
 
         @Override
         public void onResponse(final String body) {
-            SendResponse sendResponse = parseBody(SendResponse.class, body);
+            MessageActionResponse messageActionResponse = parseBody(MessageActionResponse.class, body);
 
-            if (sendResponse.getResponse() == 0) {
+            if (messageActionResponse.getResponse() == 0) {
                 makeToastError(body, context);
                 return;
             }
 
-            listenerCallback.callback();
+            switch (messageAction) {
+                case EDIT:
+                    break;
+                case SEND:
+                    break;
+            }
+
+            listenerCallback.callback(0);
         }
     }
 
@@ -134,7 +158,7 @@ public class ChatManager {
         void callback(DialogMessage message);
     }
 
-    public interface SendMessage extends Listener {
-        void callback();
+    public interface MessageActionDone extends Listener {
+        void callback(int messageId);
     }
 }

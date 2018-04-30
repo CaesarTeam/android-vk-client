@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +22,8 @@ import java.util.List;
 
 import com.caezar.vklite.libs.ChatInstanceState;
 import com.caezar.vklite.libs.DialogsInstanceState;
-import com.caezar.vklite.models.network.DialogItem;
-import com.caezar.vklite.models.network.User;
+import com.caezar.vklite.models.DialogItem;
+import com.caezar.vklite.models.User;
 
 import static com.caezar.vklite.activities.MainActivity.DIALOG_FRAGMENT_TAG;
 import static com.caezar.vklite.libs.DialogsHelper.addDataToDialogsList;
@@ -48,8 +47,6 @@ public class DialogsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.activity_dialogs, container, false);
-
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectActivityLeaks().build());
 
         RecyclerView recyclerView = view.findViewById(R.id.dialogsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.SparseArray;
 
-import com.caezar.vklite.models.network.DialogMessage;
+import com.caezar.vklite.models.DialogMessage;
 
 import java.util.List;
 

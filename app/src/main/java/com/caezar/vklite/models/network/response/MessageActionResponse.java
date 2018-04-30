@@ -5,7 +5,7 @@ package com.caezar.vklite.models.network.response;
  */
 
 @SuppressWarnings({"unused"})
-public class SendResponse {
+public class MessageActionResponse {
     private int response;
 
     public int getResponse() {
@@ -16,6 +16,6 @@ public class SendResponse {
         this.response = response;
     }
 
-    public SendResponse() {
+    public MessageActionResponse() {
     }
 }

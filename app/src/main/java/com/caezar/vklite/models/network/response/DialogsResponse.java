@@ -1,6 +1,6 @@
 package com.caezar.vklite.models.network.response;
 
-import com.caezar.vklite.models.network.DialogItem;
+import com.caezar.vklite.models.DialogItem;
 
 import java.util.Arrays;
 
