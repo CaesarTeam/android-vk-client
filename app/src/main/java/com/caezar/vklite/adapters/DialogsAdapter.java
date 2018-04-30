@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.caezar.vklite.R;
-import com.caezar.vklite.activities.DialogsActivity;
+import com.caezar.vklite.fragments.DialogsFragment;
 import com.caezar.vklite.models.network.DialogItem;
 import com.caezar.vklite.models.network.DialogMessage;
 
@@ -35,8 +35,10 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @NonNull private final List<DialogItem> items = new ArrayList<>();
     private final Context context;
+    private final DialogsFragment.DialogsCallbacks dialogsCallbacks;
 
-    public DialogsAdapter(Context context) {
+    public DialogsAdapter(DialogsFragment.DialogsCallbacks dialogsCallbacks, Context context) {
+        this.dialogsCallbacks = dialogsCallbacks;
         this.context = context;
     }
 
@@ -89,7 +91,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         if (isTimeToRequestDialogs(position)) {
-            ((DialogsActivity)context).getDialogsCallback(getItemCount());
+            dialogsCallbacks.getMoreDialogs(getItemCount());
         }
     }
 
@@ -179,9 +181,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 int peer_id = getPeerId(item);
                 String title = item.getMessage().getTitle();
 
-                if (context instanceof DialogsActivity) {
-                    ((DialogsActivity)context).openChatCallback(peer_id, title);
-                }
+                dialogsCallbacks.openChat(peer_id, title);
             }
         }
     }

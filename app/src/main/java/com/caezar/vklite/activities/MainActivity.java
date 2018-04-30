@@ -2,6 +2,7 @@ package com.caezar.vklite.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,8 @@ import android.util.Log;
 import com.caezar.vklite.R;
 import com.caezar.vklite.Config;
 import com.caezar.vklite.NetworkManager;
+import com.caezar.vklite.fragments.DialogsFragment;
+import com.caezar.vklite.fragments.ImageMessageFullScreenFragment;
 import com.caezar.vklite.libs.DialogsInstanceState;
 import com.caezar.vklite.models.network.response.UsersByIdResponse;
 import com.caezar.vklite.libs.UrlBuilder;
@@ -48,9 +51,7 @@ public class MainActivity extends AppCompatActivity {
             logIn();
         } else {
             initMetaInfo(token, myselfId);
-            DialogsInstanceState.getInstance().reset();
-            Intent intent = new Intent(MainActivity.this, DialogsActivity.class);
-            startActivityForResult(intent, DIALOG_ACTIVITY_REQUEST_CODE);
+            openDialogs();
         }
     }
 
@@ -66,6 +67,18 @@ public class MainActivity extends AppCompatActivity {
     private void initMetaInfo(String token, int myselfId) {
         Config.setToken(token);
         Config.setMyselfId(myselfId);
+    }
+
+    private void openDialogs() {
+        DialogsInstanceState.getInstance().reset();
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        DialogsFragment dialogsFragment = new DialogsFragment();
+        transaction.replace(R.id.mainContainer, dialogsFragment);
+        transaction.addToBackStack(null);
+
+        transaction.commit();
     }
 
     @Override
@@ -127,11 +140,7 @@ public class MainActivity extends AppCompatActivity {
             editor.putString(TOKEN, token);
             editor.apply();
 
-            runOnUiThread(() -> {
-                DialogsInstanceState.getInstance().reset();
-                Intent intent = new Intent(MainActivity.this, DialogsActivity.class);
-                startActivityForResult(intent, DIALOG_ACTIVITY_REQUEST_CODE);
-            });
+            runOnUiThread(MainActivity.this::openDialogs);
         }
 
         private int getMyselfId(String body) {

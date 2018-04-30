@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.SwipeRefreshLayout
-    android:id="@+id/swipe_container"
+    android:id="@+id/swipeContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activities.DialogsActivity">
+    tools:context=".fragments.DialogsFragment">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/dialogsContainer"

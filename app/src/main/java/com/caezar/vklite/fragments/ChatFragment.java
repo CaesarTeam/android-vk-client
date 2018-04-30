@@ -20,7 +20,6 @@ import com.caezar.vklite.FragmentCallback;
 import com.caezar.vklite.R;
 import com.caezar.vklite.UserManager;
 import com.caezar.vklite.adapters.ChatAdapter;
-import com.caezar.vklite.fragments.ImageMessageFullScreenFragment;
 import com.caezar.vklite.Config;
 import com.caezar.vklite.libs.ChatInstanceState;
 import com.caezar.vklite.models.network.User;
@@ -29,8 +28,8 @@ import com.caezar.vklite.models.network.DialogMessage;
 
 import java.util.List;
 
-import static com.caezar.vklite.activities.DialogsActivity.PEER_ID;
-import static com.caezar.vklite.activities.DialogsActivity.TITLE;
+import static com.caezar.vklite.fragments.DialogsFragment.PEER_ID;
+import static com.caezar.vklite.fragments.DialogsFragment.TITLE;
 import static com.caezar.vklite.libs.DialogsHelper.getChatIdFromPeerId;
 import static com.caezar.vklite.libs.KeyBoard.hideKeyboard;
 
@@ -228,7 +227,7 @@ public class ChatFragment extends Fragment {
 
             ImageMessageFullScreenFragment imageMessageFullScreenFragment = new ImageMessageFullScreenFragment();
             imageMessageFullScreenFragment.setArguments(bundle);
-            transaction.replace(R.id.dialogsContainer, imageMessageFullScreenFragment);
+            transaction.replace(R.id.mainContainer, imageMessageFullScreenFragment);
             transaction.addToBackStack(null);
 
             transaction.commit();

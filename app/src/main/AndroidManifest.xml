@@ -23,7 +23,7 @@
             android:name="com.vk.sdk.VKServiceActivity"
             android:label="ServiceActivity"
             android:theme="@style/VK.Transparent" />
-        <activity android:name=".activities.DialogsActivity" />
+        <activity android:name=".fragments.DialogsFragment" />
         <activity android:name=".fragments.ChatFragment" />
     </application>
 

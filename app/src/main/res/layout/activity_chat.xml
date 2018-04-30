@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".activities.DialogsActivity"
+    tools:context=".fragments.DialogsFragment"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@color/vk_grey_color"
     xmlns:tools="http://schemas.android.com/tools">
