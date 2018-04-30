@@ -38,6 +38,7 @@ import static com.caezar.vklite.fragments.ImageMessageFullScreenFragment.IMAGE_F
 import static com.caezar.vklite.fragments.MessageActionDialog.MESSAGE_ACTION_FRAGMENT_TAG;
 import static com.caezar.vklite.libs.DialogsHelper.getChatIdFromPeerId;
 import static com.caezar.vklite.libs.KeyBoard.hideKeyboard;
+import static com.caezar.vklite.libs.KeyBoard.showKeyboard;
 
 /**
  * Created by seva on 03.04.18 in 15:40.
@@ -50,13 +51,24 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
     private RecyclerView recyclerView;
     private ChatAdapter adapter;
     private EditText editText;
+    Button sendMessage;
+    Button submitEditMessage;
 
     private int peer_id;
     private boolean isPrivateDialog;
     private boolean isChatRequest = true;
 
+    @NonNull private final EditMessageListener editMessageListener = new EditMessageListener();
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_chat, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         String title = "";
         if (getArguments() != null) {
             peer_id = getArguments().getInt(PEER_ID, 0);
@@ -64,21 +76,26 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
 
             isPrivateDialog = peer_id < Config.peerIdConstant;
         }
-        View view = inflater.inflate(R.layout.activity_chat, container, false);
 
         TextView textView = view.findViewById(R.id.messageTitle);
         textView.setText(title);
 
         editText = view.findViewById(R.id.messageForm);
 
-        Button button = view.findViewById(R.id.buttonSendMessage);
-        button.setOnClickListener(v -> {
+        sendMessage = view.findViewById(R.id.buttonSendMessage);
+        submitEditMessage = view.findViewById(R.id.buttonSubmitEdit);
+
+        sendMessage.setVisibility(View.VISIBLE);
+        sendMessage.setOnClickListener(v -> {
+            hideKeyboard(editText);
             final String message = editText.getText().toString();
             editText.getText().clear();
             ChatManager.getInstance().sendMessage(message, peer_id, new MessageSent(), getContext());
             recyclerView.scrollToPosition(0);
-            hideKeyboard(editText);
         });
+
+        submitEditMessage.setVisibility(View.GONE);
+        submitEditMessage.setOnClickListener(editMessageListener);
 
         recyclerView = view.findViewById(R.id.messagesList);
         adapter = new ChatAdapter(new ChatCallbacks(), getContext(), isPrivateDialog);
@@ -95,13 +112,6 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         if (ChatInstanceState.getInstance().getPhotoUsers() != null) {
             setAvatarsToAdapter(ChatInstanceState.getInstance().getPhotoUsers());
         }
-
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
@@ -162,8 +172,6 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
 
     @Override
     public void onFinishDialogMessageType(MessageAction messageAction, DialogMessage dialogMessage) {
-        Log.d("onFinishDialog", dialogMessage.getBody());
-
         switch (messageAction) {
             case REPLY:
                 break;
@@ -174,10 +182,21 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             case COPY:
                 break;
             case EDIT:
+                editMessage(dialogMessage.getBody(), dialogMessage.getId());
                 break;
             case DELETE:
                 break;
         }
+    }
+
+    private void editMessage(String message, int messageId) {
+        showKeyboard(editText);
+        sendMessage.setVisibility(View.GONE);
+        submitEditMessage.setVisibility(View.VISIBLE);
+        editText.setText(message);
+        editText.requestFocus();
+        editText.setSelection(editText.getText().length());
+        editMessageListener.setMessageId(messageId);
     }
 
     private class GetMessages implements ChatManager.GetMessages {
@@ -277,6 +296,26 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             messageActionDialog.setTargetFragment(ChatFragment.this, 0);
             messageActionDialog.setArguments(bundle);
             messageActionDialog.show(getActivity().getSupportFragmentManager(), MESSAGE_ACTION_FRAGMENT_TAG);
+        }
+    }
+
+    public class EditMessageListener implements View.OnClickListener {
+        int messageId;
+
+        public EditMessageListener() {
+        }
+
+        @Override
+        public void onClick(View v) {
+            final String message = editText.getText().toString();
+            editText.getText().clear();
+            ChatManager.getInstance().editMessage(message, peer_id, messageId, new MessageEdited(), getContext());
+            hideKeyboard(editText);
+        }
+
+
+        public void setMessageId(int messageId) {
+            this.messageId = messageId;
         }
     }
 }

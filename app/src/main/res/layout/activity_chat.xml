@@ -54,6 +54,16 @@
             android:layout_alignParentEnd="true"
             android:background="@drawable/send"/>
 
+        <Button
+            android:id="@+id/buttonSubmitEdit"
+            android:layout_width="@dimen/button_send_message_size"
+            android:layout_height="@dimen/button_send_message_size"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/margin_right_for_button_send_message"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/send"/>
+
     </RelativeLayout>
 
 </RelativeLayout>
