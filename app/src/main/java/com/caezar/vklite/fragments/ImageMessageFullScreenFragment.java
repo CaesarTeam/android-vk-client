@@ -10,7 +10,7 @@ import android.widget.ImageView;
 
 import com.caezar.vklite.R;
 
-import static com.caezar.vklite.activities.ChatActivity.PHOTO_URL;
+import static com.caezar.vklite.fragments.ChatFragment.PHOTO_URL;
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
 
 /**

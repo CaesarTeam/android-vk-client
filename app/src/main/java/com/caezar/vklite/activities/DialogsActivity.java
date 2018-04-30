@@ -3,6 +3,7 @@ package com.caezar.vklite.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +18,7 @@ import com.caezar.vklite.adapters.DialogsAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.caezar.vklite.fragments.ChatFragment;
 import com.caezar.vklite.libs.ChatInstanceState;
 import com.caezar.vklite.models.network.DialogItem;
 import com.caezar.vklite.models.network.User;
@@ -107,12 +109,18 @@ public class DialogsActivity extends AppCompatActivity {
 
     public void openChatCallback(int peer_id, String title) {
         ChatInstanceState.getInstance().resetChat();
-        Intent intent = new Intent(DialogsActivity.this, ChatActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(TITLE, title);
         bundle.putInt(PEER_ID, peer_id);
-        intent.putExtras(bundle);
-        startActivity(intent);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        ChatFragment chatFragment = new ChatFragment();
+        chatFragment.setArguments(bundle);
+        transaction.replace(R.id.dialogsContainer, chatFragment);
+        transaction.addToBackStack(null);
+
+        transaction.commit();
     }
 
     public void getDialogsCallback(int offset) {

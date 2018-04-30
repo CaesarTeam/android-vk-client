@@ -1,16 +1,22 @@
-package com.caezar.vklite.activities;
+package com.caezar.vklite.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.caezar.vklite.ChatManager;
+import com.caezar.vklite.FragmentCallback;
 import com.caezar.vklite.R;
 import com.caezar.vklite.UserManager;
 import com.caezar.vklite.adapters.ChatAdapter;
@@ -32,7 +38,7 @@ import static com.caezar.vklite.libs.KeyBoard.hideKeyboard;
  * Created by seva on 03.04.18 in 15:40.
  */
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatFragment extends Fragment {
     public static final String PHOTO_URL = "photoUrl";
 
     private RecyclerView recyclerView;
@@ -41,32 +47,36 @@ public class ChatActivity extends AppCompatActivity {
 
     private int peer_id;
     private boolean isPrivateDialog;
+    private boolean isChatRequest = true;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        String title = "";
+        if (getArguments() != null) {
+            peer_id = getArguments().getInt(PEER_ID, 0);
+            title = getArguments().getString(TITLE);
 
-        peer_id = getIntent().getExtras().getInt(PEER_ID, 0);
-        isPrivateDialog = peer_id < Config.peerIdConstant;
+            isPrivateDialog = peer_id < Config.peerIdConstant;
+        }
+        View view = inflater.inflate(R.layout.activity_chat, container, false);
 
-        TextView textView = findViewById(R.id.messageTitle);
-        textView.setText(getIntent().getExtras().getString(TITLE));
+        TextView textView = view.findViewById(R.id.messageTitle);
+        textView.setText(title);
 
-        editText = findViewById(R.id.messageForm);
+        editText = view.findViewById(R.id.messageForm);
 
-        Button button = findViewById(R.id.buttonSendMessage);
+        Button button = view.findViewById(R.id.buttonSendMessage);
         button.setOnClickListener(v -> {
-                final String message = editText.getText().toString();
-                editText.getText().clear();
-                ChatManager.getInstance().sendMessage(message, peer_id, new SendMessage(), this);
-                recyclerView.scrollToPosition(0);
-                hideKeyboard(editText);
+            final String message = editText.getText().toString();
+            editText.getText().clear();
+            ChatManager.getInstance().sendMessage(message, peer_id, new SendMessage(), getContext());
+            recyclerView.scrollToPosition(0);
+            hideKeyboard(editText);
         });
 
-        recyclerView = findViewById(R.id.messagesList);
-        adapter = new ChatAdapter(this, isPrivateDialog);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView = view.findViewById(R.id.messagesList);
+        adapter = new ChatAdapter(new ChatCallbacks(), getContext(), isPrivateDialog);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setReverseLayout(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
@@ -79,10 +89,17 @@ public class ChatActivity extends AppCompatActivity {
         if (ChatInstanceState.getInstance().getPhotoUsers() != null) {
             setAvatarsToAdapter(ChatInstanceState.getInstance().getPhotoUsers());
         }
+
+        return view;
     }
 
     @Override
-    protected void onStart() {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
         super.onStart();
 
         if (!isPrivateDialog && adapter.getPhotoUsersSize() == 0) {
@@ -95,7 +112,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
 
         if (adapter.getItemCount() != 0) {
@@ -107,48 +124,34 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    public void getMessageCallback(int offset) {
-        getChat(offset);
-    }
-
     private void getParticipantsChat(int chatId) {
-        UserManager.getInstance().getUsersChat(chatId, new GetUserIds(), this);
+        UserManager.getInstance().getUsersChat(chatId, new GetUserIds(), getContext());
     }
 
     private void getChat(int offset) {
-        int defaultCount = new ChatRequest().getCount(); //todo: fix it
-        ChatManager.getInstance().getChat(offset, peer_id, defaultCount, new GetMessages(), this);
+        if (isChatRequest) {
+            isChatRequest = false;
+            int defaultCount = new ChatRequest().getCount(); //todo: fix it
+            ChatManager.getInstance().getChat(offset, peer_id, defaultCount, new GetMessages(), getContext());
+        }
     }
 
     private void addMessageToAdapterEnd(DialogMessage dialogMessage) {
-        runOnUiThread(() -> adapter.addItemToEnd(dialogMessage));
+        getActivity().runOnUiThread(() -> adapter.addItemToEnd(dialogMessage));
     }
 
     private void addMessagesToAdapterTop(List<DialogMessage> items) {
-        runOnUiThread(() -> {
+        getActivity().runOnUiThread(() -> {
             adapter.addItemsToTop(items);
             if (adapter.getItemCount() == new ChatRequest().getCount()) {
                 recyclerView.scrollToPosition(0);
             }
+            isChatRequest = true;
         });
     }
 
     private void setAvatarsToAdapter(SparseArray<String> photoUsers) {
-        runOnUiThread(() -> adapter.setUsersAvatar(photoUsers));
-    }
-
-    public void createFragmentFullSizeImageMessage(String photoUrl) {
-        Bundle bundle = new Bundle();
-        bundle.putString(PHOTO_URL, photoUrl);
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        ImageMessageFullScreenFragment imageMessageFullScreenFragment = new ImageMessageFullScreenFragment();
-        imageMessageFullScreenFragment.setArguments(bundle);
-        transaction.replace(R.id.chatContainer, imageMessageFullScreenFragment);
-        transaction.addToBackStack(null);
-
-        transaction.commit();
+        getActivity().runOnUiThread(() -> adapter.setUsersAvatar(photoUsers));
     }
 
     private class GetMessages implements ChatManager.GetMessages {
@@ -164,7 +167,7 @@ public class ChatActivity extends AppCompatActivity {
     private class SendMessage implements ChatManager.SendMessage {
         @Override
         public void callback() {
-            ChatManager.getInstance().getChat(0, peer_id, 1, new GetLastMessage(), ChatActivity.this);
+            ChatManager.getInstance().getChat(0, peer_id, 1, new GetLastMessage(), getContext());
         }
 
         public SendMessage() {
@@ -184,7 +187,7 @@ public class ChatActivity extends AppCompatActivity {
     private class GetUserIds implements UserManager.GetUserIds {
         @Override
         public void callback(int[] userIds) {
-            UserManager.getInstance().getUsers(userIds, new GetUsers(), ChatActivity.this);
+            UserManager.getInstance().getUsers(userIds, new GetUsers(), getContext());
         }
 
         public GetUserIds() {
@@ -205,6 +208,30 @@ public class ChatActivity extends AppCompatActivity {
 
         public GetUsers() {
 
+        }
+    }
+
+    public class ChatCallbacks implements FragmentCallback {
+        public ChatCallbacks() {
+
+        }
+
+        public void getMoreMessages(int offset) {
+            getChat(offset);
+        }
+
+        public void createFragmentFullSizeImageMessage(String photoUrl) {
+            Bundle bundle = new Bundle();
+            bundle.putString(PHOTO_URL, photoUrl);
+
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+
+            ImageMessageFullScreenFragment imageMessageFullScreenFragment = new ImageMessageFullScreenFragment();
+            imageMessageFullScreenFragment.setArguments(bundle);
+            transaction.replace(R.id.chatContainer, imageMessageFullScreenFragment);
+            transaction.addToBackStack(null);
+
+            transaction.commit();
         }
     }
 }

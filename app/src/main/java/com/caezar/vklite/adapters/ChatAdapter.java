@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.caezar.vklite.R;
-import com.caezar.vklite.activities.ChatActivity;
+import com.caezar.vklite.fragments.ChatFragment;
 import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.Config;
 import com.caezar.vklite.models.network.DialogMessage;
@@ -46,6 +46,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int DOC_MESSAGE = 4;
 
     private final Context context;
+    private final ChatFragment.ChatCallbacks chatCallbacks;
     @NonNull private final List<DialogMessage> items = new ArrayList<>();
     @NonNull private final SparseArray<String> photoUsers = new SparseArray<>();
     final private int myselfId;
@@ -53,8 +54,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private int prevUserIdFrom;
     private int prevPosition;
 
-    public ChatAdapter(Context context, boolean isPrivateDialog) {
+    public ChatAdapter(ChatFragment.ChatCallbacks chatCallbacks, Context context, boolean isPrivateDialog) {
         myselfId = Config.getMyselfId();
+        this.chatCallbacks = chatCallbacks;
         this.isPrivateDialog = isPrivateDialog;
         this.context = context;
     }
@@ -177,7 +179,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         prevPosition = position;
 
         if (isTimeToRequestDialogs(position)) {
-            ((ChatActivity)context).getMessageCallback(getItemCount());
+            chatCallbacks.getMoreMessages(getItemCount());
         }
     }
 
@@ -251,9 +253,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     maxPhotoSize = photo.getPhoto_604();
                 }
 
-                if (context instanceof ChatActivity){
-                    ((ChatActivity)context).createFragmentFullSizeImageMessage(maxPhotoSize);
-                }
+
+                chatCallbacks.createFragmentFullSizeImageMessage(maxPhotoSize);
             });
         }
     }
