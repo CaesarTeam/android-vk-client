@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +29,10 @@ import com.caezar.vklite.models.network.DialogMessage;
 
 import java.util.List;
 
+import static com.caezar.vklite.fragments.DialogsFragment.CHAT_FRAGMENT_TAG;
 import static com.caezar.vklite.fragments.DialogsFragment.PEER_ID;
 import static com.caezar.vklite.fragments.DialogsFragment.TITLE;
+import static com.caezar.vklite.fragments.ImageMessageFullScreenFragment.IMAGE_FULL_FRAGMENT_TAG;
 import static com.caezar.vklite.libs.DialogsHelper.getChatIdFromPeerId;
 import static com.caezar.vklite.libs.KeyBoard.hideKeyboard;
 
@@ -227,8 +230,8 @@ public class ChatFragment extends Fragment {
 
             ImageMessageFullScreenFragment imageMessageFullScreenFragment = new ImageMessageFullScreenFragment();
             imageMessageFullScreenFragment.setArguments(bundle);
-            transaction.replace(R.id.mainContainer, imageMessageFullScreenFragment);
-            transaction.addToBackStack(null);
+            transaction.replace(R.id.mainContainer, imageMessageFullScreenFragment, IMAGE_FULL_FRAGMENT_TAG);
+            transaction.addToBackStack(CHAT_FRAGMENT_TAG);
 
             transaction.commit();
         }

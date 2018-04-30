@@ -30,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String PREFS_NAME = "Vk";
     public static final String TOKEN = "token";
     private static final String MYSELF_ID = "myselfId";
-    private static final int DIALOG_ACTIVITY_REQUEST_CODE = 0;
+
+    public static final String DIALOG_FRAGMENT_TAG = "dialogFragmentTag";
 
     private final int WRONG_ID = -1;
     @Override
@@ -40,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         final String token = settings.getString(TOKEN, null);
@@ -75,19 +76,13 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         DialogsFragment dialogsFragment = new DialogsFragment();
-        transaction.replace(R.id.mainContainer, dialogsFragment);
-        transaction.addToBackStack(null);
+        transaction.replace(R.id.mainContainer, dialogsFragment, DIALOG_FRAGMENT_TAG);
 
         transaction.commit();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == DIALOG_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                finish();
-            }
-        }
         if (!VKSdk.onActivityResult(requestCode, resultCode, data, vkAccessTokenVKCallback)) {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -126,11 +121,14 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onResponse(final String body) {
-            int myselfId = getMyselfId(body);
-            if (myselfId == WRONG_ID) {
-                Log.e(this.getClass().getName(), "problems with get myselfId");
+            UsersByIdResponse usersByIdResponse = parseBody(UsersByIdResponse.class, body);
+
+            if (usersByIdResponse == null) {
+                makeToastError(body, MainActivity.this);
                 return;
             }
+
+            int myselfId = usersByIdResponse.getUsers()[0].getId();
 
             initMetaInfo(token, myselfId);
 
@@ -141,17 +139,6 @@ public class MainActivity extends AppCompatActivity {
             editor.apply();
 
             runOnUiThread(MainActivity.this::openDialogs);
-        }
-
-        private int getMyselfId(String body) {
-            UsersByIdResponse usersByIdResponse = parseBody(UsersByIdResponse.class, body);
-
-            if (usersByIdResponse == null) {
-                makeToastError(body, MainActivity.this);
-                return WRONG_ID;
-            }
-
-            return usersByIdResponse.getUsers()[0].getId();
         }
     }
 }

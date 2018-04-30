@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.caezar.vklite.libs.DialogsInstanceState;
 import com.caezar.vklite.models.network.DialogItem;
 import com.caezar.vklite.models.network.User;
 
+import static com.caezar.vklite.activities.MainActivity.DIALOG_FRAGMENT_TAG;
 import static com.caezar.vklite.libs.DialogsHelper.addDataToDialogsList;
 import static com.caezar.vklite.libs.DialogsHelper.getUsersIdFromPrivateDialogs;
 
@@ -35,6 +37,8 @@ import static com.caezar.vklite.libs.DialogsHelper.getUsersIdFromPrivateDialogs;
 public class DialogsFragment extends Fragment {
     public static final String TITLE = "title";
     public static final String PEER_ID = "peer_id";
+    public static final String CHAT_FRAGMENT_TAG = "chatFragmentTag";
+
 
     private DialogsAdapter adapter;
     private boolean requestDialogsFinish = true;
@@ -149,8 +153,8 @@ public class DialogsFragment extends Fragment {
 
             ChatFragment chatFragment = new ChatFragment();
             chatFragment.setArguments(bundle);
-            transaction.replace(R.id.mainContainer, chatFragment);
-            transaction.addToBackStack(null);
+            transaction.replace(R.id.mainContainer, chatFragment, CHAT_FRAGMENT_TAG);
+            transaction.addToBackStack(DIALOG_FRAGMENT_TAG);
 
             transaction.commit();
         }
