@@ -13,24 +13,24 @@ import java.util.List;
  */
 
 public class ChatInstanceState {
+    private ChatInstanceState() {
+    }
+
     @NonNull
     private final static ChatInstanceState INSTANCE = new ChatInstanceState();
+
+    public static ChatInstanceState getInstance() {
+        return INSTANCE;
+    }
 
     @Nullable
     private List<DialogMessage> messages = null;
     @Nullable
     private SparseArray<String> photoUsers = null;
 
-    private ChatInstanceState() {
-    }
-
-    public void resetChat() {
+    public void reset() {
         messages = null;
         photoUsers = null;
-    }
-
-    public static ChatInstanceState getInstance() {
-        return INSTANCE;
     }
 
     @Nullable

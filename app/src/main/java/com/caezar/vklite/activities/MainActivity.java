@@ -9,6 +9,7 @@ import android.util.Log;
 import com.caezar.vklite.R;
 import com.caezar.vklite.Config;
 import com.caezar.vklite.NetworkManager;
+import com.caezar.vklite.libs.DialogsInstanceState;
 import com.caezar.vklite.models.network.response.UsersByIdResponse;
 import com.caezar.vklite.libs.UrlBuilder;
 
@@ -47,9 +48,9 @@ public class MainActivity extends AppCompatActivity {
             logIn();
         } else {
             initMetaInfo(token, myselfId);
+            DialogsInstanceState.getInstance().reset();
             Intent intent = new Intent(MainActivity.this, DialogsActivity.class);
             startActivityForResult(intent, DIALOG_ACTIVITY_REQUEST_CODE);
-//            startActivity(new Intent(MainActivity.this, DialogsActivity.class));
         }
     }
 
@@ -127,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
             editor.apply();
 
             runOnUiThread(() -> {
+                DialogsInstanceState.getInstance().reset();
                 Intent intent = new Intent(MainActivity.this, DialogsActivity.class);
                 startActivityForResult(intent, DIALOG_ACTIVITY_REQUEST_CODE);
             });

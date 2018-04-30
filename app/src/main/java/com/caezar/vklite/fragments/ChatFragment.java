@@ -228,7 +228,7 @@ public class ChatFragment extends Fragment {
 
             ImageMessageFullScreenFragment imageMessageFullScreenFragment = new ImageMessageFullScreenFragment();
             imageMessageFullScreenFragment.setArguments(bundle);
-            transaction.replace(R.id.chatContainer, imageMessageFullScreenFragment);
+            transaction.replace(R.id.dialogsContainer, imageMessageFullScreenFragment);
             transaction.addToBackStack(null);
 
             transaction.commit();
