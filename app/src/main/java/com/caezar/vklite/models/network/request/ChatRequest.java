@@ -58,10 +58,18 @@ public class ChatRequest {
 
     @Override
     public String toString() {
-        return "offset=" + offset +
+        StringBuilder query = new StringBuilder(
+                "offset=" + offset +
                 "&count=" + count +
                 "&peer_id=" + peer_id +
-//                "&start_message_id=" + start_message_id +
-                "&rev=" + rev;
+                "&rev=" + rev
+        );
+
+
+        if (start_message_id != 0) {
+            query.append("&start_message_id=" + start_message_id);
+        }
+
+        return query.toString();
     }
 }

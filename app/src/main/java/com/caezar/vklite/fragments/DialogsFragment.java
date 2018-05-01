@@ -1,7 +1,6 @@
 package com.caezar.vklite.fragments;
 
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -46,7 +45,7 @@ public class DialogsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View view = inflater.inflate(R.layout.activity_dialogs, container, false);
+        View view = inflater.inflate(R.layout.fragment_dialogs, container, false);
 
         RecyclerView recyclerView = view.findViewById(R.id.dialogsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

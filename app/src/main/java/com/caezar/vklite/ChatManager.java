@@ -54,7 +54,9 @@ public class ChatManager {
             editMessageRequest.setPeer_id(peer_id);
             editMessageRequest.setMessage_id(message_id);
             final String url = UrlBuilder.constructEditMessage(editMessageRequest);
-            NetworkManager.getInstance().get(url, new OnMessageActionComplete(MessageAction.EDIT, (MessageActionDone)listener, context));
+            OnMessageActionComplete onMessageActionComplete = new OnMessageActionComplete(MessageAction.EDIT, (MessageActionDone)listener, context);
+            onMessageActionComplete.setMessageId(message_id);
+            NetworkManager.getInstance().get(url, onMessageActionComplete);
         } else {
             // todo: save to store to edit message
         }
@@ -66,6 +68,19 @@ public class ChatManager {
             chatRequest.setCount(count);
             chatRequest.setOffset(offset);
             chatRequest.setPeer_id(peer_id);
+            final String url = UrlBuilder.constructGetChat(chatRequest);
+            NetworkManager.getInstance().get(url, new OnGetMessagesChatComplete(listener, context));
+        } else {
+
+        }
+    }
+
+    public void getMessage(int peer_id, int messageId, Listener listener, Context context) {
+        if (ONLINE_MODE) {
+            final ChatRequest chatRequest = new ChatRequest();
+            chatRequest.setCount(1);
+            chatRequest.setPeer_id(peer_id);
+            chatRequest.setStart_message_id(messageId);
             final String url = UrlBuilder.constructGetChat(chatRequest);
             NetworkManager.getInstance().get(url, new OnGetMessagesChatComplete(listener, context));
         } else {
@@ -106,6 +121,8 @@ public class ChatManager {
                 ((GetMessages)listenerCallback).callback(messages);
             } else if (listenerCallback instanceof GetLastMessage) {
                 ((GetLastMessage)listenerCallback).callback(messages.get(0));
+            } else if (listenerCallback instanceof GetMessageById) {
+                ((GetMessageById)listenerCallback).callback(messages.get(0));
             }
         }
     }
@@ -114,6 +131,7 @@ public class ChatManager {
         private final MessageActionDone listenerCallback;
         private final Context context;
         private final MessageAction messageAction;
+        private int messageId;
 
         public OnMessageActionComplete(MessageAction messageAction, MessageActionDone listenerCallback, Context context) {
             this.messageAction = messageAction;
@@ -141,12 +159,16 @@ public class ChatManager {
 
             switch (messageAction) {
                 case EDIT:
+                    listenerCallback.callback(messageId);
                     break;
                 case SEND:
+                    listenerCallback.callback(0);
                     break;
             }
+        }
 
-            listenerCallback.callback(0);
+        public void setMessageId(int messageId) {
+            this.messageId = messageId;
         }
     }
 
@@ -155,6 +177,10 @@ public class ChatManager {
     }
 
     public interface GetLastMessage extends Listener {
+        void callback(DialogMessage message);
+    }
+
+    public interface GetMessageById extends Listener {
         void callback(DialogMessage message);
     }
 

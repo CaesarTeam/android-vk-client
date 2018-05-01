@@ -17,6 +17,7 @@ import com.caezar.vklite.fragments.ChatFragment;
 import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.Config;
 import com.caezar.vklite.models.DialogMessage;
+import com.caezar.vklite.models.Message;
 import com.caezar.vklite.models.Photo;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -32,6 +33,7 @@ import static com.caezar.vklite.libs.ChatHelper.unsetAlignLayoutRight;
 import static com.caezar.vklite.libs.ChatHelper.setAlignLayoutRight;
 import static com.caezar.vklite.libs.ChatHelper.setAvatar;
 import static com.caezar.vklite.libs.ChatHelper.unsetAvatar;
+import static com.caezar.vklite.libs.Guava.findIndexMessage;
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
 import static com.caezar.vklite.libs.Time.getDateTime;
 
@@ -71,6 +73,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void addItemsToTop(@NonNull List<DialogMessage> itemList) {
         items.addAll(itemList);
+        notifyDataSetChanged();
+    }
+
+    public void changeItem(@NonNull DialogMessage dialogMessage) {
+        int index = findIndexMessage(new ArrayList<>(items), dialogMessage);
+        items.get(index).setBody(dialogMessage.getBody());
         notifyDataSetChanged();
     }
 

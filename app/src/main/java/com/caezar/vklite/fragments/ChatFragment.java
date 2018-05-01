@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,7 +62,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_chat, container, false);
+        return inflater.inflate(R.layout.fragment_chat, container, false);
     }
 
     @Override
@@ -155,6 +154,10 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         getActivity().runOnUiThread(() -> adapter.addItemToEnd(dialogMessage));
     }
 
+    private void changeMessage(DialogMessage dialogMessage) {
+        getActivity().runOnUiThread(() -> adapter.changeItem(dialogMessage));
+    }
+
     private void addMessagesToAdapterTop(List<DialogMessage> items) {
         getActivity().runOnUiThread(() -> {
             adapter.addItemsToTop(items);
@@ -217,16 +220,6 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         }
     }
 
-    private class MessageEdited implements ChatManager.MessageActionDone {
-        @Override
-        public void callback(int messageId) {
-            //ChatManager.getInstance().getChat(offset, peer_id, 1, new GetMessageById(), getContext());
-        }
-
-        public MessageEdited() {
-        }
-    }
-
     private class GetLastMessage implements ChatManager.GetLastMessage {
         @Override
         public void callback(DialogMessage message) {
@@ -234,6 +227,26 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         }
 
         public GetLastMessage() {
+        }
+    }
+
+    private class MessageEdited implements ChatManager.MessageActionDone {
+        @Override
+        public void callback(int messageId) {
+            ChatManager.getInstance().getMessage(peer_id, messageId, new GetMessageById(), getContext());
+        }
+
+        public MessageEdited() {
+        }
+    }
+
+    private class GetMessageById implements ChatManager.GetMessageById {
+        @Override
+        public void callback(DialogMessage message) {
+            changeMessage(message);
+        }
+
+        public GetMessageById() {
         }
     }
 
