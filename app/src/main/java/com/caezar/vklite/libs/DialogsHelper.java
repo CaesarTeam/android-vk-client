@@ -7,10 +7,6 @@ import com.caezar.vklite.models.Attachments;
 import com.caezar.vklite.models.DialogItem;
 import com.caezar.vklite.models.DialogMessage;
 import com.caezar.vklite.models.User;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Iterables;
-import com.google.common.primitives.Ints;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,8 +14,9 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.caezar.vklite.Config.peerIdConstant;
-import static com.caezar.vklite.libs.Predicates.isEmptyTitle;
-import static com.caezar.vklite.libs.Predicates.isPositiveUserId;
+import static com.caezar.vklite.libs.Guava.findUser;
+import static com.caezar.vklite.libs.Guava.getPrivateDialogs;
+import static com.caezar.vklite.libs.Guava.integerListToIntArray;
 
 /**
  * Created by seva on 12.04.18 in 13:38.
@@ -100,23 +97,23 @@ public class DialogsHelper {
     }
 
     public static int[] getUsersIdFromPrivateDialogs(List<DialogItem> dialogs) {
-        Collection<DialogItem> privateDialogs = Collections2.filter(dialogs, Predicates.and(isEmptyTitle, isPositiveUserId));
+        Collection<DialogItem> privateDialogs = getPrivateDialogs(dialogs);
 
         List<Integer> userIds = new ArrayList<>(privateDialogs.size());
         for (DialogItem item: privateDialogs) {
             userIds.add(item.getMessage().getUser_id());
         }
 
-        return Ints.toArray(userIds);
+        return integerListToIntArray(userIds);
     }
 
     public static void addDataToDialogsList(List<DialogItem> dialogs, User[] users) {
-        Collection<DialogItem> privateDialogs = Collections2.filter(dialogs, Predicates.and(isEmptyTitle, isPositiveUserId));
+        Collection<DialogItem> privateDialogs = getPrivateDialogs(dialogs);
         List<User> usersList = Arrays.asList(users);
 
         for (DialogItem item: privateDialogs) {
             final int userId = item.getMessage().getUser_id();
-            User user = Iterables.find(usersList, _user -> _user.getId() == userId);
+            User user = findUser(usersList, userId);
             item.getMessage().setTitle(user.getFirst_name() + " " + user.getLast_name());
             item.getMessage().setPhoto_50(user.getPhoto_50());
             item.getMessage().setPhoto_100(user.getPhoto_100());

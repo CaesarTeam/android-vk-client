@@ -2,6 +2,7 @@ package com.caezar.vklite.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -45,7 +46,12 @@ public class DialogsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_dialogs, container, false);
+        return inflater.inflate(R.layout.fragment_dialogs, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         RecyclerView recyclerView = view.findViewById(R.id.dialogsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -64,8 +70,6 @@ public class DialogsFragment extends Fragment {
         if (DialogsInstanceState.getInstance().getDialogs() != null) {
             setDialogs(DialogsInstanceState.getInstance().getDialogs());
         }
-
-        return view;
     }
 
     @Override
@@ -110,9 +114,12 @@ public class DialogsFragment extends Fragment {
     private class GetDialogs implements DialogManager.GetDialogs {
         @Override
         public void callback(List<DialogItem> dialogs) {
-            setDialogsFromListener(dialogs);
             final int[] userIds = getUsersIdFromPrivateDialogs(dialogs);
-            UserManager.getInstance().getUsers(userIds, new GetUsers(dialogs), getContext());
+            if (userIds.length == 0) {
+                setDialogsFromListener(dialogs);
+            } else {
+                UserManager.getInstance().getUsers(userIds, new GetUsers(dialogs), getContext());
+            }
         }
 
         public GetDialogs() {

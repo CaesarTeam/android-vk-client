@@ -1,9 +1,20 @@
 package com.caezar.vklite.libs;
 
-import com.caezar.vklite.models.Message;
-import com.google.common.collect.Iterables;
+import android.text.TextUtils;
 
+import com.caezar.vklite.models.DialogItem;
+import com.caezar.vklite.models.Message;
+import com.caezar.vklite.models.User;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
+import com.google.common.primitives.Ints;
+
+import java.util.Collection;
 import java.util.List;
+
 
 /**
  * Created by seva on 01.05.18 in 14:05.
@@ -13,4 +24,20 @@ public class Guava {
     public static int findIndexMessage(List<Message> messages, Message newMessage) {
         return Iterables.indexOf(messages, message -> message.getId() == newMessage.getId());
     }
+
+    public static User findUser(List<User> users, int userId) {
+        return Iterables.find(users, user -> user.getId() == userId);
+    }
+
+    public static Collection<DialogItem> getPrivateDialogs(List<DialogItem> dialogs) {
+        return Collections2.filter(dialogs, Predicates.and(isEmptyTitle, isPositiveUserId));
+    }
+
+    public static int[] integerListToIntArray(List<Integer> list) {
+        return Ints.toArray(list);
+    }
+
+    private final static Predicate<DialogItem> isEmptyTitle = dialogItem -> TextUtils.isEmpty(dialogItem.getMessage().getTitle());
+
+    private final static Predicate<DialogItem> isPositiveUserId = dialogItem -> dialogItem.getMessage().getUser_id() > 0;
 }
