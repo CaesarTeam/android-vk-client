@@ -96,6 +96,25 @@ public class DialogsHelper {
         return null;
     }
 
+    public static String getBody(DialogMessage dialogMessage, Context context) {
+
+        String attachmentTypeMessage = getAttachmentsMessage(dialogMessage, context);
+        if (attachmentTypeMessage != null) {
+            return attachmentTypeMessage;
+        }
+
+        String actionTypeMessage = getActionMessage(dialogMessage, context);
+        if (actionTypeMessage != null) {
+            return actionTypeMessage;
+        }
+
+        if (dialogMessage.getFwd_messages() != null) {
+            return context.getString(R.string.messageTypeForwardMessage);
+        }
+
+        return dialogMessage.getBody();
+    }
+
     public static int[] getUsersIdFromPrivateDialogs(List<DialogItem> dialogs) {
         Collection<DialogItem> privateDialogs = getPrivateDialogs(dialogs);
 

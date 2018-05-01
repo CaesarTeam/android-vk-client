@@ -54,15 +54,33 @@
                     android:singleLine="true"/>
             </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/messageContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/titleContainer">
+
             <TextView
                 android:id="@+id/dialogMessage"
-                android:layout_width="200dp"
+                android:layout_width="@dimen/width_for_message_in_dialog"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/titleContainer"
                 android:layout_marginTop="@dimen/margin_for_message_in_dialog"
                 android:layout_marginStart="@dimen/margin_for_message_in_dialog"
                 android:singleLine="true"
+                android:layout_centerVertical="true"
                 android:textAlignment="textStart"/>
+
+            <TextView
+                android:id="@+id/dialogUnreadCount"
+                android:layout_width="@dimen/unread_count_circle_dialog"
+                android:layout_height="@dimen/unread_count_circle_dialog"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/margin_right_for_unread_in_dialog"
+                android:layout_centerVertical="true"
+                android:textAlignment="center"
+                android:textColor="@color/vk_white"
+                android:background="@drawable/blue_circle" />
+            </RelativeLayout>
         </RelativeLayout>
 
     </RelativeLayout>

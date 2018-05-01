@@ -1,5 +1,6 @@
 package com.caezar.vklite.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -21,6 +22,7 @@ import java.util.List;
 import static com.caezar.vklite.Config.minItemsToRequestDialogs;
 import static com.caezar.vklite.libs.DialogsHelper.getActionMessage;
 import static com.caezar.vklite.libs.DialogsHelper.getAttachmentsMessage;
+import static com.caezar.vklite.libs.DialogsHelper.getBody;
 import static com.caezar.vklite.libs.DialogsHelper.getPeerId;
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
 import static com.caezar.vklite.libs.ImageLoader.getUrlForResource;
@@ -76,14 +78,40 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         DialogItem item = items.get(position);
+        int unreadMessagesCount = item.getUnread();
 
         switch (getItemViewType(position)) {
             case ITEM_DIALOG:
                 DialogViewHolder dialogViewHolder = ((DialogViewHolder) holder);
-                dialogViewHolder.bind(item);
+                String imageUrl = item.getMessage().getPhoto_100();
+
+                if (imageUrl != null) {
+                    asyncImageLoad(imageUrl, dialogViewHolder.avatar);
+                } else {
+                    asyncImageLoad(getUrlForResource(R.drawable.default_avatar), dialogViewHolder.avatar);
+                }
+
+                String body = getBody(item.getMessage(), context);
+                if (!body.equals(item.getMessage().getBody())) {
+                    dialogViewHolder.message.setTextColor(ContextCompat.getColor(context, R.color.colorDialogNotMessageText));
+                } else {
+                    dialogViewHolder.message.setTextColor(ContextCompat.getColor(context, R.color.colorDefaultForTextView));
+                }
+                System.out.println(unreadMessagesCount);
+                if (unreadMessagesCount == 0) {
+                    dialogViewHolder.unreadCount.setVisibility(View.INVISIBLE);
+                } else {
+                    dialogViewHolder.unreadCount.setText(Integer.toString(unreadMessagesCount));
+                    dialogViewHolder.unreadCount.setVisibility(View.VISIBLE);
+                }
+
+                dialogViewHolder.message.setText(body);
+                dialogViewHolder.title.setText(item.getMessage().getTitle());
+                dialogViewHolder.time.setText(getDateTimeForDialog(item.getMessage().getDate(), context));
                 break;
 
             default:
@@ -115,6 +143,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         final TextView title;
         final TextView message;
         final TextView time;
+        final TextView unreadCount;
 
         DialogViewHolder(final View itemView) {
             super(itemView);
@@ -122,47 +151,9 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             title = itemView.findViewById(R.id.dialogTitle);
             message = itemView.findViewById(R.id.dialogMessage);
             time = itemView.findViewById(R.id.dialogTime);
+            unreadCount = itemView.findViewById(R.id.dialogUnreadCount);
 
             itemView.setOnClickListener(new onDialogClickListener(this));
-        }
-
-        private void bind(DialogItem item) {
-            String imageUrl = item.getMessage().getPhoto_100();
-
-            if (imageUrl != null) {
-                asyncImageLoad(imageUrl, avatar);
-            } else {
-                asyncImageLoad(getUrlForResource(R.drawable.default_avatar), avatar);
-            }
-
-            String body = getBody(item.getMessage());
-            if (!body.equals(item.getMessage().getBody())) {
-                message.setTextColor(ContextCompat.getColor(context, R.color.colorDialogNotMessageText));
-            } else {
-                message.setTextColor(ContextCompat.getColor(context, R.color.colorDefaultForTextView));
-            }
-            message.setText(body);
-            title.setText(item.getMessage().getTitle());
-            time.setText(getDateTimeForDialog(item.getMessage().getDate(), context));
-        }
-
-        private String getBody(DialogMessage dialogMessage) {
-
-            String attachmentTypeMessage = getAttachmentsMessage(dialogMessage, context);
-            if (attachmentTypeMessage != null) {
-                return attachmentTypeMessage;
-            }
-
-            String actionTypeMessage = getActionMessage(dialogMessage, context);
-            if (actionTypeMessage != null) {
-                return actionTypeMessage;
-            }
-
-            if (dialogMessage.getFwd_messages() != null) {
-                return context.getString(R.string.messageTypeForwardMessage);
-            }
-
-            return dialogMessage.getBody();
         }
     }
 

@@ -7,8 +7,10 @@
     <dimen name="margin_left_for_title_in_dialog">8dp</dimen>
     <dimen name="margin_right_for_title_in_dialog">75dp</dimen>
     <dimen name="margin_right_for_time_in_dialog">5dp</dimen>
+    <dimen name="margin_right_for_unread_in_dialog">10dp</dimen>
     <dimen name="margin_for_dialog">10dp</dimen>
     <dimen name="margin_for_message_in_dialog">8dp</dimen>
+    <dimen name="width_for_message_in_dialog">200dp</dimen>
     <dimen name="font_size_title_dialog">20sp</dimen>
     <dimen name="image_size_in_chat">200dp</dimen>
     <dimen name="land_image_size_in_chat">250dp</dimen>
@@ -32,4 +34,5 @@
     <dimen name="margin_between_message_and_time">3dp</dimen>
     <dimen name="margin_right_for_button_send_message">20dp</dimen>
     <dimen name="button_send_message_size">25dp</dimen>
+    <dimen name="unread_count_circle_dialog">20dp</dimen>
 </resources>

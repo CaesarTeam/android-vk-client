@@ -24,6 +24,7 @@ import com.caezar.vklite.UserManager;
 import com.caezar.vklite.adapters.ChatAdapter;
 import com.caezar.vklite.Config;
 import com.caezar.vklite.libs.ChatInstanceState;
+import com.caezar.vklite.libs.DialogsInstanceState;
 import com.caezar.vklite.models.MessageAction;
 import com.caezar.vklite.models.User;
 import com.caezar.vklite.models.network.request.ChatRequest;
@@ -65,6 +66,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        DialogsInstanceState.getInstance().reset();
         return inflater.inflate(R.layout.fragment_chat, container, false);
     }
 
