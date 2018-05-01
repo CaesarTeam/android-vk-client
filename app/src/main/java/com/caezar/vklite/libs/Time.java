@@ -69,6 +69,7 @@ public class Time {
         Date date = new Date(milliseconds);
         final Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
         Date todayMidnight = calendar.getTime();
         return !date.before(todayMidnight);
     }
@@ -78,6 +79,7 @@ public class Time {
         Date date = new Date(milliseconds);
         final Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
         calendar.add(Calendar.DATE, -1);
         Date yesterdayMidnight = calendar.getTime();
         return !date.before(yesterdayMidnight);
@@ -103,15 +105,7 @@ public class Time {
         return getDateTime(unixTimestamp, Format.DAY_NAME_MONTH);
     }
 
-    public static int currentUnixTimestamp() {
-        return (int) millisecondsToUnixTimestamp(System.currentTimeMillis());
-    }
-
     private static long unixTimestampToMilliseconds(long unixTimestamp) {
         return unixTimestamp * 1000;
-    }
-
-    private static long millisecondsToUnixTimestamp(long milliseconds) {
-        return milliseconds / 1000;
     }
 }
