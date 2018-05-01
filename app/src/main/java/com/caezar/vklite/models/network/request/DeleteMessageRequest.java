@@ -1,14 +1,11 @@
 package com.caezar.vklite.models.network.request;
 
-import java.util.Arrays;
-
 /**
  * Created by seva on 01.05.18 in 16:20.
  */
 
 public class DeleteMessageRequest {
     private int[] message_ids;
-    private boolean spam;
     private boolean delete_for_all = true;
 
     public int[] getMessage_ids() {
@@ -17,14 +14,6 @@ public class DeleteMessageRequest {
 
     public void setMessage_ids(int[] message_ids) {
         this.message_ids = message_ids;
-    }
-
-    public boolean isSpam() {
-        return spam;
-    }
-
-    public void setSpam(boolean spam) {
-        this.spam = spam;
     }
 
     public boolean isDelete_for_all() {
@@ -54,7 +43,6 @@ public class DeleteMessageRequest {
         String message_ids = builder.toString();
 
         return  "&message_ids=" + message_ids +
-                "&spam=" + spam +
                 "&delete_for_all=" + delete_for_all;
     }
 }

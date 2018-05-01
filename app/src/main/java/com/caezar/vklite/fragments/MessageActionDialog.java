@@ -15,6 +15,8 @@ import com.caezar.vklite.models.DialogMessage;
 import com.caezar.vklite.models.MessageAction;
 
 import static com.caezar.vklite.fragments.ChatFragment.DIALOG_MESSAGE;
+import static com.caezar.vklite.fragments.ChatFragment.IS_MYSELF_MESSAGE;
+import static com.caezar.vklite.libs.Time.isDateBefore24hours;
 
 /**
  * Created by seva on 30.04.18 in 17:15.
@@ -34,6 +36,7 @@ public class MessageActionDialog extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         DialogMessage dialogMessage = getArguments().getParcelable(DIALOG_MESSAGE);
+        boolean isMyselfMessage = getArguments().getBoolean(IS_MYSELF_MESSAGE);
 
         Button reply = view.findViewById(R.id.messageActionReply);
         Button forward = view.findViewById(R.id.messageActionForward);
@@ -71,5 +74,15 @@ public class MessageActionDialog extends DialogFragment {
             this.dismiss();
             ((ChooseMessageTypeListener)getTargetFragment()).onFinishDialogMessageType(MessageAction.DELETE, dialogMessage);
         });
+
+        if (isMyselfMessage) {
+            edit.setVisibility(View.VISIBLE);
+            delete.setVisibility(View.VISIBLE);
+        }
+
+        if (!isMyselfMessage || isDateBefore24hours(dialogMessage.getDate())) {
+            edit.setVisibility(View.GONE);
+            delete.setVisibility(View.GONE);
+        }
     }
 }

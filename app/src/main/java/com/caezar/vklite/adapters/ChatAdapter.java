@@ -244,7 +244,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             messageTextTime = (TextView) (isPort ? itemView.findViewById(R.id.messageTextTime) : itemView.findViewById(R.id.messageTextTimeLand));
 
             container.setOnClickListener(v -> {
-                chatCallbacks.createFragmentDialogMessageType(items.get(position));
+                chatCallbacks.createFragmentDialogMessageType(items.get(position), items.get(position).getFrom_id() == myselfId);
             });
         }
     }

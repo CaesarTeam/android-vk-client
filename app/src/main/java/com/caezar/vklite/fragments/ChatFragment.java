@@ -49,6 +49,7 @@ import static com.caezar.vklite.libs.KeyBoard.showKeyboard;
 public class ChatFragment extends Fragment implements ChooseMessageTypeListener {
     public static final String PHOTO_URL = "photoUrl";
     public static final String DIALOG_MESSAGE = "dialogMessage";
+    public static final String IS_MYSELF_MESSAGE = "isMyselfMessage";
 
     private RecyclerView recyclerView;
     private ChatAdapter adapter;
@@ -319,9 +320,10 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             transaction.commit();
         }
 
-        public void createFragmentDialogMessageType(DialogMessage dialogMessage) {
+        public void createFragmentDialogMessageType(DialogMessage dialogMessage, boolean isMyselfMessage) {
             Bundle bundle = new Bundle();
             bundle.putParcelable(DIALOG_MESSAGE, dialogMessage);
+            bundle.putBoolean(IS_MYSELF_MESSAGE, isMyselfMessage);
             MessageActionDialog messageActionDialog = new MessageActionDialog();
             messageActionDialog.setTargetFragment(ChatFragment.this, 0);
             messageActionDialog.setArguments(bundle);

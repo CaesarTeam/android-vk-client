@@ -61,6 +61,17 @@ public class Time {
         return getDateTime(unixTimestamp, Format.HOURS_MINUTES);
     }
 
+    public static boolean isDateBefore24hours(int unixTimestamp) {
+        long milliseconds = unixTimestampToMilliseconds(unixTimestamp);
+        Date date = new Date(milliseconds);
+
+        final Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, -1);
+        Date yesterday = calendar.getTime();
+
+        return date.before(yesterday);
+    }
+
     public static boolean isDifferentDates(long date1, long date2) {
         Calendar calendar1 = Calendar.getInstance();
         calendar1.setTimeInMillis(unixTimestampToMilliseconds(date1));
