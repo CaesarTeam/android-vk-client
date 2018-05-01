@@ -12,6 +12,8 @@
     <string name="dialogMessageActionEdit">Edit</string>
     <string name="dialogMessageActionDelete">Delete</string>
 
+    <string name="copiedToClipBoard">Copied to buffer</string>
+
     <string name="bytes">B</string>
     <string name="kilobytes">Kb</string>
     <string name="megabytes">Mb</string>

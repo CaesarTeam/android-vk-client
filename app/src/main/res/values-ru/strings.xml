@@ -11,6 +11,8 @@
     <string name="dialogMessageActionEdit">Редактировать</string>
     <string name="dialogMessageActionDelete">Удалить</string>
 
+    <string name="copiedToClipBoard">Скопировано в буфер обмена</string>
+
     <string name="bytes">Б</string>
     <string name="kilobytes">Кб</string>
     <string name="megabytes">Мб</string>

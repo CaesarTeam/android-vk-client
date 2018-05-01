@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.caezar.vklite.ChatManager;
 import com.caezar.vklite.ChooseMessageTypeListener;
@@ -37,6 +38,7 @@ import static com.caezar.vklite.fragments.ImageMessageFullScreenFragment.IMAGE_F
 import static com.caezar.vklite.fragments.MessageActionDialog.MESSAGE_ACTION_FRAGMENT_TAG;
 import static com.caezar.vklite.libs.ChatHelper.swapButtonsVisibility;
 import static com.caezar.vklite.libs.DialogsHelper.getChatIdFromPeerId;
+import static com.caezar.vklite.libs.KeyBoard.copyToClipBoard;
 import static com.caezar.vklite.libs.KeyBoard.hideKeyboard;
 import static com.caezar.vklite.libs.KeyBoard.showKeyboard;
 
@@ -186,6 +188,8 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             case PIN:
                 break;
             case COPY:
+                copyToClipBoard(getContext(), dialogMessage.getBody());
+                Toast.makeText(getContext(), R.string.copiedToClipBoard, Toast.LENGTH_SHORT).show();
                 break;
             case EDIT:
                 editMessage(dialogMessage.getBody(), dialogMessage.getId());
