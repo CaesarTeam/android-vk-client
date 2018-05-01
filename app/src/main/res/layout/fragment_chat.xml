@@ -19,7 +19,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/messagesList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/messageTitle"
         android:layout_marginTop="@dimen/margin_top_for_messages_in_chat"
         android:layout_marginBottom="@dimen/height_for_message_form_in_chat" />
