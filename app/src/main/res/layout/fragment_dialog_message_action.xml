@@ -7,38 +7,44 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <Button
         android:id="@+id/messageActionReply"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAlignment="center"
         android:text="@string/dialogMessageActionReply"/>
 
     <Button
         android:id="@+id/messageActionForward"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAlignment="center"
         android:text="@string/dialogMessageActionForward"/>
 
     <Button
         android:id="@+id/messageActionPin"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAlignment="center"
         android:text="@string/dialogMessageActionPin"/>
 
     <Button
         android:id="@+id/messageActionCopy"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAlignment="center"
         android:text="@string/dialogMessageActionCopy"/>
 
     <Button
         android:id="@+id/messageActionEdit"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAlignment="center"
         android:text="@string/dialogMessageActionEdit"/>
 
     <Button
         android:id="@+id/messageActionDelete"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAlignment="center"
         android:text="@string/dialogMessageActionDelete"/>
 
 </LinearLayout>
