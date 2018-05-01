@@ -35,4 +35,5 @@
     <dimen name="margin_right_for_button_send_message">20dp</dimen>
     <dimen name="button_send_message_size">25dp</dimen>
     <dimen name="unread_count_circle_dialog">20dp</dimen>
+    <dimen name="read_state_circle_dialog">10dp</dimen>
 </resources>

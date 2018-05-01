@@ -83,6 +83,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         DialogItem item = items.get(position);
         int unreadMessagesCount = item.getUnread();
+        boolean readState = item.getMessage().isRead_state();
 
         switch (getItemViewType(position)) {
             case ITEM_DIALOG:
@@ -101,12 +102,18 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 } else {
                     dialogViewHolder.message.setTextColor(ContextCompat.getColor(context, R.color.colorDefaultForTextView));
                 }
-                System.out.println(unreadMessagesCount);
+
                 if (unreadMessagesCount == 0) {
                     dialogViewHolder.unreadCount.setVisibility(View.INVISIBLE);
+                    if (!readState) {
+                        dialogViewHolder.readState.setVisibility(View.VISIBLE);
+                    } else {
+                        dialogViewHolder.readState.setVisibility(View.INVISIBLE);
+                    }
                 } else {
                     dialogViewHolder.unreadCount.setText(Integer.toString(unreadMessagesCount));
                     dialogViewHolder.unreadCount.setVisibility(View.VISIBLE);
+                    dialogViewHolder.readState.setVisibility(View.INVISIBLE);
                 }
 
                 dialogViewHolder.message.setText(body);
@@ -144,14 +151,17 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         final TextView message;
         final TextView time;
         final TextView unreadCount;
+        final TextView readState;
 
         DialogViewHolder(final View itemView) {
             super(itemView);
+
             avatar = itemView.findViewById(R.id.dialogAvatar);
             title = itemView.findViewById(R.id.dialogTitle);
             message = itemView.findViewById(R.id.dialogMessage);
             time = itemView.findViewById(R.id.dialogTime);
             unreadCount = itemView.findViewById(R.id.dialogUnreadCount);
+            readState = itemView.findViewById(R.id.dialogReadState);
 
             itemView.setOnClickListener(new onDialogClickListener(this));
         }
