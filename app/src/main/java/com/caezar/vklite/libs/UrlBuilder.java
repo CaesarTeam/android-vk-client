@@ -2,6 +2,7 @@ package com.caezar.vklite.libs;
 
 import com.caezar.vklite.Config;
 import com.caezar.vklite.models.network.request.ChatRequest;
+import com.caezar.vklite.models.network.request.DeleteMessageRequest;
 import com.caezar.vklite.models.network.request.DialogsRequest;
 import com.caezar.vklite.models.network.request.EditMessageRequest;
 import com.caezar.vklite.models.network.request.SendMessageRequest;
@@ -40,6 +41,10 @@ public class UrlBuilder {
         return constructGetUrl(Method.MESSAGES_EDIT, editMessageRequest.toString());
     }
 
+    public static String constructDeleteMessage(DeleteMessageRequest deleteMessageRequest) {
+        return constructGetUrl(Method.MESSAGES_DELETE, deleteMessageRequest.toString());
+    }
+
     public static String constructGetMyselfId() {
         return constructGetUrl(Method.USERS_GET, "");
     }
@@ -56,6 +61,7 @@ public class UrlBuilder {
     private enum Method {
         MESSAGES_SEND("messages.send"),
         MESSAGES_EDIT("messages.edit"),
+        MESSAGES_DELETE("messages.delete"),
         MESSAGES_GET_HISTORY("messages.getHistory"),
         MESSAGES_GET_DIALOGS("messages.getDialogs"),
         MESSAGES_GET_CHAT("messages.getChat"),
