@@ -179,12 +179,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         ChatViewHolder chatViewHolder = ((ChatViewHolder) holder);
         if (side) {
+            chatViewHolder.container.setBackgroundResource(R.color.colorMessageFromMe);
             setAlignLayoutRight(chatViewHolder.container);
             unsetAvatar(chatViewHolder.avatar);
 
         } else {
+            chatViewHolder.container.setBackgroundResource(R.color.colorMessageToMe);
             unsetAlignLayoutRight(chatViewHolder.container);
-
             if (!isPrivateDialog && avatarUrl != null) {
                 setAvatar(isNonDuplicatesAvatar, chatViewHolder.avatar, avatarUrl);
             }

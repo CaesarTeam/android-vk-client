@@ -5,8 +5,10 @@
     <color name="colorAccent">#FF4081</color>
     <color name="messageFormBorder">#d3d3d3</color>
     <color name="colorTitleChat">#0000ff</color>
-    <color name="colorMessageFromYourSelf">#99ccff</color>
     <color name="colorMessageImageTime">#e7e7e7</color>
     <color name="colorDialogNotMessageText">#2a8cab</color>
     <color name="colorDefaultForTextView">#808080</color>
+
+    <color name="colorMessageFromMe">#99ccff</color>
+    <color name="colorMessageToMe">#ffffff</color>
 </resources>
