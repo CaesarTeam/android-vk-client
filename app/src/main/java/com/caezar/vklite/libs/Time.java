@@ -19,6 +19,7 @@ public class Time {
     public enum Format {
         HOURS_MINUTES_SECONDS("HH:mm:ss"),
         DAY_MONTH("dd.MM"),
+        DAY_NAME_MONTH("dd MMMM"),
         HOURS_MINUTES("HH:mm");
 
         private final String format;
@@ -41,24 +42,15 @@ public class Time {
     }
 
     public static String getDateTimeForDialog(long unixTimestamp, Context context) {
-        long milliseconds = unixTimestampToMilliseconds(unixTimestamp);
-        Date dialogDate = new Date(milliseconds);
+        if (isToday(unixTimestamp)) {
+            return getDateTime(unixTimestamp, Format.HOURS_MINUTES);
+        }
 
-        final Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        Date todayMidnight = calendar.getTime();
-        calendar.add(Calendar.DATE, -1);
-        Date yesterdayMidnight = calendar.getTime();
-
-        if (dialogDate.before(todayMidnight)) {
-            if (dialogDate.before(yesterdayMidnight)) {
-                return getDateTime(unixTimestamp, Format.DAY_MONTH);
-            }
-
+        if (isYesterday(unixTimestamp)) {
             return context.getString(R.string.yesterday);
         }
 
-        return getDateTime(unixTimestamp, Format.HOURS_MINUTES);
+        return getDateTime(unixTimestamp, Format.DAY_MONTH);
     }
 
     public static boolean isDateBefore24hours(int unixTimestamp) {
@@ -72,7 +64,26 @@ public class Time {
         return date.before(yesterday);
     }
 
-    public static boolean isDifferentDates(long date1, long date2) {
+    private static boolean isToday(long unixTimestamp) {
+        long milliseconds = unixTimestampToMilliseconds(unixTimestamp);
+        Date date = new Date(milliseconds);
+        final Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        Date todayMidnight = calendar.getTime();
+        return !date.before(todayMidnight);
+    }
+
+    private static boolean isYesterday(long unixTimestamp) {
+        long milliseconds = unixTimestampToMilliseconds(unixTimestamp);
+        Date date = new Date(milliseconds);
+        final Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.add(Calendar.DATE, -1);
+        Date yesterdayMidnight = calendar.getTime();
+        return !date.before(yesterdayMidnight);
+    }
+
+    public static boolean isDifferentDays(long date1, long date2) {
         Calendar calendar1 = Calendar.getInstance();
         calendar1.setTimeInMillis(unixTimestampToMilliseconds(date1));
         Calendar calendar2 = Calendar.getInstance();
@@ -80,12 +91,24 @@ public class Time {
         return calendar1.get(Calendar.DAY_OF_YEAR) != calendar2.get(Calendar.DAY_OF_YEAR) && calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR);
     }
 
-    public static int currentDate() {
+    public static String constructDate(long unixTimestamp, Context context) {
+        if (isToday(unixTimestamp)) {
+            return context.getString(R.string.today);
+        }
+
+        if (isYesterday(unixTimestamp)) {
+            return context.getString(R.string.yesterday);
+        }
+
+        return getDateTime(unixTimestamp, Format.DAY_NAME_MONTH);
+    }
+
+    public static int currentUnixTimestamp() {
         return (int) millisecondsToUnixTimestamp(System.currentTimeMillis());
     }
 
-    private static long unixTimestampToMilliseconds(long UnixTimestamp) {
-        return UnixTimestamp * 1000;
+    private static long unixTimestampToMilliseconds(long unixTimestamp) {
+        return unixTimestamp * 1000;
     }
 
     private static long millisecondsToUnixTimestamp(long milliseconds) {

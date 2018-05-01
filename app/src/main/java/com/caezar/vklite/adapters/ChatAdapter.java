@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +36,9 @@ import static com.caezar.vklite.libs.ChatHelper.setAvatar;
 import static com.caezar.vklite.libs.ChatHelper.unsetAvatar;
 import static com.caezar.vklite.libs.Guava.findIndexMessage;
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
+import static com.caezar.vklite.libs.Time.constructDate;
 import static com.caezar.vklite.libs.Time.getDateTime;
+import static com.caezar.vklite.libs.Time.isDifferentDays;
 
 /**
  * Created by seva on 03.04.18 in 15:40.
@@ -73,6 +76,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void addItemsToTop(@NonNull List<DialogMessage> itemList) {
         items.addAll(itemList);
+        checkTime();
         notifyDataSetChanged();
     }
 
@@ -85,12 +89,25 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void deleteItem(int messageId) {
         int index = findIndexMessage(new ArrayList<>(items), messageId);
         items.remove(index);
+        checkTime();
         notifyDataSetChanged();
     }
 
     public void addItemToEnd(@NonNull DialogMessage dialogMessage) {
         items.add(0, dialogMessage);
+        checkTime();
         notifyDataSetChanged();
+    }
+
+    private void checkTime() {
+        for (int i = 0; i < items.size() - 1; i++) {
+            DialogMessage item1 = items.get(i);
+            DialogMessage item2 = items.get(i + 1);
+
+            if (isDifferentDays(item1.getDate(), item2.getDate())) {
+                Log.d("between", constructDate(item1.getDate(), context));
+            }
+        }
     }
 
     @NonNull

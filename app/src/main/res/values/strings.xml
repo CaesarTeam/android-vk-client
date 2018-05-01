@@ -4,6 +4,7 @@
     <string name="message_form_placeholder">Enter message</string>
     <string name="error_internet_connection">Check you internet connection</string>
     <string name="yesterday">yesterday</string>
+    <string name="today">today</string>
 
     <string name="dialogMessageActionReply">Reply</string>
     <string name="dialogMessageActionForward">Forward</string>
