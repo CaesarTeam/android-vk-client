@@ -49,6 +49,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int IMAGE_MESSAGE = 2;
     private static final int STICKER_MESSAGE = 3;
     private static final int DOC_MESSAGE = 4;
+    private static final int SERVICE_MESSAGE = 5;
 
     private final Context context;
     private final ChatFragment.ChatCallbacks chatCallbacks;
@@ -105,7 +106,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             DialogMessage item2 = items.get(i + 1);
 
             if (isDifferentDays(item1.getDate(), item2.getDate())) {
-                Log.d("between", constructDate(item1.getDate(), context));
+                DialogMessage dialogMessage = new DialogMessage();
+                dialogMessage.setBody(constructDate(item1.getDate(), context));
+                dialogMessage.setServiceMessage(true);
+                items.add(i + 1, dialogMessage);
             }
         }
     }
@@ -140,6 +144,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case DOC_MESSAGE:
                 View messageDocView = LayoutInflater.from(context).inflate(R.layout.message_doc, parent, false);
                 return new MessageDocViewHolder(messageDocView);
+            case SERVICE_MESSAGE:
+                View messageServiceView = LayoutInflater.from(context).inflate(R.layout.message_service, parent, false);
+                return new MessageServiceViewHolder(messageServiceView);
             default:
                 throw new IllegalArgumentException("invalid view type");
         }
@@ -190,6 +197,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 messageDocViewHolder.messageDocTime.bringToFront();
 
                 break;
+            case SERVICE_MESSAGE:
+                MessageServiceViewHolder messageServiceViewHolder = ((MessageServiceViewHolder) holder);
+                messageServiceViewHolder.messageService.setText(item.getBody());
+
+                return;
             default:
                 throw new IllegalArgumentException("invalid view type");
         }
@@ -219,6 +231,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         DialogMessage item = items.get(position);
+
+        if (item.isServiceMessage()) {
+            return SERVICE_MESSAGE;
+        }
 
         if (item.getAttachments() != null && item.getAttachments()[0].getType() != null) {
             switch (item.getAttachments()[0].getType()) {
@@ -329,6 +345,16 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             messageDocName = itemView.findViewById(R.id.messageDocName);
             messageDocSize = itemView.findViewById(R.id.messageDocSize);
             messageDocTime = itemView.findViewById(R.id.messageDocTime);
+        }
+    }
+
+    class MessageServiceViewHolder extends RecyclerView.ViewHolder {
+
+        final TextView messageService;
+
+        MessageServiceViewHolder(final View itemView) {
+            super(itemView);
+            messageService = itemView.findViewById(R.id.messageService);
         }
     }
 

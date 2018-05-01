@@ -26,6 +26,7 @@ public class DialogMessage extends Message implements Parcelable {
     private String photo_100;
     private String photo_200;
     private PushSettings push_settings;
+    private boolean isServiceMessage; // my field
 
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     public enum Action {
@@ -149,6 +150,14 @@ public class DialogMessage extends Message implements Parcelable {
 
     public void setPhoto_200(String photo_200) {
         this.photo_200 = photo_200;
+    }
+
+    public boolean isServiceMessage() {
+        return isServiceMessage;
+    }
+
+    public void setServiceMessage(boolean serviceMessage) {
+        isServiceMessage = serviceMessage;
     }
 
     public DialogMessage() {
