@@ -21,8 +21,8 @@ import java.util.List;
  */
 
 public class Guava {
-    public static int findIndexMessage(List<Message> messages, Message newMessage) {
-        return Iterables.indexOf(messages, message -> message.getId() == newMessage.getId());
+    public static int findIndexMessage(List<Message> messages, int messageId) {
+        return Iterables.indexOf(messages, message -> message.getId() == messageId);
     }
 
     public static User findUser(List<User> users, int userId) {

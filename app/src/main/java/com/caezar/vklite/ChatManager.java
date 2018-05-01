@@ -7,6 +7,7 @@ import com.caezar.vklite.libs.UrlBuilder;
 import com.caezar.vklite.models.DialogMessage;
 import com.caezar.vklite.models.MessageAction;
 import com.caezar.vklite.models.network.request.ChatRequest;
+import com.caezar.vklite.models.network.request.DeleteMessageRequest;
 import com.caezar.vklite.models.network.request.EditMessageRequest;
 import com.caezar.vklite.models.network.request.SendMessageRequest;
 import com.caezar.vklite.models.network.response.ChatResponse;
@@ -55,6 +56,21 @@ public class ChatManager {
             editMessageRequest.setMessage_id(message_id);
             final String url = UrlBuilder.constructEditMessage(editMessageRequest);
             OnMessageActionComplete onMessageActionComplete = new OnMessageActionComplete(MessageAction.EDIT, (MessageActionDone)listener, context);
+            onMessageActionComplete.setMessageId(message_id);
+            NetworkManager.getInstance().get(url, onMessageActionComplete);
+        } else {
+            // todo: save to store to edit message
+        }
+    }
+
+    public void deleteMessage(int message_id, Listener listener, Context context) {
+        if (ONLINE_MODE) {
+            final DeleteMessageRequest deleteMessageRequest = new DeleteMessageRequest();
+            int messageIds[] = new int[1];
+            messageIds[0] = message_id;
+            deleteMessageRequest.setMessage_ids(messageIds);
+            final String url = UrlBuilder.constructDeleteMessage(deleteMessageRequest);
+            OnMessageActionComplete onMessageActionComplete = new OnMessageActionComplete(MessageAction.DELETE, (MessageActionDone)listener, context);
             onMessageActionComplete.setMessageId(message_id);
             NetworkManager.getInstance().get(url, onMessageActionComplete);
         } else {
@@ -150,15 +166,17 @@ public class ChatManager {
 
         @Override
         public void onResponse(final String body) {
-            MessageActionResponse messageActionResponse = parseBody(MessageActionResponse.class, body);
-
-            if (messageActionResponse.getResponse() == 0) {
-                makeToastError(body, context);
-                return;
-            }
+            //todo: do parcing error if parse make toast else everything is all right
+//            MessageActionResponse messageActionResponse = parseBody(MessageActionResponse.class, body);
+//
+//            if (messageActionResponse.getResponse() == 0) {
+//                makeToastError(body, context);
+//                return;
+//            }
 
             switch (messageAction) {
                 case EDIT:
+                case DELETE:
                     listenerCallback.callback(messageId);
                     break;
                 case SEND:

@@ -158,6 +158,10 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         getActivity().runOnUiThread(() -> adapter.changeItem(dialogMessage));
     }
 
+    private void deleteMessage(int messageId) {
+        getActivity().runOnUiThread(() -> adapter.deleteItem(messageId));
+    }
+
     private void addMessagesToAdapterTop(List<DialogMessage> items) {
         getActivity().runOnUiThread(() -> {
             adapter.addItemsToTop(items);
@@ -187,6 +191,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
                 editMessage(dialogMessage.getBody(), dialogMessage.getId());
                 break;
             case DELETE:
+                ChatManager.getInstance().deleteMessage(dialogMessage.getId(), new MessageDeleted(), getContext());
                 break;
         }
     }
@@ -237,6 +242,16 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         }
 
         public MessageEdited() {
+        }
+    }
+
+    private class MessageDeleted implements ChatManager.MessageActionDone {
+        @Override
+        public void callback(int messageId) {
+            deleteMessage(messageId);
+        }
+
+        public MessageDeleted() {
         }
     }
 
