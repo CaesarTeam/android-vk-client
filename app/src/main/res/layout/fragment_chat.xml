@@ -9,18 +9,10 @@
     android:background="@color/vk_grey_color"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/messageTitle"
-        android:layout_width="match_parent"
-        android:textAlignment="center"
-        android:textColor="@color/colorTitleChat"
-        android:layout_height="wrap_content"/>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/messagesList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/messageTitle"
         android:layout_marginTop="@dimen/chat_margin_top"
         android:layout_marginBottom="@dimen/chat_margin_bottom" />
 

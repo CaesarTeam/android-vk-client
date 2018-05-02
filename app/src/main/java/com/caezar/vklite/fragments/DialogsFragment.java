@@ -6,8 +6,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import com.caezar.vklite.DialogManager;
 import com.caezar.vklite.FragmentCallback;
 import com.caezar.vklite.R;
 import com.caezar.vklite.UserManager;
+import com.caezar.vklite.activities.MainActivity;
 import com.caezar.vklite.adapters.DialogsAdapter;
 
 import java.util.List;
@@ -52,6 +55,8 @@ public class DialogsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //((MainActivity)getActivity()).toolbar.setTitle("");
+
 
         RecyclerView recyclerView = view.findViewById(R.id.dialogsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

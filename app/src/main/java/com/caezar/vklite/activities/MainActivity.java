@@ -5,13 +5,13 @@ import android.content.SharedPreferences;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.Config;
 import com.caezar.vklite.NetworkManager;
 import com.caezar.vklite.fragments.DialogsFragment;
-import com.caezar.vklite.fragments.ImageMessageFullScreenFragment;
 import com.caezar.vklite.libs.DialogsInstanceState;
 import com.caezar.vklite.models.network.response.UsersByIdResponse;
 import com.caezar.vklite.libs.UrlBuilder;
@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String PREFS_NAME = "Vk";
     public static final String TOKEN = "token";
     private static final String MYSELF_ID = "myselfId";
-
     public static final String DIALOG_FRAGMENT_TAG = "dialogFragmentTag";
 
     private final int WRONG_ID = -1;
@@ -38,6 +37,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
+
+        TextView s = findViewById(R.id.toolbarTitle);
+        s.setText(getString(R.string.app_name));
     }
 
     @Override
