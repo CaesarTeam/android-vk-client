@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxWidth="@dimen/chat_message_max_width"
-        android:textColor="@color/vk_light_color"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

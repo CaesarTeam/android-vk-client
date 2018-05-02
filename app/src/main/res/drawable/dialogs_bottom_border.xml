@@ -3,13 +3,13 @@
     <item>
         <shape android:shape="rectangle">
             <stroke
-                android:color="@color/messageFormBorder"
+                android:color="@color/colorDialogBorderBottom"
                 android:width="@dimen/dialog_border_width" />
             </shape>
     </item>
     <item android:bottom="@dimen/dialog_border_width">
         <shape android:shape="rectangle">
-            <solid android:color="@android:color/white"/>
+            <solid android:color="@color/colorDialog"/>
         </shape>
     </item>
 </layer-list>

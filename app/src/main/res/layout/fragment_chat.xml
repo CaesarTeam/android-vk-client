@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context=".fragments.DialogsFragment"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/vk_grey_color"
+    android:background="@color/colorChat"
     xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.v7.widget.RecyclerView
@@ -30,7 +30,7 @@
             android:layout_marginEnd="@dimen/chat_form_edit_margin_right"
             android:layout_marginStart="@dimen/chat_form_edit_margin_left"
             android:inputType="textMultiLine"
-            android:background="@android:color/transparent"
+            android:background="@color/colorChatFormEdit"
             android:padding="@dimen/chat_form_edit_padding"
             android:layout_centerVertical="true"
             android:textCursorDrawable="@drawable/color_cursor_message_form"

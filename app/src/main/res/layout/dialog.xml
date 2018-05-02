@@ -2,8 +2,8 @@
 <android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/dialog_margin_between"
-    android:background="@android:color/white"
+    android:layout_marginTop="@dimen/dialog_margin_between"
+    android:background="@color/colorDialog"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <RelativeLayout

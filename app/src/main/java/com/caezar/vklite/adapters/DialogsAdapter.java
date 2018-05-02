@@ -14,14 +14,11 @@ import android.widget.TextView;
 import com.caezar.vklite.R;
 import com.caezar.vklite.fragments.DialogsFragment;
 import com.caezar.vklite.models.DialogItem;
-import com.caezar.vklite.models.DialogMessage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.caezar.vklite.Config.minItemsToRequestDialogs;
-import static com.caezar.vklite.libs.DialogsHelper.getActionMessage;
-import static com.caezar.vklite.libs.DialogsHelper.getAttachmentsMessage;
 import static com.caezar.vklite.libs.DialogsHelper.getBody;
 import static com.caezar.vklite.libs.DialogsHelper.getPeerId;
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
@@ -98,9 +95,9 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                 String body = getBody(item.getMessage(), context);
                 if (!body.equals(item.getMessage().getBody())) {
-                    dialogViewHolder.message.setTextColor(ContextCompat.getColor(context, R.color.colorDialogNotMessageText));
+                    dialogViewHolder.message.setTextColor(ContextCompat.getColor(context, R.color.colorDialogMessageNotText));
                 } else {
-                    dialogViewHolder.message.setTextColor(ContextCompat.getColor(context, R.color.colorDefaultForTextView));
+                    dialogViewHolder.message.setTextColor(ContextCompat.getColor(context, R.color.colorDialogMessageDefault));
                 }
 
                 if (unreadMessagesCount == 0) {

@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="messageFormBorder">#d3d3d3</color>
-    <color name="colorTitleChat">#0000ff</color>
-    <color name="colorMessageImageTime">#e7e7e7</color>
-    <color name="colorDialogNotMessageText">#2a8cab</color>
-    <color name="colorDefaultForTextView">#808080</color>
-
-    <color name="colorMessageFromMe">#99ccff</color>
-    <color name="colorMessageToMe">#ffffff</color>
+    <color name="colorPrimary">#4CAF50</color>
+    <color name="colorPrimaryDark">#1B5E20</color>
+    <color name="colorAccent">#69F0AE</color>
+    <color name="colorDialogBorderBottom">#1B5E20</color>
+    <color name="colorMessageFormBorderTop">#1B5E20</color>
+    <color name="colorDialogMessageNotText">#81C784</color>
+    <color name="colorDialogMessageDefault">#1B5E20</color>
+    <color name="colorMessageTextFromMe">#4CAF50</color>
+    <color name="colorMessageTextToMe">#81C784</color>
+    <color name="colorDialogListBetween">#A5D6A7</color>
+    <color name="colorDialog">#A5D6A7</color>
+    <color name="colorChat">#C8E6C9</color>
+    <color name="colorMessageImageTime">#388E3C</color>
+    <color name="colorChatForm">#00C853</color>
+    <color name="colorChatFormEdit">#00E676</color>
 </resources>

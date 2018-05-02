@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +17,6 @@ import com.caezar.vklite.fragments.ChatFragment;
 import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.Config;
 import com.caezar.vklite.models.DialogMessage;
-import com.caezar.vklite.models.Message;
 import com.caezar.vklite.models.Photo;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -208,12 +206,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         ChatViewHolder chatViewHolder = ((ChatViewHolder) holder);
         if (side) {
-            chatViewHolder.container.setBackgroundResource(R.color.colorMessageFromMe);
+            chatViewHolder.container.setBackgroundResource(R.color.colorMessageTextFromMe);
             setAlignLayoutRight(chatViewHolder.container);
             unsetAvatar(chatViewHolder.avatar);
 
         } else {
-            chatViewHolder.container.setBackgroundResource(R.color.colorMessageToMe);
+            chatViewHolder.container.setBackgroundResource(R.color.colorMessageTextToMe);
             unsetAlignLayoutRight(chatViewHolder.container);
             if (!isPrivateDialog && avatarUrl != null) {
                 setAvatar(isNonDuplicatesAvatar, chatViewHolder.avatar, avatarUrl);
