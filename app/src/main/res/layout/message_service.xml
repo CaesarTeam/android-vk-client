@@ -3,16 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginBottom="@dimen/margin_chat"
+    android:layout_marginBottom="@dimen/chat_margin_between"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
         android:id="@+id/messageService"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="@dimen/max_width_for_message_in_chat"
+        android:maxWidth="@dimen/chat_message_max_width"
         android:textColor="@color/vk_light_color"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/margin_between_message_and_time"/>
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

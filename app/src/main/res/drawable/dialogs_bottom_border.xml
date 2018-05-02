@@ -4,10 +4,10 @@
         <shape android:shape="rectangle">
             <stroke
                 android:color="@color/messageFormBorder"
-                android:width="@dimen/border_width_between_dialogs" />
+                android:width="@dimen/dialog_border_width" />
             </shape>
     </item>
-    <item android:bottom="@dimen/border_width_between_dialogs">
+    <item android:bottom="@dimen/dialog_border_width">
         <shape android:shape="rectangle">
             <solid android:color="@android:color/white"/>
         </shape>

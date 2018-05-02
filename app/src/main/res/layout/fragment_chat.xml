@@ -21,12 +21,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/messageTitle"
-        android:layout_marginTop="@dimen/margin_top_for_messages_in_chat"
-        android:layout_marginBottom="@dimen/height_for_message_form_in_chat" />
+        android:layout_marginTop="@dimen/chat_margin_top"
+        android:layout_marginBottom="@dimen/chat_margin_bottom" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_for_message_form_in_chat"
+        android:layout_height="@dimen/chat_form_height"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:background="@drawable/message_form_top_border">
@@ -35,32 +35,32 @@
             android:id="@+id/messageForm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_end_for_message_form_in_chat"
-            android:layout_marginStart="@dimen/margin_start_for_message_form_in_chat"
+            android:layout_marginEnd="@dimen/chat_form_edit_margin_right"
+            android:layout_marginStart="@dimen/chat_form_edit_margin_left"
             android:inputType="textMultiLine"
             android:background="@android:color/transparent"
-            android:padding="@dimen/padding_for_message_form_in_chat"
+            android:padding="@dimen/chat_form_edit_padding"
             android:layout_centerVertical="true"
             android:textCursorDrawable="@drawable/color_cursor_message_form"
             android:hint="@string/message_form_placeholder"/>
 
         <Button
             android:id="@+id/buttonSendMessage"
-            android:layout_width="@dimen/button_send_message_size"
-            android:layout_height="@dimen/button_send_message_size"
+            android:layout_width="@dimen/chat_form_submit_size"
+            android:layout_height="@dimen/chat_form_submit_size"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/margin_right_for_button_send_message"
+            android:layout_marginEnd="@dimen/chat_form_submit_margin_right"
             android:layout_alignParentEnd="true"
             android:background="@drawable/send"/>
 
         <Button
             android:id="@+id/buttonSubmitEdit"
-            android:layout_width="@dimen/button_send_message_size"
-            android:layout_height="@dimen/button_send_message_size"
+            android:layout_width="@dimen/chat_form_submit_size"
+            android:layout_height="@dimen/chat_form_submit_size"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/margin_right_for_button_send_message"
+            android:layout_marginEnd="@dimen/chat_form_submit_margin_right"
             android:layout_alignParentEnd="true"
             android:visibility="gone"
             android:background="@drawable/submit_edit"/>

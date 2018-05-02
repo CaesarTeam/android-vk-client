@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android" >
-    <size android:width="@dimen/cursor_width_message_form_in_chat" />
+    <size android:width="@dimen/chat_form_edit_cursor_width" />
     <solid android:color="@color/colorPrimary"/>
 </shape>

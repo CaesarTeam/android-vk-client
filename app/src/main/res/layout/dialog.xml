@@ -2,28 +2,26 @@
 <android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_between_dialogs"
+    android:layout_marginBottom="@dimen/dialog_margin_between"
     android:background="@android:color/white"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/margin_for_dialog"
-        android:layout_marginBottom="@dimen/margin_for_dialog">
+        android:orientation="horizontal">
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/dialogAvatar"
-            android:layout_width="@dimen/image_size_for_avatar_in_dialogs"
-            android:layout_height="@dimen/image_size_for_avatar_in_dialogs"
-            android:layout_marginStart="@dimen/margin_left_for_avatar_in_dialog"
+            android:layout_width="@dimen/dialog_size_avatar"
+            android:layout_height="@dimen/dialog_size_avatar"
+            android:layout_marginStart="@dimen/dialog_avatar_margin_left"
             app:riv_oval="true"
             xmlns:app="http://schemas.android.com/apk/res-auto"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/image_size_for_avatar_in_dialogs"
+            android:layout_height="@dimen/dialog_size_avatar"
             android:background="@drawable/dialogs_bottom_border"
             android:layout_toEndOf="@+id/dialogAvatar">
 
@@ -37,12 +35,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:layout_marginStart="@dimen/margin_left_for_title_in_dialog"
-                    android:layout_marginEnd="@dimen/margin_right_for_title_in_dialog"
+                    android:layout_marginStart="@dimen/dialog_title_margin_left"
+                    android:layout_marginEnd="@dimen/dialog_title_margin_right"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:textColor="@color/vk_black"
-                    android:textSize="@dimen/font_size_title_dialog"/>
+                    android:textSize="@dimen/dialog_title_font_size"/>
 
                 <TextView
                     android:id="@+id/dialogTime"
@@ -50,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/margin_right_for_time_in_dialog"
+                    android:layout_marginEnd="@dimen/dialog_time_margin_right"
                     android:singleLine="true"/>
             </RelativeLayout>
 
@@ -62,20 +60,20 @@
 
             <TextView
                 android:id="@+id/dialogMessage"
-                android:layout_width="@dimen/width_for_message_in_dialog"
+                android:layout_width="@dimen/dialog_message_width"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_for_message_in_dialog"
-                android:layout_marginStart="@dimen/margin_for_message_in_dialog"
+                android:layout_marginTop="@dimen/dialog_message_margin_top"
+                android:layout_marginStart="@dimen/dialog_message_margin_left"
                 android:singleLine="true"
                 android:layout_centerVertical="true"
                 android:textAlignment="textStart"/>
 
             <TextView
                 android:id="@+id/dialogUnreadCount"
-                android:layout_width="@dimen/unread_count_circle_dialog"
-                android:layout_height="@dimen/unread_count_circle_dialog"
+                android:layout_width="@dimen/dialog_unread_size"
+                android:layout_height="@dimen/dialog_unread_size"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="@dimen/margin_right_for_unread_in_dialog"
+                android:layout_marginEnd="@dimen/dialog_unread_margin_right"
                 android:layout_centerVertical="true"
                 android:textAlignment="center"
                 android:textColor="@color/vk_white"
@@ -83,10 +81,10 @@
 
                 <TextView
                     android:id="@+id/dialogReadState"
-                    android:layout_width="@dimen/read_state_circle_dialog"
-                    android:layout_height="@dimen/read_state_circle_dialog"
+                    android:layout_width="@dimen/dialog_read_state_size"
+                    android:layout_height="@dimen/dialog_read_state_size"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="@dimen/margin_right_for_unread_in_dialog"
+                    android:layout_marginEnd="@dimen/dialog_unread_margin_right"
                     android:layout_centerVertical="true"
                     android:background="@drawable/blue_circle" />
             </RelativeLayout>

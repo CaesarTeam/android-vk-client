@@ -3,13 +3,13 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginBottom="@dimen/margin_chat"
+    android:layout_marginBottom="@dimen/chat_margin_between"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/messageTextAvatarLand"
-        android:layout_width="@dimen/image_size_for_avatar_in_chat"
-        android:layout_height="@dimen/image_size_for_avatar_in_chat"
+        android:layout_width="@dimen/chat_avatar_size"
+        android:layout_height="@dimen/chat_avatar_size"
         android:visibility="gone"
         app:riv_oval="true"
         xmlns:app="http://schemas.android.com/apk/res-auto"/>
@@ -18,9 +18,9 @@
         android:id="@+id/messageTextContainerLand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_chat"
-        android:layout_marginRight="@dimen/margin_chat"
-        android:padding="@dimen/padding_chat"
+        android:layout_marginLeft="@dimen/chat_from_avatar_margin_left_right"
+        android:layout_marginRight="@dimen/chat_from_avatar_margin_left_right"
+        android:padding="@dimen/chat_message_text_padding"
         android:layout_toEndOf="@id/messageTextAvatarLand"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -28,8 +28,8 @@
             android:id="@+id/messageTextLand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxWidth="@dimen/land_max_width_for_message_in_chat"
-            android:layout_marginBottom="@dimen/margin_between_message_and_time"/>
+            android:maxWidth="@dimen/chat_message_max_width_land"
+            android:layout_marginBottom="@dimen/chat_message_text_margin_bottom"/>
 
         <TextView
             android:id="@+id/messageTextTimeLand"

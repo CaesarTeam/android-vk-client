@@ -2,14 +2,15 @@
 <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/margin_chat"
-    android:layout_marginRight="@dimen/margin_chat"
+    android:layout_marginLeft="@dimen/chat_message_margin_left_right"
+    android:layout_marginRight="@dimen/chat_message_margin_left_right"
+    android:layout_marginBottom="@dimen/chat_margin_between"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/messageImageAvatarLand"
-        android:layout_width="@dimen/image_size_for_avatar_in_chat"
-        android:layout_height="@dimen/image_size_for_avatar_in_chat"
+        android:layout_width="@dimen/chat_avatar_size"
+        android:layout_height="@dimen/chat_avatar_size"
         android:visibility="gone"
         app:riv_oval="true"
         xmlns:app="http://schemas.android.com/apk/res-auto"/>
@@ -18,16 +19,13 @@
         android:id="@+id/messageImageContainerLand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_chat"
         android:layout_toEndOf="@id/messageImageAvatarLand"
-        android:layout_marginLeft="@dimen/margin_chat"
-        android:layout_marginRight="@dimen/margin_chat"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
         <ImageView
             android:id="@+id/messageImageLand"
-            android:layout_width="@dimen/land_image_size_in_chat"
-            android:layout_height="@dimen/land_image_size_in_chat"
+            android:layout_width="@dimen/chat_image_size_land"
+            android:layout_height="@dimen/chat_image_size_land"
             android:background="@drawable/chat_image_message_border"
             tools:ignore="ContentDescription"/>
 
@@ -37,8 +35,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/messageImageLand"
             android:layout_toEndOf="@id/messageImageLand"
-            android:layout_marginTop="@dimen/margin_top_time_in_chat"
-            android:layout_marginStart="@dimen/margin_left_time_in_chat"
+            android:layout_marginTop="@dimen/chat_time_margin_top"
+            android:layout_marginStart="@dimen/chat_time_margin_left"
             android:background="@color/colorMessageImageTime"/>
     </RelativeLayout>
 </RelativeLayout>
