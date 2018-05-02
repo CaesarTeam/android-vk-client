@@ -6,13 +6,9 @@
     android:layout_marginBottom="@dimen/chat_margin_between"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.makeramen.roundedimageview.RoundedImageView
+    <include
         android:id="@+id/messageTextAvatarLand"
-        android:layout_width="@dimen/chat_avatar_size"
-        android:layout_height="@dimen/chat_avatar_size"
-        android:visibility="gone"
-        app:riv_oval="true"
-        xmlns:app="http://schemas.android.com/apk/res-auto"/>
+        layout="@layout/chat_avatar"/>
 
     <RelativeLayout
         android:id="@+id/messageTextContainerLand"
