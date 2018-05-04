@@ -1,94 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/dialog_margin_between"
+    android:layout_marginBottom="@dimen/dialog_margin_between"
     android:background="@color/colorDialog"
+    android:padding="@dimen/dialog_padding"
+    android:orientation="horizontal"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/dialogAvatar"
+        android:layout_width="@dimen/dialog_size_avatar"
+        android:layout_height="@dimen/dialog_size_avatar"
+        app:riv_oval="true"
+        xmlns:app="http://schemas.android.com/apk/res-auto"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/dialogAvatar"
-            android:layout_width="@dimen/dialog_size_avatar"
-            android:layout_height="@dimen/dialog_size_avatar"
-            android:layout_marginStart="@dimen/dialog_avatar_margin_left"
-            app:riv_oval="true"
-            xmlns:app="http://schemas.android.com/apk/res-auto"/>
+        android:layout_height="@dimen/dialog_size_avatar">
 
         <RelativeLayout
+            android:id="@+id/titleContainer"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dialog_size_avatar"
-            android:layout_toEndOf="@+id/dialogAvatar">
-
-            <RelativeLayout
-                android:id="@+id/titleContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/dialogTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:layout_marginStart="@dimen/dialog_title_margin_left"
-                    android:layout_marginEnd="@dimen/dialog_title_margin_right"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/colorDialogTitle"
-                    android:textSize="@dimen/dialog_title_font_size"/>
-
-                <TextView
-                    android:id="@+id/dialogTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/dialog_time_margin_right"
-                    android:singleLine="true"/>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/messageContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/titleContainer">
+            android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/dialogMessage"
-                android:layout_width="@dimen/dialog_message_width"
+                android:id="@+id/dialogTitle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dialog_message_margin_top"
-                android:layout_marginStart="@dimen/dialog_message_margin_left"
-                android:singleLine="true"
+                android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:textAlignment="textStart"/>
+                android:textColor="@color/colorDialogTitle"
+                android:textSize="@dimen/dialog_title_font_size"
+                android:singleLine="true"/>
 
             <TextView
-                android:id="@+id/dialogUnreadCount"
-                android:layout_width="@dimen/dialog_unread_size"
-                android:layout_height="@dimen/dialog_unread_size"
+                android:id="@+id/dialogTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="@dimen/dialog_unread_margin_right"
-                android:layout_centerVertical="true"
-                android:textAlignment="center"
-                android:textColor="@color/vk_white"
-                android:background="@drawable/circle_read_state" />
-
-                <TextView
-                    android:id="@+id/dialogReadState"
-                    android:layout_width="@dimen/dialog_read_state_size"
-                    android:layout_height="@dimen/dialog_read_state_size"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="@dimen/dialog_unread_margin_right"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/circle_read_state" />
-            </RelativeLayout>
+                android:textColor="@color/colorDialogTime"
+                android:layout_alignBaseline="@+id/dialogTitle"
+                android:singleLine="true"/>
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/messageContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/titleContainer"
+            android:layout_marginTop="@dimen/dialog_message_margin_top"
+            android:layout_marginStart="@dimen/dialog_message_margin_left">
+
+        <TextView
+            android:id="@+id/dialogMessage"
+            android:layout_width="@dimen/dialog_message_width"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:singleLine="true"/>
+
+        <TextView
+            android:id="@+id/dialogUnreadCount"
+            android:layout_width="@dimen/dialog_unread_size"
+            android:layout_height="@dimen/dialog_unread_size"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:textAlignment="center"
+            android:textColor="@color/colorDialogUnreadCount"
+            android:background="@drawable/circle_read_state"/>
+
+        <TextView
+            android:id="@+id/dialogReadState"
+            android:layout_width="@dimen/dialog_read_state_size"
+            android:layout_height="@dimen/dialog_read_state_size"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/circle_read_state"/>
+        </RelativeLayout>
     </RelativeLayout>
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

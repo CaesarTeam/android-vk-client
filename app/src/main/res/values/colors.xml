@@ -8,10 +8,11 @@
     <color name="colorDialogListBetween">#b2dfdb</color>
     <color name="colorDialogReadState">#004d40</color>
     <color name="colorDialogTitle">#1B5E20</color>
+    <color name="colorDialogTime">#1B5E20</color>
+    <color name="colorDialogUnreadCount">#fff</color>
     <color name="colorDialogMessageNotText">#81C784</color>
     <color name="colorDialogMessageDefault">#1B5E20</color>
     <color name="colorChat">#e0f2f1</color>
-    <color name="colorChatFormBorderTop">#1B5E20</color>
     <color name="colorChatFormCursor">#00897b</color>
     <color name="colorChatForm">#00897b</color>
     <color name="colorChatFormEdit">#009688</color>

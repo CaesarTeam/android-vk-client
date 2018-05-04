@@ -7,18 +7,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".fragments.DialogsFragment">
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/dialogsContainer"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/dialogsList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorDialogListBetween">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/dialogsList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </android.support.constraint.ConstraintLayout>
-
+        android:background="@color/colorDialogListBetween"/>
 
 </android.support.v4.widget.SwipeRefreshLayout>
 

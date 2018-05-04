@@ -13,7 +13,6 @@
         android:id="@+id/messagesList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/chat_margin_top"
         android:layout_marginBottom="@dimen/chat_margin_bottom" />
 
     <RelativeLayout
@@ -21,7 +20,7 @@
         android:layout_height="@dimen/chat_form_height"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:background="@drawable/message_form_top_border">
+        android:background="@color/colorChatForm">
 
         <EditText
             android:id="@+id/messageForm"
