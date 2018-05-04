@@ -1,10 +1,12 @@
 package com.caezar.vklite.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,6 +35,7 @@ import com.caezar.vklite.models.DialogMessage;
 
 import java.util.List;
 
+import static com.caezar.vklite.fragments.DialogsFragment.BROADCAST_CLOSE_CHAT;
 import static com.caezar.vklite.fragments.DialogsFragment.CHAT_FRAGMENT_TAG;
 import static com.caezar.vklite.fragments.DialogsFragment.PEER_ID;
 import static com.caezar.vklite.fragments.DialogsFragment.TITLE;
@@ -142,6 +145,12 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
 
         if (adapter.getPhotoUsersSize() != 0) {
             ChatInstanceState.getInstance().setPhotoUsers(adapter.getPhotoUsers());
+        }
+
+        Intent intent = new Intent(BROADCAST_CLOSE_CHAT);
+        intent.putExtra(PEER_ID, peer_id);
+        if (getContext() != null) {
+            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
         }
     }
 

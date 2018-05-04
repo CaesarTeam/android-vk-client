@@ -1,15 +1,18 @@
 package com.caezar.vklite.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +21,6 @@ import com.caezar.vklite.DialogManager;
 import com.caezar.vklite.FragmentCallback;
 import com.caezar.vklite.R;
 import com.caezar.vklite.UserManager;
-import com.caezar.vklite.activities.MainActivity;
 import com.caezar.vklite.adapters.DialogsAdapter;
 
 import java.util.List;
@@ -40,11 +42,23 @@ public class DialogsFragment extends Fragment {
     public static final String TITLE = "title";
     public static final String PEER_ID = "peer_id";
     public static final String CHAT_FRAGMENT_TAG = "chatFragmentTag";
-
+    public static final String BROADCAST_CLOSE_CHAT = "broadcastCloseChat";
 
     private DialogsAdapter adapter;
     private boolean requestDialogsFinish = true;
     private boolean refresh = true;
+
+    private BroadcastReceiver closeChatReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int peerId = intent.getIntExtra(PEER_ID, 0);
+            animateClosedChat(peerId);
+        }
+    };
+
+    private void animateClosedChat(int peerId) {
+        
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,8 +69,6 @@ public class DialogsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //((MainActivity)getActivity()).toolbar.setTitle("");
-
 
         RecyclerView recyclerView = view.findViewById(R.id.dialogsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -75,6 +87,10 @@ public class DialogsFragment extends Fragment {
         if (DialogsInstanceState.getInstance().getDialogs() != null) {
             setDialogs(DialogsInstanceState.getInstance().getDialogs());
         }
+
+        if (getContext() != null) {
+            LocalBroadcastManager.getInstance(getContext()).registerReceiver(closeChatReceiver, new IntentFilter(BROADCAST_CLOSE_CHAT));
+        }
     }
 
     @Override
@@ -92,6 +108,10 @@ public class DialogsFragment extends Fragment {
 
         if (adapter.getItemCount() != 0) {
             DialogsInstanceState.getInstance().setDialogs(adapter.getItems());
+        }
+
+        if (getContext() != null) {
+            LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(closeChatReceiver);
         }
     }
 
