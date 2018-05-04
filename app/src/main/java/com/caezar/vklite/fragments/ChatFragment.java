@@ -318,7 +318,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
 
             ImageMessageFullScreenFragment imageMessageFullScreenFragment = new ImageMessageFullScreenFragment();
             imageMessageFullScreenFragment.setArguments(bundle);
-            transaction.replace(R.id.mainContainer, imageMessageFullScreenFragment, IMAGE_FULL_FRAGMENT_TAG);
+            transaction.add(R.id.mainContainer, imageMessageFullScreenFragment, IMAGE_FULL_FRAGMENT_TAG);
             transaction.addToBackStack(CHAT_FRAGMENT_TAG);
 
             transaction.commit();

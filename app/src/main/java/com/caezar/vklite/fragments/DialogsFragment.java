@@ -161,7 +161,7 @@ public class DialogsFragment extends Fragment {
 
             ChatFragment chatFragment = new ChatFragment();
             chatFragment.setArguments(bundle);
-            transaction.replace(R.id.mainContainer, chatFragment, CHAT_FRAGMENT_TAG);
+            transaction.add(R.id.mainContainer, chatFragment, CHAT_FRAGMENT_TAG);
             transaction.addToBackStack(DIALOG_FRAGMENT_TAG);
 
             transaction.commit();
