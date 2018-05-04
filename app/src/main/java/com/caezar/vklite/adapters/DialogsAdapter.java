@@ -1,14 +1,20 @@
 package com.caezar.vklite.adapters;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.caezar.vklite.R;
@@ -21,6 +27,7 @@ import java.util.List;
 import static com.caezar.vklite.Config.minItemsToRequestDialogs;
 import static com.caezar.vklite.libs.DialogsHelper.getBody;
 import static com.caezar.vklite.libs.DialogsHelper.getPeerId;
+import static com.caezar.vklite.libs.Guava.findIndexDialog;
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
 import static com.caezar.vklite.libs.ImageLoader.getUrlForResource;
 import static com.caezar.vklite.libs.Time.getDateTimeForDialog;
@@ -31,10 +38,12 @@ import static com.caezar.vklite.libs.Time.getDateTimeForDialog;
 
 public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int ITEM_DIALOG = 1;
+    private final int ANIMATE_DURATION_CLOSE_CHAT_TIME = 1500;
 
     @NonNull private final List<DialogItem> items = new ArrayList<>();
     private final Context context;
     private final DialogsFragment.DialogsCallbacks dialogsCallbacks;
+    @Nullable private LinearLayout dialogContainer = null;
 
     public DialogsAdapter(DialogsFragment.DialogsCallbacks dialogsCallbacks, Context context) {
         this.dialogsCallbacks = dialogsCallbacks;
@@ -54,6 +63,25 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             items.addAll(dialogItems);
             notifyDataSetChanged();
         }
+    }
+
+    public void animateClosedChat(int peerId) {
+        //int position = findIndexDialog(items, peerId);
+        int colorFrom = context.getResources().getColor(R.color.colorDialog);
+        int colorTo = context.getResources().getColor(R.color.colorDialogAnimateBoundary);
+
+        ValueAnimator anim = new ValueAnimator();
+        anim.setIntValues(colorTo, colorFrom);
+        anim.setEvaluator(new ArgbEvaluator());
+        anim.addUpdateListener(valueAnimator -> {
+            if (dialogContainer != null) {
+                dialogContainer.setBackgroundColor((Integer) valueAnimator.getAnimatedValue());
+            } else {
+                anim.cancel();
+            }
+        });
+        anim.setDuration(ANIMATE_DURATION_CLOSE_CHAT_TIME);
+        anim.start();
     }
 
     @NonNull
@@ -143,6 +171,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     class DialogViewHolder extends RecyclerView.ViewHolder {
 
+        final LinearLayout dialogContainer;
         final ImageView avatar;
         final TextView title;
         final TextView message;
@@ -153,6 +182,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         DialogViewHolder(final View itemView) {
             super(itemView);
 
+            dialogContainer = itemView.findViewById(R.id.dialogContainer);
             avatar = itemView.findViewById(R.id.dialogAvatar);
             title = itemView.findViewById(R.id.dialogTitle);
             message = itemView.findViewById(R.id.dialogMessage);
@@ -179,6 +209,10 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 int peer_id = getPeerId(item);
                 String title = item.getMessage().getTitle();
 
+                if (dialogContainer != null) {
+                    dialogContainer.setBackgroundColor(context.getResources().getColor(R.color.colorDialog));
+                }
+                dialogContainer = holder.dialogContainer;
                 dialogsCallbacks.openChat(peer_id, title);
             }
         }

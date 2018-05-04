@@ -52,13 +52,9 @@ public class DialogsFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             int peerId = intent.getIntExtra(PEER_ID, 0);
-            animateClosedChat(peerId);
+            adapter.animateClosedChat(peerId);
         }
     };
-
-    private void animateClosedChat(int peerId) {
-        
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

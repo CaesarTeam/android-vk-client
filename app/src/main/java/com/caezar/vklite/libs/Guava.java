@@ -15,6 +15,8 @@ import com.google.common.primitives.Ints;
 import java.util.Collection;
 import java.util.List;
 
+import static com.caezar.vklite.libs.DialogsHelper.getPeerId;
+
 
 /**
  * Created by seva on 01.05.18 in 14:05.
@@ -23,6 +25,10 @@ import java.util.List;
 public class Guava {
     public static int findIndexMessage(List<Message> messages, int messageId) {
         return Iterables.indexOf(messages, message -> message.getId() == messageId);
+    }
+
+    public static int findIndexDialog(List<DialogItem> dialogs, int peerId) {
+        return Iterables.indexOf(dialogs, dialog -> getPeerId(dialog) == peerId);
     }
 
     public static User findUser(List<User> users, int userId) {

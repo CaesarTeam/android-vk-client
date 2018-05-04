@@ -171,25 +171,33 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
     }
 
     private void changeMessage(DialogMessage dialogMessage) {
-        getActivity().runOnUiThread(() -> adapter.changeItem(dialogMessage));
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(() -> adapter.changeItem(dialogMessage));
+        }
     }
 
     private void deleteMessage(int messageId) {
-        getActivity().runOnUiThread(() -> adapter.deleteItem(messageId));
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(() -> adapter.deleteItem(messageId));
+        }
     }
 
     private void addMessagesToAdapterTop(List<DialogMessage> items) {
-        getActivity().runOnUiThread(() -> {
-            adapter.addItemsToTop(items);
-            if (adapter.getItemCount() == new ChatRequest().getCount()) {
-                recyclerView.scrollToPosition(0);
-            }
-            isChatRequest = true;
-        });
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(() -> {
+                adapter.addItemsToTop(items);
+                if (adapter.getItemCount() == new ChatRequest().getCount()) {
+                    recyclerView.scrollToPosition(0);
+                }
+                isChatRequest = true;
+            });
+        }
     }
 
     private void setAvatarsToAdapter(SparseArray<String> photoUsers) {
-        getActivity().runOnUiThread(() -> adapter.setUsersAvatar(photoUsers));
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(() -> adapter.setUsersAvatar(photoUsers));
+        }
     }
 
     @Override
