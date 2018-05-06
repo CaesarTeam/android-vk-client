@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.caezar.vklite.DialogManager;
@@ -51,6 +52,7 @@ public class DialogsFragment extends Fragment {
     public static final String BROADCAST_CLOSE_CHAT = "broadcastCloseChat";
 
     private DialogsAdapter adapter;
+    private ProgressBar progressBar;
     private boolean requestDialogsFinish = true;
     private boolean refresh = true;
 
@@ -72,6 +74,8 @@ public class DialogsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        progressBar = view.findViewById(R.id.dialogProgressBar);
 
         RecyclerView recyclerView = view.findViewById(R.id.dialogsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -128,6 +132,7 @@ public class DialogsFragment extends Fragment {
     private void getDialogs(int offset) {
         if (requestDialogsFinish) {
             requestDialogsFinish = false;
+            progressBar.setVisibility(View.VISIBLE);
             DialogManager.getInstance().getDialogs(offset, new GetDialogs(), getContext());
         }
     }
@@ -140,6 +145,7 @@ public class DialogsFragment extends Fragment {
             adapter.addItemsToEnd(dialogs);
         }
         requestDialogsFinish = true;
+        progressBar.setVisibility(View.GONE);
     }
 
     private void setDialogsFromListener(List<DialogItem> dialogs) {

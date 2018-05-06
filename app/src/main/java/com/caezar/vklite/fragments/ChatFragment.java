@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +62,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
     private RecyclerView recyclerView;
     private ChatAdapter adapter;
     private EditText editText;
+    private ProgressBar progressBar;
     Button sendMessage;
     Button submitEditMessage;
 
@@ -79,6 +81,8 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        progressBar = view.findViewById(R.id.chatProgressBar);
 
         if (getArguments() != null) {
             peer_id = getArguments().getInt(PEER_ID, 0);
@@ -159,6 +163,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
 
     private void getChat(int offset) {
         if (isChatRequest) {
+            progressBar.setVisibility(View.VISIBLE);
             isChatRequest = false;
             int defaultCount = new ChatRequest().getCount(); //todo: fix it
             ChatManager.getInstance().getChat(offset, peer_id, defaultCount, new GetMessages(), getContext());
@@ -189,6 +194,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
                     recyclerView.scrollToPosition(0);
                 }
                 isChatRequest = true;
+                progressBar.setVisibility(View.GONE);
             });
         }
     }

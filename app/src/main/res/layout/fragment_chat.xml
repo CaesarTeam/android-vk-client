@@ -58,6 +58,10 @@
 
     </RelativeLayout>
 
+    <include
+        android:id="@+id/chatProgressBar"
+        layout="@layout/default_progress_bar"/>
+
 </RelativeLayout>
 
 
