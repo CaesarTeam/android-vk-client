@@ -41,9 +41,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
-
-        TextView s = findViewById(R.id.toolbarTitle);
-        s.setText(getString(R.string.app_name));
+        toolbar.findViewById(R.id.toolbarBack).setOnClickListener((view) -> onBackPressed());
     }
 
     @Override

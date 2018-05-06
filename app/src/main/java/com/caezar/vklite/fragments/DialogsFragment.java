@@ -11,11 +11,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.caezar.vklite.DialogManager;
 import com.caezar.vklite.FragmentCallback;
@@ -33,6 +37,8 @@ import com.caezar.vklite.models.User;
 import static com.caezar.vklite.activities.MainActivity.DIALOG_FRAGMENT_TAG;
 import static com.caezar.vklite.libs.DialogsHelper.addDataToDialogsList;
 import static com.caezar.vklite.libs.DialogsHelper.getUsersIdFromPrivateDialogs;
+import static com.caezar.vklite.libs.ToolbarHelper.hideToolbarBack;
+import static com.caezar.vklite.libs.ToolbarHelper.setToolbarTitle;
 
 /**
  * Created by seva on 01.04.18 in 17:56.
@@ -53,6 +59,7 @@ public class DialogsFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             int peerId = intent.getIntExtra(PEER_ID, 0);
             adapter.animateClosedChat(peerId);
+            setToolbarProperty();
         }
     };
 
@@ -87,6 +94,8 @@ public class DialogsFragment extends Fragment {
         if (getContext() != null) {
             LocalBroadcastManager.getInstance(getContext()).registerReceiver(closeChatReceiver, new IntentFilter(BROADCAST_CLOSE_CHAT));
         }
+
+        setToolbarProperty();
     }
 
     @Override
@@ -109,6 +118,11 @@ public class DialogsFragment extends Fragment {
         if (getContext() != null) {
             LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(closeChatReceiver);
         }
+    }
+
+    private void setToolbarProperty() {
+        setToolbarTitle(getActivity().findViewById(R.id.toolbar), getString(R.string.app_name));
+        hideToolbarBack(getActivity().findViewById(R.id.toolbar));
     }
 
     private void getDialogs(int offset) {

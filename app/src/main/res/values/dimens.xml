@@ -34,4 +34,6 @@
     <dimen name="chat_form_edit_cursor_width">2dp</dimen>
     <dimen name="chat_form_submit_margin_right">20dp</dimen>
     <dimen name="chat_form_submit_size">25dp</dimen>
+
+    <dimen name="toolbar_back_button_size">25dp</dimen>
 </resources>

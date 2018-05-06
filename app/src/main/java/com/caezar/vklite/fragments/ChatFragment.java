@@ -46,6 +46,8 @@ import static com.caezar.vklite.libs.DialogsHelper.getChatIdFromPeerId;
 import static com.caezar.vklite.libs.KeyBoard.copyToClipBoard;
 import static com.caezar.vklite.libs.KeyBoard.hideKeyboard;
 import static com.caezar.vklite.libs.KeyBoard.showKeyboard;
+import static com.caezar.vklite.libs.ToolbarHelper.setToolbarTitle;
+import static com.caezar.vklite.libs.ToolbarHelper.showToolbarBack;
 
 /**
  * Created by seva on 03.04.18 in 15:40.
@@ -78,17 +80,14 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String title = "";
         if (getArguments() != null) {
             peer_id = getArguments().getInt(PEER_ID, 0);
-            title = getArguments().getString(TITLE);
-
             isPrivateDialog = peer_id < Config.peerIdConstant;
+            String title = getArguments().getString(TITLE);
+            setToolbarTitle(getActivity().findViewById(R.id.toolbar), title);
+            showToolbarBack(getActivity().findViewById(R.id.toolbar));
         }
 
-        //todo: ask it
-        TextView toolbarTitle = ((AppCompatActivity)getActivity()).findViewById(R.id.toolbarTitle);
-        toolbarTitle.setText(title);
 
         editText = view.findViewById(R.id.messageForm);
 
