@@ -32,6 +32,10 @@ public class DialogsHelper {
         return peerId - peerIdConstant;
     }
 
+    public static boolean checkIsChat(int peerId) {
+        return peerId > peerIdConstant;
+    }
+
     public static String getActionMessage(DialogMessage dialogMessage, Context context) {
         DialogMessage.Action action = dialogMessage.getAction();
         if (action != null) {

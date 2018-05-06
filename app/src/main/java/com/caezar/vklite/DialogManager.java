@@ -2,7 +2,9 @@ package com.caezar.vklite;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
+import com.caezar.vklite.libs.Db;
 import com.caezar.vklite.libs.UrlBuilder;
 import com.caezar.vklite.models.DialogItem;
 import com.caezar.vklite.models.network.request.DialogsRequest;
@@ -32,14 +34,14 @@ public final class DialogManager {
         return INSTANCE;
     }
 
-    public void getDialogs(int offset, Listener listener, Context context) {
+    public void getDialogs(int offset, GetDialogs listener, Context context) {
         if (ONLINE_MODE) {
             DialogsRequest dialogsRequest = new DialogsRequest();
             dialogsRequest.setOffset(offset);
             final String url = UrlBuilder.constructGetDialogs(dialogsRequest);
-            NetworkManager.getInstance().get(url, new OnGetDialogsComplete((GetDialogs)listener, context));
+            NetworkManager.getInstance().get(url, new OnGetDialogsComplete(listener, context));
         } else {
-            // todo: grub some beers and data from db
+            Db.getDialogs(DbManager.getInstance(context), listener);
         }
     }
 
@@ -71,7 +73,6 @@ public final class DialogManager {
             }
 
             final List<DialogItem> dialogs = Arrays.asList(dialogsResponse.getResponse().getItems());
-            insertDialogs(DbManager.getInstance(context), dialogs);
             listenerCallback.callback(dialogs);
         }
     }

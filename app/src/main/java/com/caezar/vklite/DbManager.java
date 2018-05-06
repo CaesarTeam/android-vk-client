@@ -3,14 +3,19 @@ package com.caezar.vklite;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.caezar.vklite.models.db.*;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+import static java.util.Collections.EMPTY_LIST;
 
 /**
  * Created by seva on 12.04.18 in 12:23.
@@ -23,7 +28,7 @@ public class DbManager {
     @SuppressLint("StaticFieldLeak")
     private static final DbManager INSTANCE = new DbManager();
 
-    private final String TABLE_DIALOGS = "Dialogs";
+    private final String DIALOGS_TABLE = "Dialogs";
     private final String DIALOGS_COLUMN_TITLE = "title";
     private final String DIALOGS_COLUMN_MESSAGE = "message";
     private final String DIALOGS_COLUMN_IMAGE_URL = "imageUrl";
@@ -46,8 +51,8 @@ public class DbManager {
         executor.execute(() -> insertInternal(model));
     }
 
-    public void readAll(final ReadAllListener<String> listener) {
-        executor.execute(() -> readAllInternal(listener));
+    public void readAll(BaseModel.Type type, DbListener dbListener) {
+        executor.execute(() -> readAllInternal(type, dbListener));
     }
 
     public void clean() {
@@ -63,7 +68,7 @@ public class DbManager {
 
             @Override
             public void onCreate(SQLiteDatabase db) {
-                db.execSQL("CREATE TABLE " + TABLE_DIALOGS + " ("
+                db.execSQL("CREATE TABLE " + DIALOGS_TABLE + " ("
                         + DIALOGS_COLUMN_PEER_ID + " INTEGER PRIMARY KEY NOT NULL,"
                         + DIALOGS_COLUMN_TITLE + " TEXT NOT NULL, "
                         + DIALOGS_COLUMN_MESSAGE + " TEXT,"
@@ -108,40 +113,55 @@ public class DbManager {
         values.put(DIALOGS_COLUMN_IMAGE_URL, imageUrl);
         values.put(COLUMN_DATE, date);
 
-        long rowId = database.insertWithOnConflict(TABLE_DIALOGS, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        long rowId = database.insertWithOnConflict(DIALOGS_TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
         if (rowId == -1) {
             values.remove(DIALOGS_COLUMN_PEER_ID);
-            database.update(TABLE_DIALOGS, values, DIALOGS_COLUMN_PEER_ID + "=" + peerId, null);
+            database.update(DIALOGS_TABLE, values, DIALOGS_COLUMN_PEER_ID + "=" + peerId, null);
         }
     }
 
-    private void readAllInternal(final ReadAllListener<String> listener) {
-//        checkInitialized();
-//
-//        Cursor cursor = database.rawQuery("SELECT * FROM " + TABLE_NAME, null);
-//        if (cursor == null) {
-//            listener.onReadAll(Collections.<String>emptyList());
-//            return;
-//        }
-//
-//        final List<String> result = new ArrayList<>();
-//        try {
-//            while (cursor.moveToNext()) {
-//                result.add(cursor.getString(cursor.getColumnIndex(TEXT_COLUMN)));
-//            }
-//        } finally {
-//            cursor.close();
-//        }
-//        listener.onReadAll(result);
+    private void readAllInternal(BaseModel.Type type, DbListener dbListener) {
+        checkInitialized();
+
+        switch (type) {
+            case DIALOG:
+                getDialogs(dbListener);
+            case MESSAGE:
+                break;
+        }
+    }
+
+    private void getDialogs(DbListener dbListener) {
+        Cursor cursor = database.query(DIALOGS_TABLE, null, null, null, null, null, COLUMN_DATE + " DESC");
+        if (cursor == null) {
+            return;
+        }
+
+        final List<DialogModel> result = new ArrayList<>();
+        try {
+            while (cursor.moveToNext()) {
+                DialogModel dialogModel = new DialogModel();
+                dialogModel.setTitle(cursor.getString(cursor.getColumnIndex(DIALOGS_COLUMN_TITLE)));
+                dialogModel.setMessage(cursor.getString(cursor.getColumnIndex(DIALOGS_COLUMN_MESSAGE)));
+                dialogModel.setImageUrl(cursor.getString(cursor.getColumnIndex(DIALOGS_COLUMN_IMAGE_URL)));
+                dialogModel.setPeerId(cursor.getInt(cursor.getColumnIndex(DIALOGS_COLUMN_PEER_ID)));
+                dialogModel.setDate(cursor.getInt(cursor.getColumnIndex(COLUMN_DATE)));
+                result.add(dialogModel);
+            }
+        } finally {
+            cursor.close();
+        }
+
+        dbListener.callback(result);
     }
 
     private void cleanInternal() {
         checkInitialized();
 
-        database.execSQL("DELETE FROM " + TABLE_DIALOGS);
+        database.execSQL("DELETE FROM " + DIALOGS_TABLE);
     }
 
-    private interface ReadAllListener<T> {
-        void onReadAll(final Collection<T> allItems);
+    public interface DbListener extends Listener {
+        <T extends BaseModel> void callback(List<T> models);
     }
 }

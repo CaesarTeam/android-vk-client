@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.caezar.vklite.Config;
+import com.caezar.vklite.DbManager;
 import com.caezar.vklite.DialogManager;
 import com.caezar.vklite.FragmentCallback;
 import com.caezar.vklite.R;
@@ -36,6 +38,7 @@ import com.caezar.vklite.models.DialogItem;
 import com.caezar.vklite.models.User;
 
 import static com.caezar.vklite.activities.MainActivity.DIALOG_FRAGMENT_TAG;
+import static com.caezar.vklite.libs.Db.insertDialogs;
 import static com.caezar.vklite.libs.DialogsHelper.addDataToDialogsList;
 import static com.caezar.vklite.libs.DialogsHelper.getUsersIdFromPrivateDialogs;
 import static com.caezar.vklite.libs.ToolbarHelper.hideToolbarBack;
@@ -125,7 +128,11 @@ public class DialogsFragment extends Fragment {
     }
 
     private void setToolbarProperty() {
-        setToolbarTitle(getActivity().findViewById(R.id.toolbar), getString(R.string.app_name));
+        String title = getString(R.string.app_name);
+        if (!Config.ONLINE_MODE) {
+            title += " (offline)";
+        }
+        setToolbarTitle(getActivity().findViewById(R.id.toolbar), title);
         hideToolbarBack(getActivity().findViewById(R.id.toolbar));
     }
 
@@ -149,14 +156,17 @@ public class DialogsFragment extends Fragment {
     }
 
     private void setDialogsFromListener(List<DialogItem> dialogs) {
-        getActivity().runOnUiThread(() -> setDialogs(dialogs));
+        if (getActivity() != null && getContext() != null) {
+            insertDialogs(DbManager.getInstance(getContext()), dialogs);
+            getActivity().runOnUiThread(() -> setDialogs(dialogs));
+        }
     }
 
     private class GetDialogs implements DialogManager.GetDialogs {
         @Override
         public void callback(List<DialogItem> dialogs) {
             final int[] userIds = getUsersIdFromPrivateDialogs(dialogs);
-            if (userIds.length == 0) {
+            if (userIds.length == 0 || !Config.ONLINE_MODE) {
                 setDialogsFromListener(dialogs);
             } else {
                 UserManager.getInstance().getUsers(userIds, new GetUsers(dialogs), getContext());
