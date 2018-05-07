@@ -28,6 +28,7 @@ import java.util.List;
 
 import static com.caezar.vklite.Config.minItemsToRequestChat;
 import static com.caezar.vklite.helpers.ChatHelper.getDocSize;
+import static com.caezar.vklite.helpers.ChatHelper.getMessageImageMax;
 import static com.caezar.vklite.helpers.ChatHelper.getMessageImageUrl;
 import static com.caezar.vklite.helpers.ChatHelper.getMessageStickerUrl;
 import static com.caezar.vklite.helpers.ChatHelper.isNonDuplicatesAvatar;
@@ -285,7 +286,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     class MessageImageViewHolder extends ChatViewHolder {
 
-        final ImageView messageImage;
+        final RoundedImageView messageImage;
         final TextView messageImageTime;
         int position;
 
@@ -295,22 +296,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             final boolean isPort = context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE;
             avatar = (RoundedImageView) (isPort ? itemView.findViewById(R.id.messageImageAvatar) : itemView.findViewById(R.id.messageImageAvatarLand));
             container = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageImageContainer) : itemView.findViewById(R.id.messageImageContainerLand));
-            messageImage = (ImageView) (isPort ? itemView.findViewById(R.id.messageImage) : itemView.findViewById(R.id.messageImageLand));
+            messageImage = (RoundedImageView) (isPort ? itemView.findViewById(R.id.messageImage) : itemView.findViewById(R.id.messageImageLand));
             messageImageTime = (TextView) (isPort ? itemView.findViewById(R.id.messageImageTime) : itemView.findViewById(R.id.messageImageTimeLand));
 
-            messageImage.setOnClickListener(v -> {
-                Photo photo = items.get(position).getAttachments()[0].getPhoto();
-                String maxPhotoSize = photo.getPhoto_1280();
-                if (maxPhotoSize == null) {
-                    maxPhotoSize = photo.getPhoto_807();
-                }
-                if (maxPhotoSize == null) {
-                    maxPhotoSize = photo.getPhoto_604();
-                }
-
-
-                chatCallbacks.createFragmentFullSizeImageMessage(maxPhotoSize);
-            });
+            messageImage.setOnClickListener((View v) -> chatCallbacks.createFragmentFullSizeImageMessage(getMessageImageMax(items.get(position))));
         }
     }
 

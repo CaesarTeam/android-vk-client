@@ -15,9 +15,10 @@
     <dimen name="chat_message_margin_left_right">10dp</dimen>
     <dimen name="chat_avatar_size">30dp</dimen>
     <dimen name="chat_from_avatar_margin_left_right">10dp</dimen>
+    <dimen name="chat_image_border_width">2dp</dimen>
+    <dimen name="chat_image_border_radius">2dp</dimen>
     <dimen name="chat_image_size">200dp</dimen>
     <dimen name="chat_image_size_land">250dp</dimen>
-    <dimen name="chat_image_border_width">1dp</dimen>
     <dimen name="chat_sticker_size">150dp</dimen>
     <dimen name="chat_sticker_size_land">200dp</dimen>
     <dimen name="chat_message_max_width">200dp</dimen>

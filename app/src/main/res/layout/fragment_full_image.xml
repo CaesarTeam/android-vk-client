@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorChat"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -8,7 +9,8 @@
         android:id="@+id/fullSizeImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/chat_image_message_border"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
         tools:ignore="ContentDescription"/>
 
 </LinearLayout>

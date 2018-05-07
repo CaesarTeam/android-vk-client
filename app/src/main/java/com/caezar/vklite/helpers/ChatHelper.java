@@ -7,6 +7,7 @@ import android.widget.RelativeLayout;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.models.network.DialogMessage;
+import com.caezar.vklite.models.network.Photo;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
@@ -57,6 +58,18 @@ public class ChatHelper {
 
     public static String getMessageImageUrl(DialogMessage item) {
         return item.getAttachments()[0].getPhoto().getPhoto_604();
+    }
+
+    public static String getMessageImageMax(DialogMessage item) {
+        Photo photo = item.getAttachments()[0].getPhoto();
+        String maxPhotoSize = photo.getPhoto_1280();
+        if (maxPhotoSize == null) {
+            maxPhotoSize = photo.getPhoto_807();
+        }
+        if (maxPhotoSize == null) {
+            maxPhotoSize = photo.getPhoto_604();
+        }
+        return maxPhotoSize;
     }
 
     public static String getMessageStickerUrl(DialogMessage item) {
