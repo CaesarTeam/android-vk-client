@@ -1,4 +1,4 @@
-package com.caezar.vklite.libs;
+package com.caezar.vklite.helpers;
 
 import android.content.Context;
 import android.view.View;
@@ -6,7 +6,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.caezar.vklite.R;
-import com.caezar.vklite.models.DialogMessage;
+import com.caezar.vklite.models.network.DialogMessage;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;

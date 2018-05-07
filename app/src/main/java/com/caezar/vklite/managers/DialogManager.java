@@ -1,12 +1,12 @@
-package com.caezar.vklite;
+package com.caezar.vklite.managers;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
+import com.caezar.vklite.Listener;
 import com.caezar.vklite.libs.Db;
 import com.caezar.vklite.libs.UrlBuilder;
-import com.caezar.vklite.models.DialogItem;
+import com.caezar.vklite.models.network.DialogItem;
 import com.caezar.vklite.models.network.request.DialogsRequest;
 import com.caezar.vklite.models.network.response.DialogsResponse;
 
@@ -15,10 +15,9 @@ import java.util.List;
 
 import static com.caezar.vklite.Config.ONLINE_MODE;
 import static com.caezar.vklite.Config.countItemsToRequestDialogs;
-import static com.caezar.vklite.ErrorHandler.createErrorInternetToast;
-import static com.caezar.vklite.ErrorHandler.makeToastError;
-import static com.caezar.vklite.libs.Db.insertDialogs;
-import static com.caezar.vklite.libs.ParseResponse.parseBody;
+import static com.caezar.vklite.helpers.ErrorHelper.createErrorInternetToast;
+import static com.caezar.vklite.helpers.ErrorHelper.makeToastError;
+import static com.caezar.vklite.libs.Jackson.parseBody;
 
 /**
  * Created by seva on 21.04.18 in 23:10.

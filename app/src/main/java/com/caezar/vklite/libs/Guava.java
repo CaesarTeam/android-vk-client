@@ -2,9 +2,9 @@ package com.caezar.vklite.libs;
 
 import android.text.TextUtils;
 
-import com.caezar.vklite.models.DialogItem;
-import com.caezar.vklite.models.Message;
-import com.caezar.vklite.models.User;
+import com.caezar.vklite.models.network.DialogItem;
+import com.caezar.vklite.models.network.Message;
+import com.caezar.vklite.models.network.User;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -15,7 +15,7 @@ import com.google.common.primitives.Ints;
 import java.util.Collection;
 import java.util.List;
 
-import static com.caezar.vklite.libs.DialogsHelper.getPeerId;
+import static com.caezar.vklite.helpers.DialogsHelper.getPeerId;
 
 
 /**

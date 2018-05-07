@@ -1,19 +1,20 @@
-package com.caezar.vklite;
+package com.caezar.vklite.managers;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.caezar.vklite.Listener;
 import com.caezar.vklite.libs.UrlBuilder;
-import com.caezar.vklite.models.User;
+import com.caezar.vklite.models.network.User;
 import com.caezar.vklite.models.network.request.UsersByIdRequest;
 import com.caezar.vklite.models.network.request.UsersChatRequest;
 import com.caezar.vklite.models.network.response.UsersByIdResponse;
 import com.caezar.vklite.models.network.response.UsersChatResponse;
 
 import static com.caezar.vklite.Config.ONLINE_MODE;
-import static com.caezar.vklite.ErrorHandler.createErrorInternetToast;
-import static com.caezar.vklite.ErrorHandler.makeToastError;
-import static com.caezar.vklite.libs.ParseResponse.parseBody;
+import static com.caezar.vklite.helpers.ErrorHelper.createErrorInternetToast;
+import static com.caezar.vklite.helpers.ErrorHelper.makeToastError;
+import static com.caezar.vklite.libs.Jackson.parseBody;
 
 /**
  * Created by seva on 22.04.18 in 8:35.

@@ -1,4 +1,4 @@
-package com.caezar.vklite.libs;
+package com.caezar.vklite.helpers;
 
 import android.support.v7.widget.Toolbar;
 import android.view.View;

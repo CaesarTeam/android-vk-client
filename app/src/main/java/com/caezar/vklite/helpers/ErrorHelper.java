@@ -1,4 +1,4 @@
-package com.caezar.vklite;
+package com.caezar.vklite.helpers;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,15 +6,16 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
+import com.caezar.vklite.R;
 import com.caezar.vklite.models.network.response.ErrorVkApiResponse;
 
-import static com.caezar.vklite.libs.ParseResponse.parseBody;
+import static com.caezar.vklite.libs.Jackson.parseBody;
 
 /**
  * Created by seva on 07.04.18 in 0:30.
  */
 
-public class ErrorHandler {
+public class ErrorHelper {
 
     private static int errorParse(String body) {
         ErrorVkApiResponse errorVkApiResponse = parseBody(ErrorVkApiResponse.class, body);

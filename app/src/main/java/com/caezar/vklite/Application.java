@@ -2,13 +2,14 @@ package com.caezar.vklite;
 
 import android.content.SharedPreferences;
 
-import com.caezar.vklite.libs.ParseResponse;
+import com.caezar.vklite.libs.Jackson;
+import com.caezar.vklite.managers.DbManager;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
 import com.vk.sdk.VKSdk;
 
-import static com.caezar.vklite.activities.MainActivity.PREFS_NAME;
-import static com.caezar.vklite.activities.MainActivity.TOKEN;
+import static com.caezar.vklite.MainActivity.PREFS_NAME;
+import static com.caezar.vklite.MainActivity.TOKEN;
 
 /**
  * Created by seva on 26.03.18 in 1:50.
@@ -37,7 +38,7 @@ public class Application extends android.app.Application {
         super.onCreate();
 
         DbManager.getInstance().setContext(getApplicationContext());
-        ParseResponse.configureInstance();
+        Jackson.configureInstance();
         vkAccessTokenTracker.startTracking();
         VKSdk.initialize(this);
     }

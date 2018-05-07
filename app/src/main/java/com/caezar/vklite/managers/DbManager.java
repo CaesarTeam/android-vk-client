@@ -1,4 +1,4 @@
-package com.caezar.vklite;
+package com.caezar.vklite.managers;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.caezar.vklite.Listener;
 import com.caezar.vklite.models.db.*;
 
 import java.util.ArrayList;

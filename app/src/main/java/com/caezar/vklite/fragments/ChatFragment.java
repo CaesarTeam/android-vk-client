@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
@@ -17,22 +16,21 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.caezar.vklite.ChatManager;
+import com.caezar.vklite.managers.ChatManager;
 import com.caezar.vklite.ChooseMessageTypeListener;
-import com.caezar.vklite.FragmentCallback;
+import com.caezar.vklite.FragmentCallbacks;
 import com.caezar.vklite.R;
-import com.caezar.vklite.UserManager;
+import com.caezar.vklite.managers.UserManager;
 import com.caezar.vklite.adapters.ChatAdapter;
 import com.caezar.vklite.Config;
-import com.caezar.vklite.libs.ChatInstanceState;
-import com.caezar.vklite.libs.DialogsInstanceState;
-import com.caezar.vklite.models.MessageAction;
-import com.caezar.vklite.models.User;
+import com.caezar.vklite.instanceState.ChatInstanceState;
+import com.caezar.vklite.instanceState.DialogsInstanceState;
+import com.caezar.vklite.models.network.MessageAction;
+import com.caezar.vklite.models.network.User;
 import com.caezar.vklite.models.network.request.ChatRequest;
-import com.caezar.vklite.models.DialogMessage;
+import com.caezar.vklite.models.network.DialogMessage;
 
 import java.util.List;
 
@@ -43,13 +41,13 @@ import static com.caezar.vklite.fragments.DialogsFragment.PEER_ID;
 import static com.caezar.vklite.fragments.DialogsFragment.TITLE;
 import static com.caezar.vklite.fragments.ImageMessageFullScreenFragment.IMAGE_FULL_FRAGMENT_TAG;
 import static com.caezar.vklite.fragments.MessageActionDialog.MESSAGE_ACTION_FRAGMENT_TAG;
-import static com.caezar.vklite.libs.ChatHelper.swapButtonsVisibility;
-import static com.caezar.vklite.libs.DialogsHelper.getChatIdFromPeerId;
+import static com.caezar.vklite.helpers.ChatHelper.swapButtonsVisibility;
+import static com.caezar.vklite.helpers.DialogsHelper.getChatIdFromPeerId;
 import static com.caezar.vklite.libs.KeyBoard.copyToClipBoard;
 import static com.caezar.vklite.libs.KeyBoard.hideKeyboard;
 import static com.caezar.vklite.libs.KeyBoard.showKeyboard;
-import static com.caezar.vklite.libs.ToolbarHelper.setToolbarTitle;
-import static com.caezar.vklite.libs.ToolbarHelper.showToolbarBack;
+import static com.caezar.vklite.helpers.ToolbarHelper.setToolbarTitle;
+import static com.caezar.vklite.helpers.ToolbarHelper.showToolbarBack;
 
 /**
  * Created by seva on 03.04.18 in 15:40.
@@ -323,7 +321,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         }
     }
 
-    public class ChatCallbacks implements FragmentCallback {
+    public class ChatCallbacks implements FragmentCallbacks {
         public ChatCallbacks() {
 
         }

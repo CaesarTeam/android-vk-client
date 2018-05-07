@@ -1,4 +1,4 @@
-package com.caezar.vklite;
+package com.caezar.vklite.managers;
 
 /**
  * Created by seva on 25.03.18 in 18:09.

@@ -1,9 +1,9 @@
-package com.caezar.vklite.libs;
+package com.caezar.vklite.instanceState;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.caezar.vklite.models.DialogItem;
+import com.caezar.vklite.models.network.DialogItem;
 
 import java.util.List;
 

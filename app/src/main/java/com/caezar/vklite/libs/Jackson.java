@@ -9,7 +9,7 @@ import java.io.IOException;
  * Created by seva on 09.04.18 in 19:59.
  */
 
-public class ParseResponse {
+public class Jackson {
     private static final ObjectMapper INSTANCE = new ObjectMapper();
 
     public static void configureInstance() {

@@ -1,6 +1,6 @@
 package com.caezar.vklite.models.network.response;
 
-import com.caezar.vklite.models.DialogMessage;
+import com.caezar.vklite.models.network.DialogMessage;
 
 /**
  * Created by seva on 25.03.18 in 18:41.

@@ -1,4 +1,4 @@
-package com.caezar.vklite.models;
+package com.caezar.vklite.models.network;
 
 /**
  * Created by seva on 25.03.18 in 19:07.

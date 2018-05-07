@@ -1,4 +1,4 @@
-package com.caezar.vklite.activities;
+package com.caezar.vklite;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -6,13 +6,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.widget.TextView;
 
-import com.caezar.vklite.R;
-import com.caezar.vklite.Config;
-import com.caezar.vklite.NetworkManager;
+import com.caezar.vklite.managers.NetworkManager;
 import com.caezar.vklite.fragments.DialogsFragment;
-import com.caezar.vklite.libs.DialogsInstanceState;
+import com.caezar.vklite.instanceState.DialogsInstanceState;
 import com.caezar.vklite.models.network.response.UsersByIdResponse;
 import com.caezar.vklite.libs.UrlBuilder;
 
@@ -22,9 +19,9 @@ import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
 
-import static com.caezar.vklite.ErrorHandler.createErrorInternetToast;
-import static com.caezar.vklite.ErrorHandler.makeToastError;
-import static com.caezar.vklite.libs.ParseResponse.parseBody;
+import static com.caezar.vklite.helpers.ErrorHelper.createErrorInternetToast;
+import static com.caezar.vklite.helpers.ErrorHelper.makeToastError;
+import static com.caezar.vklite.libs.Jackson.parseBody;
 
 public class MainActivity extends AppCompatActivity {
     public static final String PREFS_NAME = "Vk";

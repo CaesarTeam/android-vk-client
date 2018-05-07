@@ -1,25 +1,25 @@
-package com.caezar.vklite;
+package com.caezar.vklite.managers;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.caezar.vklite.Listener;
 import com.caezar.vklite.libs.UrlBuilder;
-import com.caezar.vklite.models.DialogMessage;
-import com.caezar.vklite.models.MessageAction;
+import com.caezar.vklite.models.network.DialogMessage;
+import com.caezar.vklite.models.network.MessageAction;
 import com.caezar.vklite.models.network.request.ChatRequest;
 import com.caezar.vklite.models.network.request.DeleteMessageRequest;
 import com.caezar.vklite.models.network.request.EditMessageRequest;
 import com.caezar.vklite.models.network.request.SendMessageRequest;
 import com.caezar.vklite.models.network.response.ChatResponse;
-import com.caezar.vklite.models.network.response.MessageActionResponse;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static com.caezar.vklite.Config.ONLINE_MODE;
-import static com.caezar.vklite.ErrorHandler.createErrorInternetToast;
-import static com.caezar.vklite.ErrorHandler.makeToastError;
-import static com.caezar.vklite.libs.ParseResponse.parseBody;
+import static com.caezar.vklite.helpers.ErrorHelper.createErrorInternetToast;
+import static com.caezar.vklite.helpers.ErrorHelper.makeToastError;
+import static com.caezar.vklite.libs.Jackson.parseBody;
 
 /**
  * Created by seva on 29.04.18 in 18:51.

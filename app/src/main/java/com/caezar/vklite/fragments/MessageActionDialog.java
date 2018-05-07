@@ -11,8 +11,8 @@ import android.widget.Button;
 
 import com.caezar.vklite.ChooseMessageTypeListener;
 import com.caezar.vklite.R;
-import com.caezar.vklite.models.DialogMessage;
-import com.caezar.vklite.models.MessageAction;
+import com.caezar.vklite.models.network.DialogMessage;
+import com.caezar.vklite.models.network.MessageAction;
 
 import static com.caezar.vklite.fragments.ChatFragment.DIALOG_MESSAGE;
 import static com.caezar.vklite.fragments.ChatFragment.IS_MYSELF_MESSAGE;

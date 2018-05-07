@@ -2,19 +2,18 @@ package com.caezar.vklite.libs;
 
 import android.support.annotation.NonNull;
 
-import com.caezar.vklite.DbManager;
-import com.caezar.vklite.DialogManager;
-import com.caezar.vklite.models.DialogMessage;
+import com.caezar.vklite.managers.DbManager;
+import com.caezar.vklite.managers.DialogManager;
 import com.caezar.vklite.models.db.BaseModel;
 import com.caezar.vklite.models.db.DialogModel;
-import com.caezar.vklite.models.DialogItem;
+import com.caezar.vklite.models.network.DialogItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.caezar.vklite.libs.DialogsHelper.checkIsChat;
-import static com.caezar.vklite.libs.DialogsHelper.getChatIdFromPeerId;
-import static com.caezar.vklite.libs.DialogsHelper.getPeerId;
+import static com.caezar.vklite.helpers.DialogsHelper.checkIsChat;
+import static com.caezar.vklite.helpers.DialogsHelper.getChatIdFromPeerId;
+import static com.caezar.vklite.helpers.DialogsHelper.getPeerId;
 
 /**
  * Created by seva on 12.04.18 in 12:55.

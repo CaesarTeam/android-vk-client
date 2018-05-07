@@ -1,10 +1,10 @@
-package com.caezar.vklite.libs;
+package com.caezar.vklite.instanceState;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.SparseArray;
 
-import com.caezar.vklite.models.DialogMessage;
+import com.caezar.vklite.models.network.DialogMessage;
 
 import java.util.List;
 

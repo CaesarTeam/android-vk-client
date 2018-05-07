@@ -1,12 +1,12 @@
-package com.caezar.vklite.libs;
+package com.caezar.vklite.helpers;
 
 import android.content.Context;
 
 import com.caezar.vklite.R;
-import com.caezar.vklite.models.Attachments;
-import com.caezar.vklite.models.DialogItem;
-import com.caezar.vklite.models.DialogMessage;
-import com.caezar.vklite.models.User;
+import com.caezar.vklite.models.network.Attachments;
+import com.caezar.vklite.models.network.DialogItem;
+import com.caezar.vklite.models.network.DialogMessage;
+import com.caezar.vklite.models.network.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
