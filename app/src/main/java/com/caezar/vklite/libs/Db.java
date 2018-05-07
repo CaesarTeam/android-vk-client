@@ -34,7 +34,7 @@ public class Db {
     }
 
     public static void getDialogs(DialogManager.GetDialogs listener, int limit, int offset) {
-        DbManager.getInstance().select(BaseModel.Type.DIALOG, new GetDialogs(listener), limit, offset);
+        DbManager.getInstance().select(BaseModel.Type.DIALOG, new DbGetDialogs(listener), limit, offset);
     }
 
     private static List<DialogItem> transformDialogsFromModel(List<DialogModel> dialogModels) {
@@ -42,7 +42,6 @@ public class Db {
 
         for (DialogModel dialogModel: dialogModels) {
             DialogItem dialogItem = new DialogItem();
-            dialogItem.setMessage(new DialogMessage());
             dialogItem.getMessage().setTitle(dialogModel.getTitle());
             dialogItem.getMessage().setBody(dialogModel.getMessage());
             dialogItem.getMessage().setPhoto_100(dialogModel.getImageUrl());
@@ -62,10 +61,10 @@ public class Db {
         return dialogItems;
     }
 
-    public static class GetDialogs implements DbManager.DbListener {
+    public static class DbGetDialogs implements DbManager.DbListener {
         @NonNull private final DialogManager.GetDialogs listener;
 
-        public GetDialogs(DialogManager.GetDialogs listener) {
+        public DbGetDialogs(DialogManager.GetDialogs listener) {
             this.listener = listener;
         }
 

@@ -13,6 +13,7 @@ public class DialogItem {
     private DialogMessage message;
 
     public DialogItem() {
+        message = new DialogMessage();
     }
 
     public int getUnread() {
