@@ -41,7 +41,7 @@ public final class DialogManager {
             final String url = UrlBuilder.constructGetDialogs(dialogsRequest);
             NetworkManager.getInstance().get(url, new OnGetDialogsComplete(listener, context));
         } else {
-            Db.getDialogs(DbManager.getInstance(context), listener);
+            Db.getDialogs(listener);
         }
     }
 

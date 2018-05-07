@@ -23,8 +23,7 @@ import static com.caezar.vklite.libs.DialogsHelper.getPeerId;
  */
 
 public class Db {
-// todo: DbManager manager in this class
-    public static void insertDialogs(DbManager manager, List<DialogItem> dialogs) {
+    public static void insertDialogs(List<DialogItem> dialogs) {
         for (DialogItem dialogItem: dialogs) {
             DialogModel dialogModel = new DialogModel();
             dialogModel.setTitle(dialogItem.getMessage().getTitle());
@@ -32,12 +31,12 @@ public class Db {
             dialogModel.setImageUrl(dialogItem.getMessage().getPhoto_100());
             dialogModel.setPeerId(getPeerId(dialogItem));
             dialogModel.setDate(dialogItem.getMessage().getDate());
-            manager.insert(dialogModel);
+            DbManager.getInstance().insert(dialogModel);
         }
     }
 
-    public static void getDialogs(DbManager manager, DialogManager.GetDialogs listener) {
-        manager.readAll(BaseModel.Type.DIALOG, new GetDialogs(listener));
+    public static void getDialogs(DialogManager.GetDialogs listener) {
+        DbManager.getInstance().readAll(BaseModel.Type.DIALOG, new GetDialogs(listener));
     }
 
     private static List<DialogItem> transformDialogsFromModel(List<DialogModel> dialogModels) {

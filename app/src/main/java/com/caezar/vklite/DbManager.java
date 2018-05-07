@@ -36,9 +36,12 @@ public class DbManager {
 
     private final String COLUMN_DATE = "date";
 
-    public static DbManager getInstance(Context context) {
-        INSTANCE.context = context.getApplicationContext();
+    public static DbManager getInstance() {
         return INSTANCE;
+    }
+
+    public static void setContext(Context context) {
+        INSTANCE.context = context;
     }
 
     private final Executor executor = Executors.newSingleThreadExecutor();

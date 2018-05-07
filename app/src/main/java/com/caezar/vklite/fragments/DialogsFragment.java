@@ -157,7 +157,7 @@ public class DialogsFragment extends Fragment {
 
     private void setDialogsFromListener(List<DialogItem> dialogs) {
         if (getActivity() != null && getContext() != null) {
-            insertDialogs(DbManager.getInstance(getContext()), dialogs);
+            insertDialogs(dialogs);
             getActivity().runOnUiThread(() -> setDialogs(dialogs));
         }
     }
