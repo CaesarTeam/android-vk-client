@@ -175,6 +175,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 messageTextViewHolder.messageText.setText(item.getBody());
                 messageTextViewHolder.messageTextTime.setText(time);
 
+                if (side) {
+                    messageTextViewHolder.container.setBackgroundResource(R.drawable.message_text_from_me_container);
+                } else {
+                    messageTextViewHolder.container.setBackgroundResource(R.drawable.message_text_to_me_container);
+                }
+
                 break;
             case IMAGE_MESSAGE:
                 MessageImageViewHolder messageImageViewHolder = ((MessageImageViewHolder) holder);
@@ -210,12 +216,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         ChatViewHolder chatViewHolder = ((ChatViewHolder) holder);
         if (side) {
-            chatViewHolder.container.setBackgroundResource(R.drawable.message_text_from_me_container);
             setAlignLayoutRight(chatViewHolder.container);
             unsetAvatar(chatViewHolder.avatar);
 
         } else {
-            chatViewHolder.container.setBackgroundResource(R.drawable.message_text_to_me_container);
             unsetAlignLayoutRight(chatViewHolder.container);
             if (!isPrivateDialog && avatarUrl != null) {
                 setAvatar(isNonDuplicatesAvatar, chatViewHolder.avatar, avatarUrl);
