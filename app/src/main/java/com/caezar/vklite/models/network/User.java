@@ -13,6 +13,15 @@ public class User {
     private String photo_100;
     private String photo_200;
     private String photo_max;
+    private boolean online;
+
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
 
     public int getId() {
         return id;

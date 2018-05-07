@@ -9,8 +9,16 @@ public class DialogItem {
     private int unread;
     private int in_read;
     private int out_read;
-
+    private boolean online;
     private DialogMessage message;
+
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
 
     public DialogItem() {
         message = new DialogMessage();

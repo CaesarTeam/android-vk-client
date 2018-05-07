@@ -7,7 +7,7 @@ package com.caezar.vklite.models.network.request;
 @SuppressWarnings({"unused"})
 public class UsersByIdRequest {
     private int[] user_ids;
-    private String fields = "photo_50,photo_100,photo_200,photo_max";
+    private String fields = "photo_50,photo_100,photo_200,photo_max,online";
 
     public int[] getUser_ids() {
         return user_ids;

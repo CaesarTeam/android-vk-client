@@ -141,6 +141,7 @@ public class DialogsHelper {
             item.getMessage().setPhoto_50(user.getPhoto_50());
             item.getMessage().setPhoto_100(user.getPhoto_100());
             item.getMessage().setPhoto_200(user.getPhoto_200());
+            item.setOnline(user.isOnline());
         }
     }
 }

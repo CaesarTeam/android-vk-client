@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.caezar.vklite.R;
 import com.caezar.vklite.fragments.DialogsFragment;
 import com.caezar.vklite.models.network.DialogItem;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,6 +120,14 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     asyncImageLoad(getUrlForResource(R.drawable.default_avatar), dialogViewHolder.avatar);
                 }
 
+                if (item.isOnline()) {
+                    dialogViewHolder.avatar.setBorderWidth(4.f);
+                    dialogViewHolder.avatar.setBorderColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
+                } else {
+                    dialogViewHolder.avatar.setBorderWidth(0.f);
+                    dialogViewHolder.avatar.clearColorFilter();
+                }
+
                 String body = getBody(item.getMessage(), context);
                 if (!body.equals(item.getMessage().getBody())) {
                     dialogViewHolder.message.setTextColor(ContextCompat.getColor(context, R.color.colorDialogMessageNotText));
@@ -170,7 +179,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     class DialogViewHolder extends RecyclerView.ViewHolder {
 
         final LinearLayout dialogContainer;
-        final ImageView avatar;
+        final RoundedImageView avatar;
         final TextView title;
         final TextView message;
         final TextView time;
