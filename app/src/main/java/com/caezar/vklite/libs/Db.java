@@ -53,7 +53,7 @@ public class Db {
                 dialogItem.getMessage().setChat_id(0);
                 dialogItem.getMessage().setUser_id(peerId);
             }
-
+            dialogItem.getMessage().setRead_state(true);
             dialogItems.add(dialogItem);
         }
 

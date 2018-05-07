@@ -38,6 +38,7 @@ import static com.caezar.vklite.helpers.DialogsHelper.addDataToDialogsList;
 import static com.caezar.vklite.helpers.DialogsHelper.getUsersIdFromPrivateDialogs;
 import static com.caezar.vklite.helpers.ToolbarHelper.hideToolbarBack;
 import static com.caezar.vklite.helpers.ToolbarHelper.setToolbarTitle;
+import static com.caezar.vklite.libs.Guava.findIndexDialog;
 
 /**
  * Created by seva on 01.04.18 in 17:56.
@@ -49,6 +50,7 @@ public class DialogsFragment extends Fragment {
     public static final String CHAT_FRAGMENT_TAG = "chatFragmentTag";
     public static final String BROADCAST_CLOSE_CHAT = "broadcastCloseChat";
 
+    private RecyclerView recyclerView;
     private DialogsAdapter adapter;
     private ProgressBar progressBar;
     private boolean requestDialogsFinish = true;
@@ -58,7 +60,8 @@ public class DialogsFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             int peerId = intent.getIntExtra(PEER_ID, 0);
-            adapter.animateClosedChat(peerId);
+            int position = findIndexDialog(adapter.getItems(), peerId);
+            adapter.animateClosedChat(recyclerView.findViewHolderForAdapterPosition(position));
             setToolbarProperty();
         }
     };
@@ -75,7 +78,7 @@ public class DialogsFragment extends Fragment {
 
         progressBar = view.findViewById(R.id.dialogProgressBar);
 
-        RecyclerView recyclerView = view.findViewById(R.id.dialogsList);
+        recyclerView = view.findViewById(R.id.dialogsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new DialogsAdapter(new DialogsCallbacks(), getContext());
         recyclerView.setAdapter(adapter);

@@ -40,7 +40,6 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @NonNull private final List<DialogItem> items = new ArrayList<>();
     private final Context context;
     private final DialogsFragment.DialogsCallbacks dialogsCallbacks;
-    @Nullable private LinearLayout dialogContainer = null;
 
     public DialogsAdapter(DialogsFragment.DialogsCallbacks dialogsCallbacks, Context context) {
         this.dialogsCallbacks = dialogsCallbacks;
@@ -62,23 +61,25 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    public void animateClosedChat(int peerId) {
-        //int position = findIndexDialog(items, peerId);
+    public void animateClosedChat(RecyclerView.ViewHolder viewHolder) {
+        DialogViewHolder dialogViewHolder = ((DialogViewHolder) viewHolder);
+        final LinearLayout dialogContainer = dialogViewHolder.dialogContainer;
+
         int colorFrom = context.getResources().getColor(R.color.colorDialog);
         int colorTo = context.getResources().getColor(R.color.colorDialogAnimateBoundary);
 
-        ValueAnimator anim = new ValueAnimator();
-        anim.setIntValues(colorTo, colorFrom);
-        anim.setEvaluator(new ArgbEvaluator());
-        anim.addUpdateListener(valueAnimator -> {
+        ValueAnimator animator = new ValueAnimator();
+        animator.setIntValues(colorTo, colorFrom);
+        animator.setEvaluator(new ArgbEvaluator());
+        animator.addUpdateListener(valueAnimator -> {
             if (dialogContainer != null) {
                 dialogContainer.setBackgroundColor((Integer) valueAnimator.getAnimatedValue());
             } else {
-                anim.cancel();
+                animator.cancel();
             }
         });
-        anim.setDuration(ANIMATE_DURATION_CLOSE_CHAT_TIME);
-        anim.start();
+        animator.setDuration(ANIMATE_DURATION_CLOSE_CHAT_TIME);
+        animator.start();
     }
 
     @NonNull
@@ -205,11 +206,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 DialogItem item = items.get(position);
                 int peer_id = getPeerId(item);
                 String title = item.getMessage().getTitle();
-
-                if (dialogContainer != null) {
-                    dialogContainer.setBackgroundColor(context.getResources().getColor(R.color.colorDialog));
-                }
-                dialogContainer = holder.dialogContainer;
+                holder.dialogContainer.setBackgroundColor(context.getResources().getColor(R.color.colorDialog));
                 dialogsCallbacks.openChat(peer_id, title);
             }
         }
