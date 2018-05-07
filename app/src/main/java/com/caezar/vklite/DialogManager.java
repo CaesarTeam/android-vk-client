@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.caezar.vklite.Config.ONLINE_MODE;
+import static com.caezar.vklite.Config.countItemsToRequestDialogs;
 import static com.caezar.vklite.ErrorHandler.createErrorInternetToast;
 import static com.caezar.vklite.ErrorHandler.makeToastError;
 import static com.caezar.vklite.libs.Db.insertDialogs;
@@ -41,7 +42,7 @@ public final class DialogManager {
             final String url = UrlBuilder.constructGetDialogs(dialogsRequest);
             NetworkManager.getInstance().get(url, new OnGetDialogsComplete(listener, context));
         } else {
-            Db.getDialogs(listener);
+            Db.getDialogs(listener, countItemsToRequestDialogs, offset);
         }
     }
 

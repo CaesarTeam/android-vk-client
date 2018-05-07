@@ -6,7 +6,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.caezar.vklite.models.db.*;
 
@@ -14,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-
-import static java.util.Collections.EMPTY_LIST;
 
 /**
  * Created by seva on 12.04.18 in 12:23.
@@ -54,8 +51,8 @@ public class DbManager {
         executor.execute(() -> insertInternal(model));
     }
 
-    public void readAll(BaseModel.Type type, DbListener dbListener) {
-        executor.execute(() -> readAllInternal(type, dbListener));
+    public void select(BaseModel.Type type, DbListener dbListener, int limit, int offset) {
+        executor.execute(() -> selectInternal(type, dbListener, limit, offset));
     }
 
     public void clean() {
@@ -123,19 +120,20 @@ public class DbManager {
         }
     }
 
-    private void readAllInternal(BaseModel.Type type, DbListener dbListener) {
+    private void selectInternal(BaseModel.Type type, DbListener dbListener, int limit, int offset) {
         checkInitialized();
 
         switch (type) {
             case DIALOG:
-                getDialogs(dbListener);
+                getDialogs(dbListener, limit, offset);
             case MESSAGE:
                 break;
         }
     }
 
-    private void getDialogs(DbListener dbListener) {
-        Cursor cursor = database.query(DIALOGS_TABLE, null, null, null, null, null, COLUMN_DATE + " DESC");
+    private void getDialogs(DbListener dbListener, int limit, int offset) {
+        // LIMIT x, y == LIMIT y OFFSET x
+        Cursor cursor = database.query(DIALOGS_TABLE, null, null, null, null, null, COLUMN_DATE + " DESC", offset + "," + limit);
         if (cursor == null) {
             return;
         }

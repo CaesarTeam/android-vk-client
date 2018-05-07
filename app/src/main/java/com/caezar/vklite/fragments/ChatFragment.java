@@ -36,6 +36,7 @@ import com.caezar.vklite.models.DialogMessage;
 
 import java.util.List;
 
+import static com.caezar.vklite.Config.countItemsToRequestChat;
 import static com.caezar.vklite.fragments.DialogsFragment.BROADCAST_CLOSE_CHAT;
 import static com.caezar.vklite.fragments.DialogsFragment.CHAT_FRAGMENT_TAG;
 import static com.caezar.vklite.fragments.DialogsFragment.PEER_ID;
@@ -165,8 +166,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         if (isChatRequest) {
             progressBar.setVisibility(View.VISIBLE);
             isChatRequest = false;
-            int defaultCount = new ChatRequest().getCount(); //todo: fix it
-            ChatManager.getInstance().getChat(offset, peer_id, defaultCount, new GetMessages(), getContext());
+            ChatManager.getInstance().getChat(offset, peer_id, countItemsToRequestChat, new GetMessages(), getContext());
         }
     }
 

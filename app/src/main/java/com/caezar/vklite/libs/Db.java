@@ -1,11 +1,9 @@
 package com.caezar.vklite.libs;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.caezar.vklite.DbManager;
 import com.caezar.vklite.DialogManager;
-import com.caezar.vklite.Listener;
 import com.caezar.vklite.models.DialogMessage;
 import com.caezar.vklite.models.db.BaseModel;
 import com.caezar.vklite.models.db.DialogModel;
@@ -35,8 +33,8 @@ public class Db {
         }
     }
 
-    public static void getDialogs(DialogManager.GetDialogs listener) {
-        DbManager.getInstance().readAll(BaseModel.Type.DIALOG, new GetDialogs(listener));
+    public static void getDialogs(DialogManager.GetDialogs listener, int limit, int offset) {
+        DbManager.getInstance().select(BaseModel.Type.DIALOG, new GetDialogs(listener), limit, offset);
     }
 
     private static List<DialogItem> transformDialogsFromModel(List<DialogModel> dialogModels) {
