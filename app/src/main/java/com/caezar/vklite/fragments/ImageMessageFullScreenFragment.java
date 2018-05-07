@@ -11,6 +11,8 @@ import android.widget.ImageView;
 
 import com.caezar.vklite.R;
 
+import it.sephiroth.android.library.imagezoom.ImageViewTouch;
+
 import static com.caezar.vklite.fragments.ChatFragment.PHOTO_URL;
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
 
@@ -39,7 +41,7 @@ public class ImageMessageFullScreenFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         if (urlPhoto != null) {
-            ImageView imageView = view.findViewById(R.id.fullSizeImage);
+            ImageViewTouch imageView = view.findViewById(R.id.fullSizeImage);
             asyncImageLoad(urlPhoto, imageView);
         }
     }

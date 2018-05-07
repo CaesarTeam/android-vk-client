@@ -53,5 +53,6 @@ dependencies {
     implementation 'com.vk:androidsdk:1.6.5'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.google.guava:guava:24.1-android'
+    implementation 'it.sephiroth.android.library.imagezoom:imagezoom:+'
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.0' // http://192.168.1.68:8080 to see db
 }

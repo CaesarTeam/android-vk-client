@@ -62,13 +62,17 @@ public class ChatHelper {
 
     public static String getMessageImageMax(DialogMessage item) {
         Photo photo = item.getAttachments()[0].getPhoto();
-        String maxPhotoSize = photo.getPhoto_1280();
+        String maxPhotoSize = photo.getPhoto_2560();
+        if (maxPhotoSize == null) {
+            maxPhotoSize = photo.getPhoto_1280();
+        }
         if (maxPhotoSize == null) {
             maxPhotoSize = photo.getPhoto_807();
         }
         if (maxPhotoSize == null) {
             maxPhotoSize = photo.getPhoto_604();
         }
+        System.out.println(maxPhotoSize);
         return maxPhotoSize;
     }
 
