@@ -128,7 +128,7 @@ public class DialogsFragment extends Fragment {
     private void setToolbarProperty() {
         String title = getString(R.string.app_name);
         if (!Config.ONLINE_MODE) {
-            title += " (offline)";
+            title += getString(R.string.toolbar_title_offline);
         }
         setToolbarTitle(getActivity().findViewById(R.id.toolbar), title);
         hideToolbarBack(getActivity().findViewById(R.id.toolbar));

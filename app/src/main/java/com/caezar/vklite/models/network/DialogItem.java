@@ -6,9 +6,9 @@ package com.caezar.vklite.models.network;
 
 @SuppressWarnings({"unused"})
 public class DialogItem {
-    private int  unread;
-    private int  in_read;
-    private int  out_read;
+    private int unread;
+    private int in_read;
+    private int out_read;
 
     private DialogMessage message;
 

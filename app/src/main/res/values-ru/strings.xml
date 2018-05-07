@@ -4,6 +4,7 @@
     <string name="error_internet_connection">Проверьте ваше подключение к интернету</string>
     <string name="yesterday">вчера</string>
     <string name="today">сегодня</string>
+    <string name="toolbar_title_offline"> (offline)</string>
 
     <string name="dialogMessageActionReply">Ответить</string>
     <string name="dialogMessageActionForward">Переслать</string>

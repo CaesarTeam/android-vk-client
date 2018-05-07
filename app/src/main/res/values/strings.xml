@@ -5,6 +5,7 @@
     <string name="error_internet_connection">Check you internet connection</string>
     <string name="yesterday">yesterday</string>
     <string name="today">today</string>
+    <string name="toolbar_title_offline"> (offline)</string>
 
     <string name="dialogMessageActionReply">Reply</string>
     <string name="dialogMessageActionForward">Forward</string>

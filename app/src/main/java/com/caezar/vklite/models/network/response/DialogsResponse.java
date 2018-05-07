@@ -15,7 +15,7 @@ public class DialogsResponse {
     public static class Response {
         private int count;
 
-        private int  unread_dialogs;
+        private int unread_dialogs;
 
         private DialogItem[] items;
 
