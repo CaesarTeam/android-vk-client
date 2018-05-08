@@ -20,6 +20,8 @@
         android:layout_height="@dimen/chat_form_height"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
+        android:clickable="true"
+        android:focusable="true"
         android:background="@color/colorChatForm">
 
         <EditText
