@@ -10,7 +10,6 @@
     <dimen name="dialog_unread_size">20dp</dimen>
     <dimen name="dialog_read_state_size">10dp</dimen>
 
-    <dimen name="chat_margin_bottom">40dp</dimen>
     <dimen name="chat_margin_between">10dp</dimen>
     <dimen name="chat_message_margin_left_right">10dp</dimen>
     <dimen name="chat_avatar_size">30dp</dimen>

@@ -13,11 +13,13 @@
         android:id="@+id/messagesList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/chat_margin_bottom" />
+        android:layout_above="@+id/messageFormContainer"/>
 
     <RelativeLayout
+        android:id="@+id/messageFormContainer"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/chat_form_height"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/chat_form_height"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:clickable="true"
@@ -34,6 +36,8 @@
             android:background="@color/colorChatFormEdit"
             android:padding="@dimen/chat_form_edit_padding"
             android:layout_centerVertical="true"
+            android:scrollbars="vertical"
+            android:maxLines="4"
             android:textCursorDrawable="@drawable/color_cursor_message_form"
             android:hint="@string/message_form_placeholder"/>
 
