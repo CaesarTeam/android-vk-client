@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:maxWidth="@dimen/chat_message_max_width"
         android:textColor="@color/colorPrimaryDark"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textStyle="italic"/>
 
 </RelativeLayout>
