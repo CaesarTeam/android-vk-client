@@ -20,4 +20,6 @@
     <color name="colorMessageTextToMe">#b2dfdb</color>
     <color name="colorMessageTextFromMe">#4db6ac</color>
     <color name="colorMessageImageTime">#4db6ac</color>
+
+    <color name="colorToolbarTitle">#b3ffffff</color>
 </resources>

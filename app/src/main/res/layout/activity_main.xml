@@ -26,11 +26,14 @@
                 android:fontFamily="@font/font_toolbar_title"
                 android:singleLine="true"
                 android:maxWidth="@dimen/toolbar_title_max_width"
+                android:textColor="@color/colorToolbarTitle"
                 android:layout_gravity="center"/>
+
             <ImageView
                 android:id="@+id/toolbarBack"
                 android:layout_width="@dimen/toolbar_back_button_size"
                 android:layout_height="@dimen/toolbar_back_button_size"
+                android:alpha="0.7"
                 android:src="@drawable/back_button"/>
         </android.support.v7.widget.Toolbar>
 
