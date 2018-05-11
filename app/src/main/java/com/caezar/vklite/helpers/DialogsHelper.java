@@ -1,12 +1,17 @@
 package com.caezar.vklite.helpers;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.TextView;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.models.network.Attachments;
 import com.caezar.vklite.models.network.DialogItem;
 import com.caezar.vklite.models.network.DialogMessage;
 import com.caezar.vklite.models.network.User;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +41,7 @@ public class DialogsHelper {
         return peerId > peerIdConstant;
     }
 
-    public static String getActionMessage(DialogMessage dialogMessage, Context context) {
+    private static String getActionMessage(DialogMessage dialogMessage, Context context) {
         DialogMessage.Action action = dialogMessage.getAction();
         if (action != null) {
             switch (action) {
@@ -66,7 +71,7 @@ public class DialogsHelper {
         return null;
     }
 
-    public static String getAttachmentsMessage(DialogMessage dialogMessage, Context context) {
+    private static String getAttachmentsMessage(DialogMessage dialogMessage, Context context) {
         Attachments[] attachments = dialogMessage.getAttachments();
         if (attachments != null && attachments[0].getType() != null) {
             switch (attachments[0].getType()) {
@@ -100,8 +105,7 @@ public class DialogsHelper {
         return null;
     }
 
-    public static String getBody(DialogMessage dialogMessage, Context context) {
-
+    private static String getDialogMessage(DialogMessage dialogMessage, Context context) {
         String attachmentTypeMessage = getAttachmentsMessage(dialogMessage, context);
         if (attachmentTypeMessage != null) {
             return attachmentTypeMessage;
@@ -117,6 +121,10 @@ public class DialogsHelper {
         }
 
         return dialogMessage.getBody();
+    }
+
+    public static boolean isTextMessage(DialogMessage dialogMessage) {
+        return !TextUtils.isEmpty(dialogMessage.getBody());
     }
 
     public static int[] getUsersIdFromPrivateDialogs(List<DialogItem> dialogs) {
@@ -143,5 +151,46 @@ public class DialogsHelper {
             item.getMessage().setPhoto_200(user.getPhoto_200());
             item.setOnline(user.isOnline());
         }
+    }
+
+    public static void setAvatarDialogOnline(RoundedImageView avatar, Context context) {
+        avatar.setBorderWidth(9.f);
+        avatar.setBorderColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
+        avatar.setPadding(5, 5, 5, 5);
+    }
+
+    public static void unsetAvatarDialogOnline(RoundedImageView avatar) {
+        avatar.setBorderWidth(0.f);
+        avatar.clearColorFilter();
+        avatar.setPadding(0, 0, 0, 0);
+    }
+
+    public static void setReadState(TextView readState) {
+        readState.setVisibility(View.VISIBLE);
+    }
+
+    public static void unsetReadState(TextView readState) {
+        readState.setVisibility(View.INVISIBLE);
+    }
+
+    public static void setUnreadCount(TextView unreadCount, String countUnreadMessagesCount) {
+        unreadCount.setText(countUnreadMessagesCount);
+        unreadCount.setVisibility(View.VISIBLE);
+    }
+
+    public static void unsetUnreadCount(TextView unreadCount) {
+        unreadCount.setVisibility(View.INVISIBLE);
+    }
+
+    public static void setDialogMessageText(DialogMessage dialogMessage, TextView message, Context context) {
+        String body = getDialogMessage(dialogMessage, context);
+        message.setText(body);
+        message.setTextColor(ContextCompat.getColor(context, R.color.colorDialogMessageDefault));
+    }
+
+    public static void setDialogMessageNotText(DialogMessage dialogMessage, TextView message, Context context) {
+        String body = getDialogMessage(dialogMessage, context);
+        message.setText(body);
+        message.setTextColor(ContextCompat.getColor(context, R.color.colorDialogMessageNotText));
     }
 }

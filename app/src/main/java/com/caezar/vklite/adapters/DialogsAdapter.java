@@ -5,13 +5,10 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,8 +21,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.caezar.vklite.Config.minItemsToRequestDialogs;
-import static com.caezar.vklite.helpers.DialogsHelper.getBody;
 import static com.caezar.vklite.helpers.DialogsHelper.getPeerId;
+import static com.caezar.vklite.helpers.DialogsHelper.isTextMessage;
+import static com.caezar.vklite.helpers.DialogsHelper.setAvatarDialogOnline;
+import static com.caezar.vklite.helpers.DialogsHelper.setDialogMessageNotText;
+import static com.caezar.vklite.helpers.DialogsHelper.setDialogMessageText;
+import static com.caezar.vklite.helpers.DialogsHelper.setReadState;
+import static com.caezar.vklite.helpers.DialogsHelper.setUnreadCount;
+import static com.caezar.vklite.helpers.DialogsHelper.unsetAvatarDialogOnline;
+import static com.caezar.vklite.helpers.DialogsHelper.unsetReadState;
+import static com.caezar.vklite.helpers.DialogsHelper.unsetUnreadCount;
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
 import static com.caezar.vklite.libs.ImageLoader.getUrlForResource;
 import static com.caezar.vklite.libs.Time.getDateTimeForDialog;
@@ -121,34 +126,29 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
 
                 if (item.isOnline()) {
-                    dialogViewHolder.avatar.setBorderWidth(4.f);
-                    dialogViewHolder.avatar.setBorderColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
+                    setAvatarDialogOnline(dialogViewHolder.avatar, context);
                 } else {
-                    dialogViewHolder.avatar.setBorderWidth(0.f);
-                    dialogViewHolder.avatar.clearColorFilter();
+                    unsetAvatarDialogOnline(dialogViewHolder.avatar);
                 }
 
-                String body = getBody(item.getMessage(), context);
-                if (!body.equals(item.getMessage().getBody())) {
-                    dialogViewHolder.message.setTextColor(ContextCompat.getColor(context, R.color.colorDialogMessageNotText));
+                if (isTextMessage(item.getMessage())) {
+                    setDialogMessageText(item.getMessage(), dialogViewHolder.message, context);
                 } else {
-                    dialogViewHolder.message.setTextColor(ContextCompat.getColor(context, R.color.colorDialogMessageDefault));
+                    setDialogMessageNotText(item.getMessage(), dialogViewHolder.message, context);
                 }
 
                 if (unreadMessagesCount == 0) {
-                    dialogViewHolder.unreadCount.setVisibility(View.INVISIBLE);
-                    if (!readState) {
-                        dialogViewHolder.readState.setVisibility(View.VISIBLE);
-                    } else {
-                        dialogViewHolder.readState.setVisibility(View.INVISIBLE);
-                    }
+                    unsetUnreadCount(dialogViewHolder.unreadCount);
                 } else {
-                    dialogViewHolder.unreadCount.setText(Integer.toString(unreadMessagesCount));
-                    dialogViewHolder.unreadCount.setVisibility(View.VISIBLE);
-                    dialogViewHolder.readState.setVisibility(View.INVISIBLE);
+                    setUnreadCount(dialogViewHolder.unreadCount, Integer.toString(unreadMessagesCount));
                 }
 
-                dialogViewHolder.message.setText(body);
+                if (!readState) {
+                    setReadState(dialogViewHolder.readState);
+                } else {
+                    unsetReadState(dialogViewHolder.readState);
+                }
+
                 dialogViewHolder.title.setText(item.getMessage().getTitle());
                 dialogViewHolder.time.setText(getDateTimeForDialog(item.getMessage().getDate(), context));
                 break;
