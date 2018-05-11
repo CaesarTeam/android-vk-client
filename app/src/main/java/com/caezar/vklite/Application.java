@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 
 import com.caezar.vklite.libs.Jackson;
 import com.caezar.vklite.managers.DbManager;
+import com.squareup.leakcanary.LeakCanary;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
 import com.vk.sdk.VKSdk;
@@ -41,6 +42,10 @@ public class Application extends android.app.Application {
         Jackson.configureInstance();
         vkAccessTokenTracker.startTracking();
         VKSdk.initialize(this);
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return;
+        }
+        LeakCanary.install(this);
     }
 }
 /*
