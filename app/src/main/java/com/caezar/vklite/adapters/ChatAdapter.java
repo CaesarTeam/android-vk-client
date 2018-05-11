@@ -2,10 +2,7 @@ package com.caezar.vklite.adapters;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -20,13 +17,14 @@ import com.caezar.vklite.fragments.ChatFragment;
 import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.Config;
 import com.caezar.vklite.models.network.DialogMessage;
-import com.caezar.vklite.models.network.Photo;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.caezar.vklite.Config.minItemsToRequestChat;
+import static com.caezar.vklite.helpers.ChatHelper.cleanItemsFromMessagesService;
+import static com.caezar.vklite.helpers.ChatHelper.constructMessageService;
 import static com.caezar.vklite.helpers.ChatHelper.getDocSize;
 import static com.caezar.vklite.helpers.ChatHelper.getMessageImageMax;
 import static com.caezar.vklite.helpers.ChatHelper.getMessageImageUrl;
@@ -38,7 +36,6 @@ import static com.caezar.vklite.helpers.ChatHelper.setAvatar;
 import static com.caezar.vklite.helpers.ChatHelper.unsetAvatar;
 import static com.caezar.vklite.libs.Guava.findIndexMessage;
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
-import static com.caezar.vklite.libs.Time.constructDate;
 import static com.caezar.vklite.libs.Time.getDateTime;
 import static com.caezar.vklite.libs.Time.isDifferentDays;
 
@@ -61,6 +58,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     final private boolean isPrivateDialog;
     private int prevUserIdFrom;
     private int prevPosition;
+    private int sizeWithoutServiceMessage;
+    private int countMessagesChat;
+
+    public void setCountMessagesChat(int countMessagesChat) {
+        this.countMessagesChat = countMessagesChat;
+    }
 
     public ChatAdapter(ChatFragment.ChatCallbacks chatCallbacks, Context context, boolean isPrivateDialog) {
         myselfId = Config.getMyselfId();
@@ -79,7 +82,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void addItemsToTop(@NonNull List<DialogMessage> itemList) {
         items.addAll(itemList);
-        checkTime();
+
+        cleanItemsFromMessagesService(items);
+        sizeWithoutServiceMessage = items.size();
+        addMessagesServiceTime();
+
         notifyDataSetChanged();
     }
 
@@ -92,26 +99,33 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void deleteItem(int messageId) {
         int index = findIndexMessage(new ArrayList<>(items), messageId);
         items.remove(index);
-        checkTime();
+
+        cleanItemsFromMessagesService(items);
+        sizeWithoutServiceMessage = items.size();
+        addMessagesServiceTime();
+
         notifyDataSetChanged();
     }
 
     public void addItemToEnd(@NonNull DialogMessage dialogMessage) {
         items.add(0, dialogMessage);
-        checkTime();
+
+        cleanItemsFromMessagesService(items);
+        sizeWithoutServiceMessage = items.size();
+        addMessagesServiceTime();
+
         notifyDataSetChanged();
     }
 
-    private void checkTime() {
+    private void addMessagesServiceTime() {
+        items.add(constructMessageService(items.get(items.size() - 1).getDate(), context));
+
         for (int i = 0; i < items.size() - 1; i++) {
             DialogMessage item1 = items.get(i);
             DialogMessage item2 = items.get(i + 1);
 
             if (isDifferentDays(item1.getDate(), item2.getDate())) {
-                DialogMessage dialogMessage = new DialogMessage();
-                dialogMessage.setBody(constructDate(item1.getDate(), context));
-                dialogMessage.setServiceMessage(true);
-                items.add(i + 1, dialogMessage);
+                items.add(i + 1, constructMessageService(item1.getDate(), context));
             }
         }
     }
@@ -230,7 +244,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         prevPosition = position;
 
         if (isTimeToRequestDialogs(position)) {
-            chatCallbacks.getMoreMessages(getItemCount());
+            chatCallbacks.getMoreMessages(sizeWithoutServiceMessage);
         }
     }
 
@@ -264,7 +278,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private boolean isTimeToRequestDialogs(int position) {
-        return items.size() - position < minItemsToRequestChat;
+        return countMessagesChat > sizeWithoutServiceMessage && sizeWithoutServiceMessage - position < minItemsToRequestChat;
     }
 
     class MessageTextViewHolder extends ChatViewHolder {

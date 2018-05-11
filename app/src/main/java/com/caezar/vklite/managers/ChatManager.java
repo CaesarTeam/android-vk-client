@@ -134,6 +134,7 @@ public class ChatManager {
             final List<DialogMessage> messages = Arrays.asList(chatResponse.getResponse().getItems());
 //            insertDialogs(DbManager.getInstance(context), dialogs);
             if (listenerCallback instanceof GetMessages) {
+                ((GetMessages)listenerCallback).getSizeChat(chatResponse.getResponse().getCount());
                 ((GetMessages)listenerCallback).callback(messages);
             } else if (listenerCallback instanceof GetLastMessage) {
                 ((GetLastMessage)listenerCallback).callback(messages.get(0));
@@ -192,6 +193,8 @@ public class ChatManager {
 
     public interface GetMessages extends Listener {
         void callback(List<DialogMessage> messages);
+
+        void getSizeChat(int size);
     }
 
     public interface GetLastMessage extends Listener {

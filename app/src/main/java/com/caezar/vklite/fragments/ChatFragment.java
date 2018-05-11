@@ -172,6 +172,10 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         getActivity().runOnUiThread(() -> adapter.addItemToEnd(dialogMessage));
     }
 
+    private void setChatSize(int size) {
+        adapter.setCountMessagesChat(size);
+    }
+
     private void changeMessage(DialogMessage dialogMessage) {
         if (getActivity() != null) {
             getActivity().runOnUiThread(() -> adapter.changeItem(dialogMessage));
@@ -238,6 +242,11 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         @Override
         public void callback(List<DialogMessage> messages) {
             addMessagesToAdapterTop(messages);
+        }
+
+        @Override
+        public void getSizeChat(int size) {
+            setChatSize(size);
         }
 
         public GetMessages() {

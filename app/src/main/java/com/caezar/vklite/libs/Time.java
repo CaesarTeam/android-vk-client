@@ -93,7 +93,7 @@ public class Time {
         return calendar1.get(Calendar.DAY_OF_YEAR) != calendar2.get(Calendar.DAY_OF_YEAR) && calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR);
     }
 
-    public static String constructDate(long unixTimestamp, Context context) {
+    public static String constructStringServiceTime(long unixTimestamp, Context context) {
         if (isToday(unixTimestamp)) {
             return context.getString(R.string.today);
         }

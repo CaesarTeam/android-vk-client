@@ -10,13 +10,37 @@ import com.caezar.vklite.models.network.DialogMessage;
 import com.caezar.vklite.models.network.Photo;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
+import static com.caezar.vklite.libs.Time.constructStringServiceTime;
 
 /**
  * Created by seva on 13.04.18 in 16:07.
  */
 
 public class ChatHelper {
+    public static void cleanItemsFromMessagesService(List<DialogMessage> items) {
+        for (int i = 0; i < items.size(); i++) {
+            if (isMessageService(items.get(i))) {
+                items.remove(i);
+                i--;
+            }
+        }
+    }
+
+    public static DialogMessage constructMessageService(int date, Context context) {
+        DialogMessage dialogMessage = new DialogMessage();
+        dialogMessage.setBody(constructStringServiceTime(date, context));
+        dialogMessage.setServiceMessage(true);
+        return dialogMessage;
+    }
+
+    private static boolean isMessageService(DialogMessage dialogMessage) {
+        return dialogMessage.isServiceMessage();
+    }
+
     public static boolean isNonDuplicatesAvatar(int itemSize, int position, int userId, int prevUserId, int nextUserId, boolean scrollUp) {
         final boolean isLastItem = (itemSize - 1) == position;
         final boolean isMessageSameAuthorBelow = userId != prevUserId && !scrollUp;
