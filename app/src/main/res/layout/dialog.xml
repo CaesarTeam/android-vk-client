@@ -18,7 +18,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dialog_size_avatar">
+        android:layout_height="@dimen/dialog_size_avatar"
+        android:layout_marginStart="@dimen/dialog_from_avatar_margin_left">
 
         <RelativeLayout
             android:id="@+id/titleContainer"
@@ -27,10 +28,8 @@
 
             <TextView
                 android:id="@+id/dialogTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/dialog_title_width"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
                 android:textColor="@color/colorDialogTitle"
                 android:textSize="@dimen/dialog_title_font_size"
                 android:singleLine="true"/>
@@ -50,8 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/titleContainer"
-            android:layout_marginTop="@dimen/dialog_message_margin_top"
-            android:layout_marginStart="@dimen/dialog_message_margin_left">
+            android:layout_marginTop="@dimen/dialog_message_margin_top">
 
         <TextView
             android:id="@+id/dialogMessage"
