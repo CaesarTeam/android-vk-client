@@ -139,13 +139,13 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                 if (unreadMessagesCount == 0) {
                     unsetUnreadCount(dialogViewHolder.unreadCount);
+                    if (!readState) {
+                        setReadState(dialogViewHolder.readState);
+                    } else {
+                        unsetReadState(dialogViewHolder.readState);
+                    }
                 } else {
                     setUnreadCount(dialogViewHolder.unreadCount, Integer.toString(unreadMessagesCount));
-                }
-
-                if (!readState) {
-                    setReadState(dialogViewHolder.readState);
-                } else {
                     unsetReadState(dialogViewHolder.readState);
                 }
 
