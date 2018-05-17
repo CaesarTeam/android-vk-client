@@ -213,17 +213,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     messageTextViewHolder.container.setBackgroundResource(R.drawable.message_text_to_me_container);
                 }
 
-                if (isReadState) {
-                    messageTextViewHolder.messageTextReadState.setVisibility(View.GONE);
-                } else {
-                    messageTextViewHolder.messageTextReadState.setVisibility(View.VISIBLE);
-                    if (side) {
-                        unsetAlignParentEnd(messageTextViewHolder.messageTextReadState);
-                    } else {
-                        setAlignParentEnd(messageTextViewHolder.messageTextReadState);
-                    }
-                }
-
                 break;
             case IMAGE_MESSAGE:
                 MessageImageViewHolder messageImageViewHolder = ((MessageImageViewHolder) holder);
@@ -270,13 +259,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         if (isReadState) {
-            if (side) {
-                // left circle
-            } else {
-                // right circle
-            }
+            chatViewHolder.messageReadState.setVisibility(View.GONE);
         } else {
-            // gone both circle, or try to do this using only one circle
+            chatViewHolder.messageReadState.setVisibility(View.VISIBLE);
+            if (side) {
+                unsetAlignParentEnd(chatViewHolder.messageReadState);
+            } else {
+                setAlignParentEnd(chatViewHolder.messageReadState);
+            }
         }
 
         prevUserIdFrom = userIdFrom;
@@ -324,7 +314,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         final TextView messageText;
         final TextView messageTextTime;
-        final TextView messageTextReadState;
         int position;
 
         MessageTextViewHolder(final View itemView) {
@@ -335,7 +324,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             container = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageTextContainer) : itemView.findViewById(R.id.messageTextContainerLand));
             messageText = (TextView) (isPort ? itemView.findViewById(R.id.messageText) : itemView.findViewById(R.id.messageTextLand));
             messageTextTime = (TextView) (isPort ? itemView.findViewById(R.id.messageTextTime) : itemView.findViewById(R.id.messageTextTimeLand));
-            messageTextReadState = itemView.findViewById(R.id.messageTextReadState);
+            messageReadState = (TextView) (isPort ? itemView.findViewById(R.id.messageTextReadState) : itemView.findViewById(R.id.messageTextReadStateLand));
 
             container.setOnClickListener(v -> {
                 chatCallbacks.createFragmentDialogMessageType(items.get(position), items.get(position).getFrom_id() == myselfId);
@@ -357,6 +346,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             container = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageImageContainer) : itemView.findViewById(R.id.messageImageContainerLand));
             messageImage = (RoundedImageView) (isPort ? itemView.findViewById(R.id.messageImage) : itemView.findViewById(R.id.messageImageLand));
             messageImageTime = (TextView) (isPort ? itemView.findViewById(R.id.messageImageTime) : itemView.findViewById(R.id.messageImageTimeLand));
+            messageReadState = (TextView) (isPort ? itemView.findViewById(R.id.messageImageReadState) : itemView.findViewById(R.id.messageImageReadStateLand));
 
             messageImage.setOnClickListener((View v) -> chatCallbacks.createFragmentFullSizeImageMessage(getMessageImageMax(items.get(position))));
         }
@@ -375,6 +365,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             container = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageStickerContainer) : itemView.findViewById(R.id.messageStickerContainerLand));
             messageSticker = (ImageView) (isPort ? itemView.findViewById(R.id.messageSticker) : itemView.findViewById(R.id.messageStickerLand));
             messageStickerTime = (TextView) (isPort ? itemView.findViewById(R.id.messageStickerTime) : itemView.findViewById(R.id.messageStickerTimeLand));
+            messageReadState = (TextView) (isPort ? itemView.findViewById(R.id.messageStickerReadState) : itemView.findViewById(R.id.messageStickerReadStateLand));
+
         }
     }
 
@@ -394,6 +386,18 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             messageDocName = itemView.findViewById(R.id.messageDocName);
             messageDocSize = itemView.findViewById(R.id.messageDocSize);
             messageDocTime = itemView.findViewById(R.id.messageDocTime);
+            messageReadState = itemView.findViewById(R.id.messageDocReadState);
+
+        }
+    }
+
+    class ChatViewHolder extends RecyclerView.ViewHolder {
+        RoundedImageView avatar;
+        RelativeLayout container;
+        TextView messageReadState;
+
+        public ChatViewHolder(View itemView) {
+            super(itemView);
         }
     }
 
@@ -404,15 +408,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         MessageServiceViewHolder(final View itemView) {
             super(itemView);
             messageService = itemView.findViewById(R.id.messageService);
-        }
-    }
-
-    class ChatViewHolder extends RecyclerView.ViewHolder {
-        RoundedImageView avatar;
-        RelativeLayout container;
-
-        public ChatViewHolder(View itemView) {
-            super(itemView);
         }
     }
 }

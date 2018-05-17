@@ -51,4 +51,8 @@
             android:layout_below="@id/messageDocName"
             android:layout_toEndOf="@id/messageDocName"/>
     </RelativeLayout>
+
+    <include
+        android:id="@+id/messageDocReadState"
+        layout="@layout/chat_read_state"/>
 </RelativeLayout>

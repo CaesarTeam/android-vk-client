@@ -42,4 +42,8 @@
             android:layout_marginStart="@dimen/chat_time_margin_left"
             android:background="@color/colorMessageImageTime"/>
     </RelativeLayout>
+
+    <include
+        android:id="@+id/messageImageReadState"
+        layout="@layout/chat_read_state"/>
 </RelativeLayout>

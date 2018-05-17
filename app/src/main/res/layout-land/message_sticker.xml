@@ -34,4 +34,8 @@
             android:layout_toEndOf="@id/messageStickerLand"
             android:layout_marginStart="@dimen/chat_time_margin_left"/>
     </RelativeLayout>
+
+    <include
+        android:id="@+id/messageStickerReadStateLand"
+        layout="@layout/chat_read_state"/>
 </RelativeLayout>

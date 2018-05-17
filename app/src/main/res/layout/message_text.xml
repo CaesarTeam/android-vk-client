@@ -35,11 +35,7 @@
             android:layout_toEndOf="@id/messageText"/>
     </RelativeLayout>
 
-    <TextView
+    <include
         android:id="@+id/messageTextReadState"
-        android:layout_width="@dimen/chat_message_read_state_size"
-        android:layout_height="@dimen/chat_message_read_state_size"
-        android:layout_centerVertical="true"
-        android:layout_margin="@dimen/chat_message_read_state_margin"
-        android:background="@drawable/circle_read_state"/>
+        layout="@layout/chat_read_state"/>
 </RelativeLayout>

@@ -34,4 +34,8 @@
             android:layout_below="@id/messageTextLand"
             android:layout_toEndOf="@id/messageTextLand"/>
     </RelativeLayout>
+
+    <include
+        android:id="@+id/messageTextReadStateLand"
+        layout="@layout/chat_read_state"/>
 </RelativeLayout>
