@@ -31,9 +31,12 @@ import static com.caezar.vklite.helpers.ChatHelper.getMessageImageUrl;
 import static com.caezar.vklite.helpers.ChatHelper.getMessageStickerUrl;
 import static com.caezar.vklite.helpers.ChatHelper.getPositionToScrollChat;
 import static com.caezar.vklite.helpers.ChatHelper.isNonDuplicatesAvatar;
+import static com.caezar.vklite.helpers.ChatHelper.markOtherMessagesRead;
+import static com.caezar.vklite.helpers.ChatHelper.setAlignParentEnd;
 import static com.caezar.vklite.helpers.ChatHelper.unsetAlignLayoutRight;
 import static com.caezar.vklite.helpers.ChatHelper.setAlignLayoutRight;
 import static com.caezar.vklite.helpers.ChatHelper.setAvatar;
+import static com.caezar.vklite.helpers.ChatHelper.unsetAlignParentEnd;
 import static com.caezar.vklite.helpers.ChatHelper.unsetAvatar;
 import static com.caezar.vklite.libs.Guava.findIndexMessage;
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
@@ -122,6 +125,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void addItemToEnd(@NonNull DialogMessage dialogMessage) {
         items.add(0, dialogMessage);
+        markOtherMessagesRead(items);
 
         cleanItemsFromMessagesService(items);
         sizeWithoutServiceMessage = items.size();
@@ -207,6 +211,17 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     messageTextViewHolder.container.setBackgroundResource(R.drawable.message_text_from_me_container);
                 } else {
                     messageTextViewHolder.container.setBackgroundResource(R.drawable.message_text_to_me_container);
+                }
+
+                if (isReadState) {
+                    messageTextViewHolder.messageTextReadState.setVisibility(View.GONE);
+                } else {
+                    messageTextViewHolder.messageTextReadState.setVisibility(View.VISIBLE);
+                    if (side) {
+                        unsetAlignParentEnd(messageTextViewHolder.messageTextReadState);
+                    } else {
+                        setAlignParentEnd(messageTextViewHolder.messageTextReadState);
+                    }
                 }
 
                 break;
@@ -309,6 +324,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         final TextView messageText;
         final TextView messageTextTime;
+        final TextView messageTextReadState;
         int position;
 
         MessageTextViewHolder(final View itemView) {
@@ -319,6 +335,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             container = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageTextContainer) : itemView.findViewById(R.id.messageTextContainerLand));
             messageText = (TextView) (isPort ? itemView.findViewById(R.id.messageText) : itemView.findViewById(R.id.messageTextLand));
             messageTextTime = (TextView) (isPort ? itemView.findViewById(R.id.messageTextTime) : itemView.findViewById(R.id.messageTextTimeLand));
+            messageTextReadState = itemView.findViewById(R.id.messageTextReadState);
 
             container.setOnClickListener(v -> {
                 chatCallbacks.createFragmentDialogMessageType(items.get(position), items.get(position).getFrom_id() == myselfId);

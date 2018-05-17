@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.caezar.vklite.R;
 import com.caezar.vklite.models.network.DialogMessage;
@@ -43,6 +44,14 @@ public class ChatHelper {
         return -1;
     }
 
+    public static void markOtherMessagesRead(List<DialogMessage> items) {
+        for (DialogMessage item : items) {
+            if (!item.isOut()) {
+                item.setRead_state(true);
+            }
+        }
+    }
+
     public static DialogMessage constructMessageService(int date, Context context) {
         DialogMessage dialogMessage = new DialogMessage();
         dialogMessage.setBody(constructStringServiceTime(date, context));
@@ -67,6 +76,24 @@ public class ChatHelper {
         container.setLayoutParams(params);
     }
 
+    public static void unsetAlignLayoutRight(RelativeLayout container) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) container.getLayoutParams();
+        params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        container.setLayoutParams(params);
+    }
+
+    public static void setAlignParentEnd(TextView readState) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) readState.getLayoutParams();
+        params.addRule(RelativeLayout.ALIGN_PARENT_END);
+        readState.setLayoutParams(params);
+    }
+
+    public static void unsetAlignParentEnd(TextView readState) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) readState.getLayoutParams();
+        params.removeRule(RelativeLayout.ALIGN_PARENT_END);
+        readState.setLayoutParams(params);
+    }
+
     public static void swapButtonsVisibility(Button button1, Button button2) {
         int firstVisibility = button1.getVisibility();
         int secondVisibility = button2.getVisibility();
@@ -81,12 +108,6 @@ public class ChatHelper {
         } else {
             avatarView.setVisibility(View.INVISIBLE);
         }
-    }
-
-    public static void unsetAlignLayoutRight(RelativeLayout container) {
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) container.getLayoutParams();
-        params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        container.setLayoutParams(params);
     }
 
     public static void unsetAvatar(RoundedImageView avatarView) {
