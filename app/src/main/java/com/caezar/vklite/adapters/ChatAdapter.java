@@ -29,6 +29,7 @@ import static com.caezar.vklite.helpers.ChatHelper.getDocSize;
 import static com.caezar.vklite.helpers.ChatHelper.getMessageImageMax;
 import static com.caezar.vklite.helpers.ChatHelper.getMessageImageUrl;
 import static com.caezar.vklite.helpers.ChatHelper.getMessageStickerUrl;
+import static com.caezar.vklite.helpers.ChatHelper.getPositionToScrollChat;
 import static com.caezar.vklite.helpers.ChatHelper.isNonDuplicatesAvatar;
 import static com.caezar.vklite.helpers.ChatHelper.unsetAlignLayoutRight;
 import static com.caezar.vklite.helpers.ChatHelper.setAlignLayoutRight;
@@ -81,6 +82,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void addItemsToTop(@NonNull List<DialogMessage> itemList) {
+        boolean needScrolling = false;
+        if (items.size() == 0) {
+            needScrolling = true;
+        }
+
         items.addAll(itemList);
 
         cleanItemsFromMessagesService(items);
@@ -88,6 +94,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         addMessagesServiceTime();
 
         notifyDataSetChanged();
+
+        if (needScrolling) {
+            int position = getPositionToScrollChat(items);
+            if (position != -1) {
+                chatCallbacks.scrollToPosition(position);
+            }
+        }
     }
 
     public void changeItem(@NonNull DialogMessage dialogMessage) {

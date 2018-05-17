@@ -30,6 +30,19 @@ public class ChatHelper {
         }
     }
 
+    public static int getPositionToScrollChat(List<DialogMessage> items) {
+        for (int i = items.size() - 1; i > 0; i--) {
+            if (!items.get(i).isRead_state() && !items.get(i).isServiceMessage()) {
+                if (i + 2 < items.size() - 1) {
+                    i += 2;
+                }
+               return i;
+            }
+        }
+
+        return -1;
+    }
+
     public static DialogMessage constructMessageService(int date, Context context) {
         DialogMessage dialogMessage = new DialogMessage();
         dialogMessage.setBody(constructStringServiceTime(date, context));

@@ -1,6 +1,8 @@
 package com.caezar.vklite.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -18,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.caezar.vklite.LinearLayoutManagerWithSmoothScroller;
 import com.caezar.vklite.managers.ChatManager;
 import com.caezar.vklite.ChooseMessageTypeListener;
 import com.caezar.vklite.FragmentCallbacks;
@@ -34,6 +38,7 @@ import com.caezar.vklite.models.network.DialogMessage;
 
 import java.util.List;
 
+import static android.widget.LinearLayout.VERTICAL;
 import static com.caezar.vklite.Config.countItemsToRequestChat;
 import static com.caezar.vklite.fragments.DialogsFragment.BROADCAST_CLOSE_CHAT;
 import static com.caezar.vklite.fragments.DialogsFragment.CHAT_FRAGMENT_TAG;
@@ -109,9 +114,8 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
 
         recyclerView = view.findViewById(R.id.messagesList);
         adapter = new ChatAdapter(new ChatCallbacks(), getContext(), isPrivateDialog);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setReverseLayout(true);
-        recyclerView.setLayoutManager(linearLayoutManager);
+
+        recyclerView.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getContext(), VERTICAL, true));
         recyclerView.setAdapter(adapter);
 
 
@@ -192,11 +196,8 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         if (getActivity() != null) {
             getActivity().runOnUiThread(() -> {
                 adapter.addItemsToTop(items);
-                if (adapter.getItemCount() == new ChatRequest().getCount()) {
-                    recyclerView.scrollToPosition(0);
-                }
-                isChatRequest = true;
                 progressBar.setVisibility(View.GONE);
+                isChatRequest = true;
             });
         }
     }
@@ -361,6 +362,10 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             messageActionDialog.setTargetFragment(ChatFragment.this, 0);
             messageActionDialog.setArguments(bundle);
             messageActionDialog.show(getActivity().getSupportFragmentManager(), MESSAGE_ACTION_FRAGMENT_TAG);
+        }
+
+        public void scrollToPosition(int position) {
+            recyclerView.smoothScrollToPosition(position);
         }
     }
 
