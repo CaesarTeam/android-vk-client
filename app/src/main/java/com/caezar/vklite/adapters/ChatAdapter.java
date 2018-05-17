@@ -185,6 +185,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         DialogMessage item = items.get(position);
         final int userIdFrom = item.getFrom_id();
+        boolean isReadState = item.isRead_state();
         boolean side = userIdFrom == myselfId;
         final String time = getDateTime(item.getDate(), Time.Format.HOURS_MINUTES_SECONDS);
         final boolean scrollUp = position > prevPosition;
@@ -251,6 +252,16 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             if (!isPrivateDialog && avatarUrl != null) {
                 setAvatar(isNonDuplicatesAvatar, chatViewHolder.avatar, avatarUrl);
             }
+        }
+
+        if (isReadState) {
+            if (side) {
+                // left circle
+            } else {
+                // right circle
+            }
+        } else {
+            // gone both circle, or try to do this using only one circle
         }
 
         prevUserIdFrom = userIdFrom;
