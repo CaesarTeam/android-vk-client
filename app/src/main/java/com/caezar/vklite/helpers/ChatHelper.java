@@ -2,6 +2,7 @@ package com.caezar.vklite.helpers;
 
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -70,13 +71,13 @@ public class ChatHelper {
         return isLastItem || isMessageSameAuthorBelow || isMessageSameAuthorUp;
     }
 
-    public static void setAlignLayoutRight(RelativeLayout container) {
+    public static void setAlignLayoutRight(ViewGroup container) {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) container.getLayoutParams();
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         container.setLayoutParams(params);
     }
 
-    public static void unsetAlignLayoutRight(RelativeLayout container) {
+    public static void unsetAlignLayoutRight(ViewGroup container) {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) container.getLayoutParams();
         params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         container.setLayoutParams(params);

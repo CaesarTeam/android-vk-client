@@ -36,10 +36,10 @@
             android:id="@+id/messageImageTimeLand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/messageImageLand"
-            android:layout_toEndOf="@id/messageImageLand"
-            android:layout_marginTop="@dimen/chat_time_margin_top"
-            android:layout_marginStart="@dimen/chat_time_margin_left"
+            android:layout_alignBottom="@+id/messageImageLand"
+            android:layout_alignEnd="@+id/messageImageLand"
+            android:layout_marginEnd="@dimen/chat_time_margin_right"
+            android:layout_marginBottom="@dimen/chat_time_margin_bottom"
             android:background="@color/colorMessageImageTime"/>
     </RelativeLayout>
 

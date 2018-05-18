@@ -30,9 +30,10 @@
             android:id="@+id/messageStickerTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/messageSticker"
-            android:layout_toEndOf="@id/messageSticker"
-            android:layout_marginStart="@dimen/chat_time_margin_left"/>
+            android:layout_alignBottom="@+id/messageSticker"
+            android:layout_alignEnd="@+id/messageSticker"
+            android:layout_marginEnd="@dimen/chat_time_margin_right"
+            android:layout_marginBottom="@dimen/chat_time_margin_bottom"/>
     </RelativeLayout>
 
     <include

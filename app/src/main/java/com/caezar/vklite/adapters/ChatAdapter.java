@@ -220,7 +220,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 asyncImageLoad(getMessageImageUrl(item), messageImageViewHolder.messageImage);
                 messageImageViewHolder.messageImageTime.setText(time);
                 messageImageViewHolder.messageImageTime.bringToFront();
-                System.out.println(item.getAttachments().length);
+
                 break;
             case STICKER_MESSAGE:
                 MessageStickerViewHolder messageStickerViewHolder = ((MessageStickerViewHolder) holder);
@@ -393,7 +393,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     class ChatViewHolder extends RecyclerView.ViewHolder {
         RoundedImageView avatar;
-        RelativeLayout container;
+        ViewGroup container;
         TextView messageReadState;
 
         public ChatViewHolder(View itemView) {
