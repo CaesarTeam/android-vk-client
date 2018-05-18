@@ -3,8 +3,10 @@ package com.caezar.vklite.adapters;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +18,9 @@ import com.caezar.vklite.R;
 import com.caezar.vklite.fragments.ChatFragment;
 import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.Config;
+import com.caezar.vklite.models.network.Attachments;
 import com.caezar.vklite.models.network.DialogMessage;
+import com.caezar.vklite.models.network.Photo;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
@@ -217,9 +221,23 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case IMAGE_MESSAGE:
                 MessageImageViewHolder messageImageViewHolder = ((MessageImageViewHolder) holder);
                 messageImageViewHolder.position = position;
-                asyncImageLoad(getMessageImageUrl(item), messageImageViewHolder.messageImage);
-                messageImageViewHolder.messageImageTime.setText(time);
-                messageImageViewHolder.messageImageTime.bringToFront();
+
+                messageImageViewHolder.container.removeAllViews();
+
+                for (int i = 0; i < item.getAttachments().length; i++) {
+                    Attachments attachment = item.getAttachments()[i];
+
+                    View messageImageView = LayoutInflater.from(context).inflate(R.layout.chat_image_item, messageImageViewHolder.container, false);
+
+                    RoundedImageView messageImage = messageImageView.findViewById(R.id.messageImage);
+                    TextView messageImageTime = messageImageView.findViewById(R.id.messageImageTime);
+
+                    asyncImageLoad(getMessageImageUrl(attachment.getPhoto()), messageImage);
+                    messageImageTime.setText(time);
+                    messageImageTime.bringToFront();
+
+                    messageImageViewHolder.container.addView(messageImageView);
+                }
 
                 break;
             case STICKER_MESSAGE:
@@ -334,8 +352,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     class MessageImageViewHolder extends ChatViewHolder {
 
-        final RoundedImageView messageImage;
-        final TextView messageImageTime;
         int position;
 
         MessageImageViewHolder(final View itemView) {
@@ -343,12 +359,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             final boolean isPort = context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE;
             avatar = (RoundedImageView) (isPort ? itemView.findViewById(R.id.messageImageAvatar) : itemView.findViewById(R.id.messageImageAvatarLand));
-            container = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageImageContainer) : itemView.findViewById(R.id.messageImageContainerLand));
-            messageImage = (RoundedImageView) (isPort ? itemView.findViewById(R.id.messageImage) : itemView.findViewById(R.id.messageImageLand));
-            messageImageTime = (TextView) (isPort ? itemView.findViewById(R.id.messageImageTime) : itemView.findViewById(R.id.messageImageTimeLand));
+            container = (GridLayout) (isPort ? itemView.findViewById(R.id.messageImageContainer) : itemView.findViewById(R.id.messageImageContainerLand));
             messageReadState = (TextView) (isPort ? itemView.findViewById(R.id.messageImageReadState) : itemView.findViewById(R.id.messageImageReadStateLand));
 
-            messageImage.setOnClickListener((View v) -> chatCallbacks.createFragmentFullSizeImageMessage(getMessageImageMax(items.get(position))));
+            //messageImage.setOnClickListener((View v) -> chatCallbacks.createFragmentFullSizeImageMessage(getMessageImageMax(items.get(position))));
         }
     }
 

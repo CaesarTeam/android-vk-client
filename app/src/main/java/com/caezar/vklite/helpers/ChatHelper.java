@@ -115,8 +115,8 @@ public class ChatHelper {
         avatarView.setVisibility(View.GONE);
     }
 
-    public static String getMessageImageUrl(DialogMessage item) {
-        return item.getAttachments()[0].getPhoto().getPhoto_604();
+    public static String getMessageImageUrl(Photo photo) {
+        return photo.getPhoto_604();
     }
 
     public static String getMessageImageMax(DialogMessage item) {
