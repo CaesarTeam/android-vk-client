@@ -220,7 +220,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 break;
             case IMAGE_MESSAGE:
                 MessageImageViewHolder messageImageViewHolder = ((MessageImageViewHolder) holder);
-                messageImageViewHolder.position = position;
 
                 messageImageViewHolder.container.removeAllViews();
 
@@ -235,6 +234,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     asyncImageLoad(getMessageImageUrl(attachment.getPhoto()), messageImage);
                     messageImageTime.setText(time);
                     messageImageTime.bringToFront();
+
+                    messageImage.setOnClickListener((View v) -> chatCallbacks.createFragmentFullSizeImageMessage(getMessageImageMax(attachment.getPhoto())));
 
                     messageImageViewHolder.container.addView(messageImageView);
                 }
@@ -358,8 +359,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     class MessageImageViewHolder extends ChatViewHolder {
 
-        int position;
-
         MessageImageViewHolder(final View itemView) {
             super(itemView);
 
@@ -367,8 +366,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             avatar = (RoundedImageView) (isPort ? itemView.findViewById(R.id.messageImageAvatar) : itemView.findViewById(R.id.messageImageAvatarLand));
             container = (GridLayout) (isPort ? itemView.findViewById(R.id.messageImageContainer) : itemView.findViewById(R.id.messageImageContainerLand));
             messageReadState = (TextView) (isPort ? itemView.findViewById(R.id.messageImageReadState) : itemView.findViewById(R.id.messageImageReadStateLand));
-
-            //messageImage.setOnClickListener((View v) -> chatCallbacks.createFragmentFullSizeImageMessage(getMessageImageMax(items.get(position))));
         }
     }
 
