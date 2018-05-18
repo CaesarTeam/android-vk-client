@@ -254,6 +254,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 messageDocViewHolder.messageDocTime.setText(time);
                 messageDocViewHolder.messageDocTime.bringToFront();
 
+                if (side) {
+                    messageDocViewHolder.container.setBackgroundResource(R.drawable.message_text_from_me_container);
+                } else {
+                    messageDocViewHolder.container.setBackgroundResource(R.drawable.message_text_to_me_container);
+                }
+
                 break;
             case SERVICE_MESSAGE:
                 MessageServiceViewHolder messageServiceViewHolder = ((MessageServiceViewHolder) holder);
