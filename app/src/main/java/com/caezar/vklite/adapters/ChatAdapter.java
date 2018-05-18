@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -220,13 +221,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 break;
             case IMAGE_MESSAGE:
                 MessageImageViewHolder messageImageViewHolder = ((MessageImageViewHolder) holder);
+                messageImageViewHolder.messageImageText.setText(item.getBody());
 
-                messageImageViewHolder.container.removeAllViews();
-
+                messageImageViewHolder.messageImage.removeAllViews();
                 for (int i = 0; i < item.getAttachments().length; i++) {
                     Attachments attachment = item.getAttachments()[i];
 
-                    View messageImageView = LayoutInflater.from(context).inflate(R.layout.chat_image_item, messageImageViewHolder.container, false);
+                    View messageImageView = LayoutInflater.from(context).inflate(R.layout.chat_image_item, messageImageViewHolder.messageImage, false);
 
                     RoundedImageView messageImage = messageImageView.findViewById(R.id.messageImage);
                     TextView messageImageTime = messageImageView.findViewById(R.id.messageImageTime);
@@ -237,7 +238,22 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                     messageImage.setOnClickListener((View v) -> chatCallbacks.createFragmentFullSizeImageMessage(getMessageImageMax(attachment.getPhoto())));
 
-                    messageImageViewHolder.container.addView(messageImageView);
+                    messageImageViewHolder.messageImage.addView(messageImageView);
+                }
+
+                if (side) {
+                    messageImageViewHolder.container.setBackgroundResource(R.drawable.message_text_from_me_container);
+                } else {
+                    messageImageViewHolder.container.setBackgroundResource(R.drawable.message_text_to_me_container);
+                }
+
+                if (TextUtils.isEmpty(item.getBody())) {
+                    messageImageViewHolder.messageImageText.setVisibility(View.GONE);
+                    if (item.getAttachments().length == 1) {
+                        messageImageViewHolder.container.setBackground(null);
+                    }
+                } else {
+                    messageImageViewHolder.messageImageText.setVisibility(View.VISIBLE);
                 }
 
                 break;
@@ -359,13 +375,18 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     class MessageImageViewHolder extends ChatViewHolder {
 
+        TextView messageImageText;
+        GridLayout messageImage;
+
         MessageImageViewHolder(final View itemView) {
             super(itemView);
 
             final boolean isPort = context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE;
             avatar = (RoundedImageView) (isPort ? itemView.findViewById(R.id.messageImageAvatar) : itemView.findViewById(R.id.messageImageAvatarLand));
-            container = (GridLayout) (isPort ? itemView.findViewById(R.id.messageImageContainer) : itemView.findViewById(R.id.messageImageContainerLand));
+            container = itemView.findViewById(R.id.messageImageContainer);
             messageReadState = (TextView) (isPort ? itemView.findViewById(R.id.messageImageReadState) : itemView.findViewById(R.id.messageImageReadStateLand));
+            messageImageText = itemView.findViewById(R.id.messageImageText);
+            messageImage = itemView.findViewById(R.id.messageImage);
         }
     }
 

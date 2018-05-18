@@ -11,18 +11,34 @@
         android:id="@+id/messageImageAvatar"
         layout="@layout/chat_avatar"/>
 
-    <android.support.v7.widget.GridLayout
+    <RelativeLayout
         android:id="@+id/messageImageContainer"
-        android:layout_width="@dimen/chat_image_size"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/chat_from_avatar_margin_left_right"
         android:layout_marginRight="@dimen/chat_from_avatar_margin_left_right"
-        android:layout_toEndOf="@id/messageImageAvatar"
-        grid:orientation="vertical"
-        grid:useDefaultMargins="true"
-        xmlns:grid="http://schemas.android.com/apk/res-auto">
+        android:layout_toEndOf="@id/messageImageAvatar">
 
-    </android.support.v7.widget.GridLayout>
+        <TextView
+            android:id="@+id/messageImageText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="@dimen/chat_message_max_width"
+            android:padding="@dimen/chat_message_text_padding"/>
+
+        <android.support.v7.widget.GridLayout
+            android:id="@+id/messageImage"
+            android:layout_width="@dimen/chat_image_size"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/chat_message_image_left_right"
+            android:layout_marginRight="@dimen/chat_message_image_left_right"
+            grid:orientation="vertical"
+            android:layout_below="@+id/messageImageText"
+            xmlns:grid="http://schemas.android.com/apk/res-auto">
+
+        </android.support.v7.widget.GridLayout>
+    </RelativeLayout>
+
 
     <include
         android:id="@+id/messageImageReadState"
