@@ -30,17 +30,20 @@
             app:riv_border_color="@color/colorPrimary"
             app:riv_border_width="@dimen/chat_image_border_width"
             app:riv_corner_radius="@dimen/chat_image_border_radius"
-            tools:ignore="ContentDescription"/>
+            tools:ignore="ContentDescription">
+
+        </com.makeramen.roundedimageview.RoundedImageView>
 
         <TextView
             android:id="@+id/messageImageTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/messageImage"
-            android:layout_toEndOf="@id/messageImage"
-            android:layout_marginTop="@dimen/chat_time_margin_top"
-            android:layout_marginStart="@dimen/chat_time_margin_left"
+            android:layout_alignBottom="@+id/messageImage"
+            android:layout_alignEnd="@+id/messageImage"
+            android:layout_marginEnd="@dimen/chat_time_margin_right"
+            android:layout_marginBottom="@dimen/chat_time_margin_bottom"
             android:background="@color/colorMessageImageTime"/>
+
     </RelativeLayout>
 
     <include

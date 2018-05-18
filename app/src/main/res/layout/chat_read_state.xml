@@ -5,4 +5,5 @@
     android:layout_centerVertical="true"
     android:layout_margin="@dimen/chat_message_read_state_margin"
     android:background="@drawable/circle_read_state"
+    android:visibility="gone"
     xmlns:android="http://schemas.android.com/apk/res/android"/>
