@@ -7,35 +7,35 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <include
-        android:id="@+id/messageTextAvatarLand"
+        android:id="@+id/messageTextAvatar"
         layout="@layout/chat_avatar"/>
 
     <RelativeLayout
-        android:id="@+id/messageTextContainerLand"
+        android:id="@+id/messageTextContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/chat_from_avatar_margin_left_right"
         android:layout_marginRight="@dimen/chat_from_avatar_margin_left_right"
         android:padding="@dimen/chat_message_text_padding"
-        android:layout_toEndOf="@id/messageTextAvatarLand"
+        android:layout_toEndOf="@id/messageTextAvatar"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
         <TextView
-            android:id="@+id/messageTextLand"
+            android:id="@+id/messageText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxWidth="@dimen/chat_message_max_width_land"
             android:layout_marginBottom="@dimen/chat_message_text_margin_bottom"/>
 
         <TextView
-            android:id="@+id/messageTextTimeLand"
+            android:id="@+id/messageTextTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/messageTextLand"
-            android:layout_toEndOf="@id/messageTextLand"/>
+            android:layout_below="@id/messageText"
+            android:layout_toEndOf="@id/messageText"/>
     </RelativeLayout>
 
     <include
-        android:id="@+id/messageTextReadStateLand"
+        android:id="@+id/messageTextReadState"
         layout="@layout/chat_read_state"/>
 </RelativeLayout>

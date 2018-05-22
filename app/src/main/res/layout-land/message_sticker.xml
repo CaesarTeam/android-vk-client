@@ -9,35 +9,35 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <include
-        android:id="@+id/messageStickerAvatarLand"
+        android:id="@+id/messageStickerAvatar"
         layout="@layout/chat_avatar"/>
 
     <RelativeLayout
-        android:id="@+id/messageStickerContainerLand"
+        android:id="@+id/messageStickerContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/messageStickerAvatarLand"
+        android:layout_toEndOf="@id/messageStickerAvatar"
         android:layout_marginLeft="@dimen/chat_from_avatar_margin_left_right"
         android:layout_marginRight="@dimen/chat_from_avatar_margin_left_right"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
         <ImageView
-            android:id="@+id/messageStickerLand"
+            android:id="@+id/messageSticker"
             android:layout_width="@dimen/chat_sticker_size_land"
             android:layout_height="@dimen/chat_sticker_size_land"
             tools:ignore="ContentDescription"/>
 
         <TextView
-            android:id="@+id/messageStickerTimeLand"
+            android:id="@+id/messageStickerTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/messageStickerLand"
-            android:layout_alignEnd="@+id/messageStickerLand"
+            android:layout_alignBottom="@+id/messageSticker"
+            android:layout_alignEnd="@+id/messageSticker"
             android:layout_marginEnd="@dimen/chat_time_margin_right"
             android:layout_marginBottom="@dimen/chat_time_margin_bottom"/>
     </RelativeLayout>
 
     <include
-        android:id="@+id/messageStickerReadStateLand"
+        android:id="@+id/messageStickerReadState"
         layout="@layout/chat_read_state"/>
 </RelativeLayout>

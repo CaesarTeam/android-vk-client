@@ -353,12 +353,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         MessageTextViewHolder(final View itemView) {
             super(itemView);
 
-            final boolean isPort = context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE;
-            avatar = (RoundedImageView) (isPort ? itemView.findViewById(R.id.messageTextAvatar) : itemView.findViewById(R.id.messageTextAvatarLand));
-            container = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageTextContainer) : itemView.findViewById(R.id.messageTextContainerLand));
-            messageText = (TextView) (isPort ? itemView.findViewById(R.id.messageText) : itemView.findViewById(R.id.messageTextLand));
-            messageTextTime = (TextView) (isPort ? itemView.findViewById(R.id.messageTextTime) : itemView.findViewById(R.id.messageTextTimeLand));
-            messageReadState = (TextView) (isPort ? itemView.findViewById(R.id.messageTextReadState) : itemView.findViewById(R.id.messageTextReadStateLand));
+            avatar = itemView.findViewById(R.id.messageTextAvatar);
+            container = (RelativeLayout) itemView.findViewById(R.id.messageTextContainer);
+            messageText = itemView.findViewById(R.id.messageText);
+            messageTextTime = itemView.findViewById(R.id.messageTextTime);
+            messageReadState = itemView.findViewById(R.id.messageTextReadState);
 
             container.setOnClickListener(v -> chatCallbacks.createFragmentDialogMessageType(items.get(position), items.get(position).getFrom_id() == myselfId));
         }
@@ -372,12 +371,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         MessageImageViewHolder(final View itemView) {
             super(itemView);
 
-            final boolean isPort = context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE;
-            avatar = (RoundedImageView) (isPort ? itemView.findViewById(R.id.messageImageAvatar) : itemView.findViewById(R.id.messageImageAvatarLand));
-            container = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageImageContainer) : itemView.findViewById(R.id.messageImageContainerLand));
-            messageReadState = (TextView) (isPort ? itemView.findViewById(R.id.messageImageReadState) : itemView.findViewById(R.id.messageImageReadStateLand));
-            messageImageText = (TextView) (isPort ? itemView.findViewById(R.id.messageImageText) : itemView.findViewById(R.id.messageImageTextLand));
-            messageImage = (GridLayout) (isPort ? itemView.findViewById(R.id.messageImage) : itemView.findViewById(R.id.messageImageLand));
+            avatar = itemView.findViewById(R.id.messageImageAvatar);
+            container = (RelativeLayout) itemView.findViewById(R.id.messageImageContainer);
+            messageReadState = itemView.findViewById(R.id.messageImageReadState);
+            messageImageText = itemView.findViewById(R.id.messageImageText);
+            messageImage = itemView.findViewById(R.id.messageImage);
         }
     }
 
@@ -389,12 +387,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         MessageStickerViewHolder(final View itemView) {
             super(itemView);
 
-            final boolean isPort = context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE;
-            avatar = (RoundedImageView) (isPort ? itemView.findViewById(R.id.messageStickerAvatar) : itemView.findViewById(R.id.messageStickerAvatarLand));
-            container = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageStickerContainer) : itemView.findViewById(R.id.messageStickerContainerLand));
-            messageSticker = (ImageView) (isPort ? itemView.findViewById(R.id.messageSticker) : itemView.findViewById(R.id.messageStickerLand));
-            messageStickerTime = (TextView) (isPort ? itemView.findViewById(R.id.messageStickerTime) : itemView.findViewById(R.id.messageStickerTimeLand));
-            messageReadState = (TextView) (isPort ? itemView.findViewById(R.id.messageStickerReadState) : itemView.findViewById(R.id.messageStickerReadStateLand));
+            avatar = itemView.findViewById(R.id.messageStickerAvatar);
+            container = (RelativeLayout) itemView.findViewById(R.id.messageStickerContainer);
+            messageSticker = itemView.findViewById(R.id.messageSticker);
+            messageStickerTime = itemView.findViewById(R.id.messageStickerTime);
+            messageReadState = itemView.findViewById(R.id.messageStickerReadState);
         }
     }
 
