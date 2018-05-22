@@ -10,10 +10,6 @@
         android:id="@+id/messageTextAvatar"
         layout="@layout/chat_avatar"/>
 
-    <include
-        android:id="@+id/messageTextReadState"
-        layout="@layout/chat_read_state"/>
-
     <RelativeLayout
         android:id="@+id/messageTextContainer"
         android:layout_width="wrap_content"
@@ -38,4 +34,8 @@
             android:layout_below="@id/messageText"
             android:layout_toEndOf="@id/messageText"/>
     </RelativeLayout>
+
+    <include
+        android:id="@+id/messageTextReadState"
+        layout="@layout/chat_read_state"/>
 </RelativeLayout>

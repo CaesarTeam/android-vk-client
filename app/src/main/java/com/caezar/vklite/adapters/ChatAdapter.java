@@ -221,24 +221,17 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 break;
             case IMAGE_MESSAGE:
                 MessageImageViewHolder messageImageViewHolder = ((MessageImageViewHolder) holder);
-                System.out.println("text " + item.getBody());
                 messageImageViewHolder.messageImageText.setText(item.getBody());
 
                 messageImageViewHolder.messageImage.removeAllViews();
-                for (int i = 0; i < item.getAttachments().length; i++) {
-                    Attachments attachment = item.getAttachments()[i];
-
+                for (Attachments attachment : item.getAttachments()) {
                     View messageImageView = LayoutInflater.from(context).inflate(R.layout.chat_image_item, messageImageViewHolder.messageImage, false);
-
                     RoundedImageView messageImage = messageImageView.findViewById(R.id.messageImage);
                     TextView messageImageTime = messageImageView.findViewById(R.id.messageImageTime);
-
                     asyncImageLoad(getMessageImageUrl(attachment.getPhoto()), messageImage);
+                    messageImage.setOnClickListener((View v) -> chatCallbacks.createFragmentFullSizeImageMessage(getMessageImageMax(attachment.getPhoto())));
                     messageImageTime.setText(time);
                     messageImageTime.bringToFront();
-
-                    messageImage.setOnClickListener((View v) -> chatCallbacks.createFragmentFullSizeImageMessage(getMessageImageMax(attachment.getPhoto())));
-
                     messageImageViewHolder.messageImage.addView(messageImageView);
                 }
 
@@ -368,9 +361,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             messageTextTime = (TextView) (isPort ? itemView.findViewById(R.id.messageTextTime) : itemView.findViewById(R.id.messageTextTimeLand));
             messageReadState = (TextView) (isPort ? itemView.findViewById(R.id.messageTextReadState) : itemView.findViewById(R.id.messageTextReadStateLand));
 
-            container.setOnClickListener(v -> {
-                chatCallbacks.createFragmentDialogMessageType(items.get(position), items.get(position).getFrom_id() == myselfId);
-            });
+            container.setOnClickListener(v -> chatCallbacks.createFragmentDialogMessageType(items.get(position), items.get(position).getFrom_id() == myselfId));
         }
     }
 
@@ -405,7 +396,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             messageSticker = (ImageView) (isPort ? itemView.findViewById(R.id.messageSticker) : itemView.findViewById(R.id.messageStickerLand));
             messageStickerTime = (TextView) (isPort ? itemView.findViewById(R.id.messageStickerTime) : itemView.findViewById(R.id.messageStickerTimeLand));
             messageReadState = (TextView) (isPort ? itemView.findViewById(R.id.messageStickerReadState) : itemView.findViewById(R.id.messageStickerReadStateLand));
-
         }
     }
 
