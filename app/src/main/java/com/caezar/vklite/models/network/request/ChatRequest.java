@@ -67,7 +67,7 @@ public class ChatRequest {
 
 
         if (start_message_id != 0) {
-            query.append("&start_message_id=" + start_message_id);
+            query.append("&start_message_id=").append(start_message_id);
         }
 
         return query.toString();

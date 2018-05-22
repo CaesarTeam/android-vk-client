@@ -49,7 +49,7 @@ public final class DialogManager {
         private final GetDialogs listenerCallback;
         private final Context context;
 
-        public OnGetDialogsComplete(GetDialogs listenerCallback, Context context) {
+        OnGetDialogsComplete(GetDialogs listenerCallback, Context context) {
             this.listenerCallback = listenerCallback;
             this.context = context;
         }

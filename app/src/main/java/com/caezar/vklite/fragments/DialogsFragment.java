@@ -57,7 +57,7 @@ public class DialogsFragment extends Fragment {
     private boolean requestDialogsFinish = true;
     private boolean refresh = true;
 
-    private BroadcastReceiver closeChatReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver closeChatReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             int peerId = intent.getIntExtra(PEER_ID, 0);
@@ -173,13 +173,13 @@ public class DialogsFragment extends Fragment {
             }
         }
 
-        public GetDialogs() {
+        GetDialogs() {
         }
 
     }
 
     private class GetUsers implements UserManager.GetUsers {
-        List<DialogItem> dialogs;
+        final List<DialogItem> dialogs;
 
         @Override
         public void callback(User[] users) {
@@ -187,13 +187,13 @@ public class DialogsFragment extends Fragment {
             setDialogsFromListener(dialogs);
         }
 
-        public GetUsers(List<DialogItem> dialogs) {
+        GetUsers(List<DialogItem> dialogs) {
             this.dialogs = dialogs;
         }
     }
 
     public class DialogsCallbacks implements FragmentCallbacks {
-        public DialogsCallbacks() {
+        DialogsCallbacks() {
 
         }
 

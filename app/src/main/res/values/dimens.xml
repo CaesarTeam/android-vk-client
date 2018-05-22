@@ -8,7 +8,7 @@
     <dimen name="dialog_message_margin_top">8dp</dimen>
     <dimen name="dialog_from_avatar_margin_left">16dp</dimen>
     <dimen name="dialog_message_width">224dp</dimen>
-    <dimen name="dialog_unread_size">20dp</dimen>
+    <dimen name="dialog_unread_size">24dp</dimen>
     <dimen name="dialog_read_state_size">8dp</dimen>
 
     <dimen name="chat_margin_between">8dp</dimen>

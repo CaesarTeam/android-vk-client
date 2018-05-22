@@ -22,6 +22,7 @@ import static com.caezar.vklite.helpers.DialogsHelper.getPeerId;
  * Created by seva on 01.05.18 in 14:05.
  */
 
+@SuppressWarnings("Guava")
 public class Guava {
     public static int findIndexMessage(List<Message> messages, int messageId) {
         return Iterables.indexOf(messages, message -> message.getId() == messageId);

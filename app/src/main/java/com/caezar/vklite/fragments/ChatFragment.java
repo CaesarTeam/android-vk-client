@@ -1,16 +1,12 @@
 package com.caezar.vklite.fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -32,17 +28,14 @@ import com.caezar.vklite.managers.UserManager;
 import com.caezar.vklite.adapters.ChatAdapter;
 import com.caezar.vklite.Config;
 import com.caezar.vklite.instanceState.ChatInstanceState;
-import com.caezar.vklite.instanceState.DialogsInstanceState;
 import com.caezar.vklite.models.network.MessageAction;
 import com.caezar.vklite.models.network.User;
-import com.caezar.vklite.models.network.request.ChatRequest;
 import com.caezar.vklite.models.network.DialogMessage;
 
 import java.util.List;
 
 import static android.widget.LinearLayout.VERTICAL;
 import static com.caezar.vklite.Config.countItemsToRequestChat;
-import static com.caezar.vklite.MainActivity.DIALOG_FRAGMENT_TAG;
 import static com.caezar.vklite.fragments.DialogsFragment.BROADCAST_CLOSE_CHAT;
 import static com.caezar.vklite.fragments.DialogsFragment.CHAT_FRAGMENT_TAG;
 import static com.caezar.vklite.fragments.DialogsFragment.PEER_ID;
@@ -70,8 +63,8 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
     private ChatAdapter adapter;
     private EditText editText;
     private ProgressBar progressBar;
-    Button sendMessage;
-    Button submitEditMessage;
+    private Button sendMessage;
+    private Button submitEditMessage;
 
     private int peer_id;
     private boolean isPrivateDialog;
@@ -259,7 +252,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             setChatSize(size);
         }
 
-        public GetMessages() {
+        GetMessages() {
         }
     }
 
@@ -269,7 +262,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             ChatManager.getInstance().getChat(0, peer_id, 1, new GetLastMessage(), getContext());
         }
 
-        public MessageSent() {
+        MessageSent() {
         }
     }
 
@@ -279,7 +272,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             addMessageToAdapterEnd(message);
         }
 
-        public GetLastMessage() {
+        GetLastMessage() {
         }
     }
 
@@ -289,7 +282,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             ChatManager.getInstance().getMessage(peer_id, messageId, new GetMessageById(), getContext());
         }
 
-        public MessageEdited() {
+        MessageEdited() {
         }
     }
 
@@ -299,7 +292,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             deleteMessage(messageId);
         }
 
-        public MessageDeleted() {
+        MessageDeleted() {
         }
     }
 
@@ -309,7 +302,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             changeMessage(message);
         }
 
-        public GetMessageById() {
+        GetMessageById() {
         }
     }
 
@@ -319,7 +312,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             UserManager.getInstance().getUsers(userIds, new GetUsers(), getContext());
         }
 
-        public GetUserIds() {
+        GetUserIds() {
         }
     }
 
@@ -335,13 +328,13 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             setAvatarsToAdapter(photoUsers);
         }
 
-        public GetUsers() {
+        GetUsers() {
 
         }
     }
 
     public class ChatCallbacks implements FragmentCallbacks {
-        public ChatCallbacks() {
+        ChatCallbacks() {
 
         }
 
@@ -378,10 +371,10 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         }
     }
 
-    public class EditMessageListener implements View.OnClickListener {
+    class EditMessageListener implements View.OnClickListener {
         int messageId;
 
-        public EditMessageListener() {
+        EditMessageListener() {
         }
 
         @Override
@@ -394,7 +387,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         }
 
 
-        public void setMessageId(int messageId) {
+        void setMessageId(int messageId) {
             this.messageId = messageId;
         }
     }

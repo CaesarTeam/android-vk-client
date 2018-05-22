@@ -7,7 +7,6 @@ import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.SparseArray;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,6 @@ import com.caezar.vklite.libs.Time;
 import com.caezar.vklite.Config;
 import com.caezar.vklite.models.network.Attachments;
 import com.caezar.vklite.models.network.DialogMessage;
-import com.caezar.vklite.models.network.Photo;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
@@ -191,7 +189,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        position = holder.getAdapterPosition();
         DialogMessage item = items.get(position);
         final int userIdFrom = item.getFrom_id();
         boolean isReadState = item.isRead_state();
@@ -367,8 +366,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     class MessageImageViewHolder extends ChatViewHolder {
 
-        TextView messageImageText;
-        GridLayout messageImage;
+        final TextView messageImageText;
+        final GridLayout messageImage;
 
         MessageImageViewHolder(final View itemView) {
             super(itemView);
@@ -425,7 +424,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         ViewGroup container;
         TextView messageReadState;
 
-        public ChatViewHolder(View itemView) {
+        ChatViewHolder(View itemView) {
             super(itemView);
         }
     }

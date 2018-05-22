@@ -21,8 +21,8 @@ public class UrlBuilder {
         return constructGetUrl(Method.MESSAGES_GET_DIALOGS, dialogs.toString());
     }
 
-    public static String constructGetUsersInfo(UsersByIdRequest usersByid) {
-        return constructGetUrl(Method.USERS_GET, usersByid.toString());
+    public static String constructGetUsersInfo(UsersByIdRequest usersById) {
+        return constructGetUrl(Method.USERS_GET, usersById.toString());
     }
 
     public static String constructGetChat(ChatRequest chatRequest) {
@@ -73,7 +73,7 @@ public class UrlBuilder {
             this.method = method;
         }
 
-        public String getMethod() {
+        String getMethod() {
             return method;
         }
     }

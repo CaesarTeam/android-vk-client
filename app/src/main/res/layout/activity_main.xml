@@ -34,6 +34,7 @@
                 android:layout_width="@dimen/toolbar_back_button_size"
                 android:layout_height="@dimen/toolbar_back_button_size"
                 android:alpha="0.7"
+                tools:ignore="ContentDescription"
                 android:src="@drawable/back_button"/>
         </android.support.v7.widget.Toolbar>
 

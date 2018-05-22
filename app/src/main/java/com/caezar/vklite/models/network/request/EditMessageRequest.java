@@ -5,15 +5,11 @@ package com.caezar.vklite.models.network.request;
  */
 
 public class EditMessageRequest {
-    int peer_id;
-    String message;
-    int message_id;
+    private int peer_id;
+    private String message;
+    private int message_id;
 
     public EditMessageRequest() {
-    }
-
-    public int getPeer_id() {
-        return peer_id;
     }
 
     public void setPeer_id(int peer_id) {
@@ -26,10 +22,6 @@ public class EditMessageRequest {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public int getMessage_id() {
-        return message_id;
     }
 
     public void setMessage_id(int message_id) {

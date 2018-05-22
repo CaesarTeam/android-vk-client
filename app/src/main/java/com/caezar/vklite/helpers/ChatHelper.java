@@ -12,7 +12,6 @@ import com.caezar.vklite.models.network.DialogMessage;
 import com.caezar.vklite.models.network.Photo;
 import com.makeramen.roundedimageview.RoundedImageView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;

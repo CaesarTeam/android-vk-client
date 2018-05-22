@@ -108,7 +108,7 @@ public class ChatManager {
         private final Listener listenerCallback;
         private final Context context;
 
-        public OnGetMessagesChatComplete(Listener listenerCallback, Context context) {
+        OnGetMessagesChatComplete(Listener listenerCallback, Context context) {
             this.listenerCallback = listenerCallback;
             this.context = context;
         }
@@ -150,7 +150,7 @@ public class ChatManager {
         private final MessageAction messageAction;
         private int messageId;
 
-        public OnMessageActionComplete(MessageAction messageAction, MessageActionDone listenerCallback, Context context) {
+        OnMessageActionComplete(MessageAction messageAction, MessageActionDone listenerCallback, Context context) {
             this.messageAction = messageAction;
             this.listenerCallback = listenerCallback;
             this.context = context;
@@ -167,7 +167,7 @@ public class ChatManager {
 
         @Override
         public void onResponse(final String body) {
-            //todo: do parcing error if parse make toast else everything is all right
+            //todo: do parsing error if parse make toast else everything is all right
 //            MessageActionResponse messageActionResponse = parseBody(MessageActionResponse.class, body);
 //
 //            if (messageActionResponse.getResponse() == 0) {
@@ -186,7 +186,7 @@ public class ChatManager {
             }
         }
 
-        public void setMessageId(int messageId) {
+        void setMessageId(int messageId) {
             this.messageId = messageId;
         }
     }

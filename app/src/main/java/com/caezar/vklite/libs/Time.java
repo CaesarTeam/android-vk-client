@@ -28,7 +28,7 @@ public class Time {
             this.format = format;
         }
 
-        public String getFormat() {
+        String getFormat() {
             return format;
         }
     }

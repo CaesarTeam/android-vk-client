@@ -63,7 +63,7 @@ public class Db {
     public static class DbGetDialogs implements DbManager.DbListener {
         @NonNull private final DialogManager.GetDialogs listener;
 
-        public DbGetDialogs(DialogManager.GetDialogs listener) {
+        DbGetDialogs(DialogManager.GetDialogs listener) {
             this.listener = listener;
         }
 

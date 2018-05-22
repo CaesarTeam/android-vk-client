@@ -55,9 +55,9 @@ public class UserManager {
 
     private class OnGetUsersComplete implements NetworkManager.OnRequestCompleteListener {
         private final GetUsers listenerCallback;
-        private Context context;
+        private final Context context;
 
-        public OnGetUsersComplete(GetUsers listenerCallback, Context context) {
+        OnGetUsersComplete(GetUsers listenerCallback, Context context) {
             this.listenerCallback = listenerCallback;
             this.context = context;
         }
@@ -86,9 +86,9 @@ public class UserManager {
 
     private class OnGetUsersIdComplete implements NetworkManager.OnRequestCompleteListener {
         private final GetUserIds listenerCallback;
-        private Context context;
+        private final Context context;
 
-        public OnGetUsersIdComplete(GetUserIds listenerCallback, Context context) {
+        OnGetUsersIdComplete(GetUserIds listenerCallback, Context context) {
             this.listenerCallback = listenerCallback;
             this.context = context;
         }

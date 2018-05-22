@@ -3,8 +3,6 @@ package com.caezar.vklite;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,7 +20,6 @@ import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
 
-import static com.caezar.vklite.fragments.DialogsFragment.CHAT_FRAGMENT_TAG;
 import static com.caezar.vklite.helpers.ErrorHelper.createErrorInternetToast;
 import static com.caezar.vklite.helpers.ErrorHelper.makeToastError;
 import static com.caezar.vklite.libs.Jackson.parseBody;
@@ -121,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
     private class OnLogInComplete implements NetworkManager.OnRequestCompleteListener {
         private final String token;
 
-        public OnLogInComplete(String token) {
+        OnLogInComplete(String token) {
             this.token = token;
         }
 

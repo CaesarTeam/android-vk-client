@@ -31,7 +31,7 @@ public class BaseModel {
         return type;
     }
 
-    public void setType(Type type) {
+    void setType(Type type) {
         this.type = type;
     }
 }

@@ -6,6 +6,7 @@
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:name=".Application"
@@ -23,8 +24,6 @@
             android:name="com.vk.sdk.VKServiceActivity"
             android:label="ServiceActivity"
             android:theme="@style/VK.Transparent" />
-        <activity android:name=".fragments.DialogsFragment" />
-        <activity android:name=".fragments.ChatFragment" />
     </application>
 
 </manifest>

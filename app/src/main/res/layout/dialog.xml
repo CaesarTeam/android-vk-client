@@ -64,7 +64,9 @@
             android:layout_height="@dimen/dialog_unread_size"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:textAlignment="center"
+            android:textAlignment="gravity"
+            android:gravity="center"
+            android:singleLine="true"
             android:textColor="@color/colorDialogUnreadCount"
             android:background="@drawable/circle_read_state"/>
 
@@ -74,6 +76,7 @@
             android:layout_height="@dimen/dialog_read_state_size"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:visibility="gone"
             android:background="@drawable/circle_read_state"/>
         </RelativeLayout>
     </RelativeLayout>

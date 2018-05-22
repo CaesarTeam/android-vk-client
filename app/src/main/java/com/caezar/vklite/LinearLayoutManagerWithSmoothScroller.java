@@ -1,7 +1,6 @@
 package com.caezar.vklite;
 
 import android.content.Context;
-import android.graphics.PointF;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
@@ -20,11 +19,6 @@ public class LinearLayoutManagerWithSmoothScroller extends LinearLayoutManager {
     public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
         RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(recyclerView.getContext()) {
             private final float MILLISECONDS_PER_INCH = 50f; //default is 25f (bigger => slower)
-
-            @Override
-            public PointF computeScrollVectorForPosition(int targetPosition) {
-                return super.computeScrollVectorForPosition(targetPosition);
-            }
 
             @Override
             protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
