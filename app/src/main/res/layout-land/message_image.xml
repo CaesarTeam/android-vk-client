@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginLeft="@dimen/chat_message_margin_left_right"
     android:layout_marginRight="@dimen/chat_message_margin_left_right"
     android:layout_marginBottom="@dimen/chat_margin_between"
@@ -18,29 +17,25 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/chat_from_avatar_margin_left_right"
         android:layout_marginRight="@dimen/chat_from_avatar_margin_left_right"
-        android:layout_toEndOf="@id/messageImageAvatarLand"
-        xmlns:android="http://schemas.android.com/apk/res/android">
-
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/messageImageLand"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxWidth="@dimen/chat_image_size_land"
-            android:maxHeight="@dimen/chat_image_size_land"
-            app:riv_border_width="@dimen/chat_image_border_width"
-            app:riv_corner_radius="@dimen/chat_image_border_radius"
-            app:riv_border_color="@color/colorPrimary"
-            tools:ignore="ContentDescription"/>
+        android:layout_toEndOf="@id/messageImageAvatarLand">
 
         <TextView
-            android:id="@+id/messageImageTimeLand"
+            android:id="@+id/messageImageTextLand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/messageImageLand"
-            android:layout_alignEnd="@+id/messageImageLand"
-            android:layout_marginEnd="@dimen/chat_time_margin_right"
-            android:layout_marginBottom="@dimen/chat_time_margin_bottom"
-            android:background="@color/colorMessageImageTime"/>
+            android:maxWidth="@dimen/chat_message_max_width"
+            android:padding="@dimen/chat_message_text_padding"/>
+
+        <android.support.v7.widget.GridLayout
+            android:id="@+id/messageImageLand"
+            android:layout_width="@dimen/chat_image_size_land"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/chat_message_image_left_right"
+            android:layout_marginRight="@dimen/chat_message_image_left_right"
+            grid:orientation="vertical"
+            android:layout_below="@+id/messageImageTextLand"
+            xmlns:grid="http://schemas.android.com/apk/res-auto"/>
+
     </RelativeLayout>
 
     <include

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.caezar.vklite.ChooseMessageTypeListener;
+import com.caezar.vklite.MainActivity;
 import com.caezar.vklite.R;
 import com.caezar.vklite.models.network.DialogMessage;
 import com.caezar.vklite.models.network.MessageAction;
@@ -28,6 +29,7 @@ public class MessageActionDialog extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((MainActivity)getActivity()).setOnBackPressedListener(null);
         return inflater.inflate(R.layout.fragment_dialog_message_action, container, false);
     }
 

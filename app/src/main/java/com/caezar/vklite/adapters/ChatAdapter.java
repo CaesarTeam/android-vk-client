@@ -221,6 +221,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 break;
             case IMAGE_MESSAGE:
                 MessageImageViewHolder messageImageViewHolder = ((MessageImageViewHolder) holder);
+                System.out.println("text " + item.getBody());
                 messageImageViewHolder.messageImageText.setText(item.getBody());
 
                 messageImageViewHolder.messageImage.removeAllViews();
@@ -383,10 +384,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             final boolean isPort = context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE;
             avatar = (RoundedImageView) (isPort ? itemView.findViewById(R.id.messageImageAvatar) : itemView.findViewById(R.id.messageImageAvatarLand));
-            container = itemView.findViewById(R.id.messageImageContainer);
+            container = (RelativeLayout) (isPort ? itemView.findViewById(R.id.messageImageContainer) : itemView.findViewById(R.id.messageImageContainerLand));
             messageReadState = (TextView) (isPort ? itemView.findViewById(R.id.messageImageReadState) : itemView.findViewById(R.id.messageImageReadStateLand));
-            messageImageText = itemView.findViewById(R.id.messageImageText);
-            messageImage = itemView.findViewById(R.id.messageImage);
+            messageImageText = (TextView) (isPort ? itemView.findViewById(R.id.messageImageText) : itemView.findViewById(R.id.messageImageTextLand));
+            messageImage = (GridLayout) (isPort ? itemView.findViewById(R.id.messageImage) : itemView.findViewById(R.id.messageImageLand));
         }
     }
 

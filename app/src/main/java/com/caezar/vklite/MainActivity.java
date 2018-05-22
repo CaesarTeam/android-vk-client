@@ -3,6 +3,8 @@ package com.caezar.vklite;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
 
+import static com.caezar.vklite.fragments.DialogsFragment.CHAT_FRAGMENT_TAG;
 import static com.caezar.vklite.helpers.ErrorHelper.createErrorInternetToast;
 import static com.caezar.vklite.helpers.ErrorHelper.makeToastError;
 import static com.caezar.vklite.libs.Jackson.parseBody;
@@ -37,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         if (onBackPressedListener != null) {
             onBackPressedListener.doBack();
         }
-
         super.onBackPressed();
     }
 
@@ -68,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setOnBackPressedListener(OnBackPressedListener onBackPressedListener) {
+    public void setOnBackPressedListener(@Nullable OnBackPressedListener onBackPressedListener) {
         this.onBackPressedListener = onBackPressedListener;
     }
 
@@ -87,14 +89,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openDialogs() {
-        DialogsInstanceState.getInstance().reset();
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        DialogsFragment dialogsFragment = new DialogsFragment();
-        transaction.replace(R.id.mainContainer, dialogsFragment, DIALOG_FRAGMENT_TAG);
-
-        transaction.commit();
+        if (getSupportFragmentManager().findFragmentByTag(DIALOG_FRAGMENT_TAG) == null) {
+            DialogsInstanceState.getInstance().reset();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.add(R.id.mainContainer, new DialogsFragment(), DIALOG_FRAGMENT_TAG);
+            transaction.commit();
+        }
     }
 
     @Override

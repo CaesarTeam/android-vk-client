@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.caezar.vklite.Config;
+import com.caezar.vklite.MainActivity;
 import com.caezar.vklite.managers.DialogManager;
 import com.caezar.vklite.FragmentCallbacks;
 import com.caezar.vklite.R;
@@ -69,6 +70,7 @@ public class DialogsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((MainActivity)getActivity()).setOnBackPressedListener(null);
         return inflater.inflate(R.layout.fragment_dialogs, container, false);
     }
 
@@ -197,6 +199,8 @@ public class DialogsFragment extends Fragment {
 
         public void openChat(int peer_id, String title) {
             ChatInstanceState.getInstance().reset();
+            DialogsInstanceState.getInstance().reset();
+
             Bundle bundle = new Bundle();
             bundle.putString(TITLE, title);
             bundle.putInt(PEER_ID, peer_id);

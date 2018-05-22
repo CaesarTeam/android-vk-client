@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.caezar.vklite.MainActivity;
 import com.caezar.vklite.R;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
@@ -34,7 +35,7 @@ public class ImageMessageFullScreenFragment extends Fragment {
         if (getArguments() != null) {
             urlPhoto = getArguments().getString(PHOTO_URL);
         }
-
+        ((MainActivity)getActivity()).setOnBackPressedListener(null);
         return inflater.inflate(R.layout.fragment_full_image, container, false);
     }
 

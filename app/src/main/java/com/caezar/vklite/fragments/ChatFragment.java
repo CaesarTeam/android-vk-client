@@ -42,6 +42,7 @@ import java.util.List;
 
 import static android.widget.LinearLayout.VERTICAL;
 import static com.caezar.vklite.Config.countItemsToRequestChat;
+import static com.caezar.vklite.MainActivity.DIALOG_FRAGMENT_TAG;
 import static com.caezar.vklite.fragments.DialogsFragment.BROADCAST_CLOSE_CHAT;
 import static com.caezar.vklite.fragments.DialogsFragment.CHAT_FRAGMENT_TAG;
 import static com.caezar.vklite.fragments.DialogsFragment.PEER_ID;
@@ -80,8 +81,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        DialogsInstanceState.getInstance().reset();
-
+        super.onCreate(savedInstanceState);
         ((MainActivity)getActivity()).setOnBackPressedListener(new ChatOnBackPressedListener());
         return inflater.inflate(R.layout.fragment_chat, container, false);
     }
