@@ -22,6 +22,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.caezar.vklite.LinearLayoutManagerWithSmoothScroller;
+import com.caezar.vklite.MainActivity;
+import com.caezar.vklite.OnBackPressedListener;
 import com.caezar.vklite.managers.ChatManager;
 import com.caezar.vklite.ChooseMessageTypeListener;
 import com.caezar.vklite.FragmentCallbacks;
@@ -79,6 +81,8 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         DialogsInstanceState.getInstance().reset();
+
+        ((MainActivity)getActivity()).setOnBackPressedListener(new ChatOnBackPressedListener());
         return inflater.inflate(R.layout.fragment_chat, container, false);
     }
 
@@ -151,12 +155,6 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
 
         if (adapter.getPhotoUsersSize() != 0) {
             ChatInstanceState.getInstance().setPhotoUsers(adapter.getPhotoUsers());
-        }
-
-        Intent intent = new Intent(BROADCAST_CLOSE_CHAT);
-        intent.putExtra(PEER_ID, peer_id);
-        if (getContext() != null) {
-            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
         }
     }
 
@@ -237,6 +235,17 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         editText.requestFocus();
         editText.setSelection(editText.getText().length());
         editMessageListener.setMessageId(messageId);
+    }
+
+    private class ChatOnBackPressedListener implements OnBackPressedListener {
+        @Override
+        public void doBack() {
+            Intent intent = new Intent(BROADCAST_CLOSE_CHAT);
+            intent.putExtra(PEER_ID, peer_id);
+            if (getContext() != null) {
+                LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+            }
+        }
     }
 
     private class GetMessages implements ChatManager.GetMessages {

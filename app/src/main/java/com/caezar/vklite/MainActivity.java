@@ -2,6 +2,7 @@ package com.caezar.vklite;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,7 +30,17 @@ public class MainActivity extends AppCompatActivity {
     private static final String MYSELF_ID = "myselfId";
     public static final String DIALOG_FRAGMENT_TAG = "dialogFragmentTag";
 
-    private final int WRONG_ID = -1;
+    @Nullable private OnBackPressedListener onBackPressedListener = null;
+
+    @Override
+    public void onBackPressed() {
+        if (onBackPressedListener != null) {
+            onBackPressedListener.doBack();
+        }
+
+        super.onBackPressed();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         final String token = settings.getString(TOKEN, null);
-        final int myselfId = settings.getInt(MYSELF_ID, WRONG_ID);
+        final int myselfId = settings.getInt(MYSELF_ID, -1);
 
         if (!checkAuth(token, myselfId)) {
             logIn();
@@ -57,8 +68,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void setOnBackPressedListener(OnBackPressedListener onBackPressedListener) {
+        this.onBackPressedListener = onBackPressedListener;
+    }
+
     private boolean checkAuth(String token, int myselfId) {
-        return !(token == null || myselfId == WRONG_ID);
+        return !(token == null || myselfId == -1);
     }
 
     private void logIn() {
