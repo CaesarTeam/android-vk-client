@@ -1,7 +1,6 @@
 package com.caezar.vklite.adapters;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.RecyclerView;
@@ -227,10 +226,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     View messageImageView = LayoutInflater.from(context).inflate(R.layout.chat_image_item, messageImageViewHolder.messageImage, false);
                     RoundedImageView messageImage = messageImageView.findViewById(R.id.messageImage);
                     TextView messageImageTime = messageImageView.findViewById(R.id.messageImageTime);
+
                     asyncImageLoad(getMessageImageUrl(attachment.getPhoto()), messageImage);
                     messageImage.setOnClickListener((View v) -> chatCallbacks.createFragmentFullSizeImageMessage(getMessageImageMax(attachment.getPhoto())));
                     messageImageTime.setText(time);
                     messageImageTime.bringToFront();
+
                     messageImageViewHolder.messageImage.addView(messageImageView);
                 }
 
@@ -259,16 +260,35 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 break;
             case DOC_MESSAGE:
                 MessageDocViewHolder messageDocViewHolder = ((MessageDocViewHolder) holder);
-                messageDocViewHolder.messageDocName.setText(item.getAttachments()[0].getDoc().getTitle());
-                messageDocViewHolder.messageDocSize.setText(getDocSize(item.getAttachments()[0].getDoc().getSize(), context));
-                messageDocViewHolder.messageDocTime.setText(time);
-                messageDocViewHolder.messageDocTime.bringToFront();
-                messageDocViewHolder.messageDocDownload.setOnClickListener((View v) -> chatCallbacks.downloadDocument(item.getAttachments()[0].getDoc().getUrl()));
-                // todo GRID few documents
+                messageDocViewHolder.messageDocText.setText(item.getBody());
+
+                messageDocViewHolder.messageDoc.removeAllViews();
+                for (Attachments attachment : item.getAttachments()) {
+                    View messageDocView = LayoutInflater.from(context).inflate(R.layout.chat_document_item, messageDocViewHolder.messageDoc, false);
+                    RoundedImageView messageDocDownload = messageDocView.findViewById(R.id.messageDocDownload);
+                    TextView messageDocName = messageDocView.findViewById(R.id.messageDocName);
+                    TextView messageDocSize = messageDocView.findViewById(R.id.messageDocSize);
+                    TextView messageDocTime = messageDocView.findViewById(R.id.messageDocTime);
+
+                    messageDocDownload.setOnClickListener((View v) -> chatCallbacks.downloadDocument(attachment.getDoc().getUrl()));
+                    messageDocName.setText(attachment.getDoc().getTitle());
+                    messageDocSize.setText(getDocSize(attachment.getDoc().getSize(), context));
+                    messageDocTime.setText(time);
+                    messageDocTime.bringToFront();
+
+                    messageDocViewHolder.messageDoc.addView(messageDocView);
+                }
+                
                 if (side) {
                     messageDocViewHolder.container.setBackgroundResource(R.drawable.message_text_from_me_container);
                 } else {
                     messageDocViewHolder.container.setBackgroundResource(R.drawable.message_text_to_me_container);
+                }
+
+                if (TextUtils.isEmpty(item.getBody())) {
+                    messageDocViewHolder.messageDocText.setVisibility(View.GONE);
+                } else {
+                    messageDocViewHolder.messageDocText.setVisibility(View.VISIBLE);
                 }
 
                 break;
@@ -398,22 +418,17 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     class MessageDocViewHolder extends ChatViewHolder {
 
-        final RoundedImageView messageDocDownload;
-        final TextView messageDocName;
-        final TextView messageDocSize;
-        final TextView messageDocTime;
+        final TextView messageDocText;
+        final GridLayout messageDoc;
 
         MessageDocViewHolder(final View itemView) {
             super(itemView);
 
             avatar = itemView.findViewById(R.id.messageDocAvatar);
-            container = itemView.findViewById(R.id.messageDocContainer);
-            messageDocDownload = itemView.findViewById(R.id.messageDocDownload);
-            messageDocName = itemView.findViewById(R.id.messageDocName);
-            messageDocSize = itemView.findViewById(R.id.messageDocSize);
-            messageDocTime = itemView.findViewById(R.id.messageDocTime);
+            container = (RelativeLayout) itemView.findViewById(R.id.messageDocContainer);
             messageReadState = itemView.findViewById(R.id.messageDocReadState);
-
+            messageDocText = itemView.findViewById(R.id.messageDocText);
+            messageDoc = itemView.findViewById(R.id.messageDoc);
         }
     }
 

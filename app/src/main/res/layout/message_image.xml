@@ -33,6 +33,8 @@
             android:layout_marginLeft="@dimen/chat_message_image_left_right"
             android:layout_marginRight="@dimen/chat_message_image_left_right"
             grid:orientation="vertical"
+            android:verticalSpacing="8dp"
+            android:clipChildren="true"
             android:layout_below="@+id/messageImageText"
             xmlns:grid="http://schemas.android.com/apk/res-auto"/>
 

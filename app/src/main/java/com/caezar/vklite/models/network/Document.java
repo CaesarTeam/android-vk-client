@@ -16,6 +16,7 @@ public class Document {
     private String ext;
     private String url;
     private String access_key;
+    private int date;
     // todo: use enum
     private int type;
 
@@ -43,6 +44,14 @@ public class Document {
         TypeDoc(int typeDoc) {
             this.typeDoc = typeDoc;
         }
+    }
+
+    public int getDate() {
+        return date;
+    }
+
+    public void setDate(int date) {
+        this.date = date;
     }
 
     public int getId() {

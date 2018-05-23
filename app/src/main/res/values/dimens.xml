@@ -26,6 +26,7 @@
     <dimen name="chat_message_max_width_land">400dp</dimen>
     <dimen name="chat_time_margin_bottom">8dp</dimen>
     <dimen name="chat_time_margin_right">8dp</dimen>
+    <dimen name="chat_doc_size">248dp</dimen>
     <dimen name="chat_doc_icon_margin_right">16dp</dimen>
     <dimen name="chat_message_text_margin_bottom">8dp</dimen>
     <dimen name="chat_message_text_padding">8dp</dimen>

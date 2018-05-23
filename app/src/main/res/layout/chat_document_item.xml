@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:maxWidth="@dimen/chat_message_max_width"
+    android:layout_marginLeft="@dimen/chat_from_avatar_margin_left_right"
+    android:layout_marginRight="@dimen/chat_from_avatar_margin_left_right"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/messageDocDownload"
+        android:layout_width="@dimen/chat_avatar_size"
+        android:layout_height="@dimen/chat_avatar_size"
+        app:riv_oval="true"
+        android:src="@drawable/icon_file"
+        android:layout_marginEnd="@dimen/chat_doc_icon_margin_right"
+        xmlns:app="http://schemas.android.com/apk/res-auto"/>
+
+    <TextView
+        android:id="@+id/messageDocName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/messageDocDownload"
+        android:layout_marginBottom="@dimen/chat_message_text_margin_bottom"/>
+
+    <TextView
+        android:id="@+id/messageDocSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/messageDocName"
+        android:layout_toEndOf="@id/messageDocDownload"/>
+
+    <TextView
+        android:id="@+id/messageDocTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/messageDocName"
+        android:layout_alignParentEnd="true"
+        android:singleLine="true"/>
+</RelativeLayout>

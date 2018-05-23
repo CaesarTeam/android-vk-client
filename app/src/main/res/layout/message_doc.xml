@@ -16,40 +16,25 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/chat_from_avatar_margin_left_right"
         android:layout_marginRight="@dimen/chat_from_avatar_margin_left_right"
-        android:padding="@dimen/chat_message_text_padding"
-        android:layout_toEndOf="@id/messageDocAvatar"
-        xmlns:android="http://schemas.android.com/apk/res/android">
-
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/messageDocDownload"
-            android:layout_width="@dimen/chat_avatar_size"
-            android:layout_height="@dimen/chat_avatar_size"
-            app:riv_oval="true"
-            android:src="@drawable/icon_file"
-            android:layout_marginEnd="@dimen/chat_doc_icon_margin_right"
-            xmlns:app="http://schemas.android.com/apk/res-auto"/>
+        android:layout_toEndOf="@id/messageDocAvatar">
 
         <TextView
-            android:id="@+id/messageDocName"
+            android:id="@+id/messageDocText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxWidth="@dimen/chat_message_max_width"
-            android:layout_toEndOf="@id/messageDocDownload"
-            android:layout_marginBottom="@dimen/chat_message_text_margin_bottom"/>
+            android:padding="@dimen/chat_message_text_padding"/>
 
-        <TextView
-            android:id="@+id/messageDocSize"
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.GridLayout
+            android:id="@+id/messageDoc"
+            android:layout_width="@dimen/chat_doc_size"
             android:layout_height="wrap_content"
-            android:layout_below="@id/messageDocName"
-            android:layout_toEndOf="@id/messageDocDownload"/>
+            android:layout_marginLeft="@dimen/chat_message_image_left_right"
+            android:layout_marginRight="@dimen/chat_message_image_left_right"
+            grid:orientation="vertical"
+            android:layout_below="@+id/messageDocText"
+            xmlns:grid="http://schemas.android.com/apk/res-auto"/>
 
-        <TextView
-            android:id="@+id/messageDocTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/messageDocName"
-            android:layout_toEndOf="@id/messageDocName"/>
     </RelativeLayout>
 
     <include
