@@ -270,7 +270,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     TextView messageDocSize = messageDocView.findViewById(R.id.messageDocSize);
                     TextView messageDocTime = messageDocView.findViewById(R.id.messageDocTime);
 
-                    messageDocDownload.setOnClickListener((View v) -> chatCallbacks.downloadDocument(attachment.getDoc().getUrl()));
+                    messageDocDownload.setOnClickListener((View v) -> chatCallbacks.downloadDocument(attachment.getDoc().getUrl(), attachment.getDoc().getTitle()));
                     messageDocName.setText(attachment.getDoc().getTitle());
                     messageDocSize.setText(getDocSize(attachment.getDoc().getSize(), context));
                     messageDocTime.setText(time);

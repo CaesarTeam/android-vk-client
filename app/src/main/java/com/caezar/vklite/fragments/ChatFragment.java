@@ -36,6 +36,13 @@ import com.caezar.vklite.instanceState.ChatInstanceState;
 import com.caezar.vklite.models.network.MessageAction;
 import com.caezar.vklite.models.network.User;
 import com.caezar.vklite.models.network.DialogMessage;
+import com.tonyodev.fetch2.Download;
+import com.tonyodev.fetch2.Error;
+import com.tonyodev.fetch2.Fetch;
+import com.tonyodev.fetch2.Func;
+import com.tonyodev.fetch2.NetworkType;
+import com.tonyodev.fetch2.Priority;
+import com.tonyodev.fetch2.Request;
 
 import java.io.File;
 import java.util.List;
@@ -55,6 +62,7 @@ import static com.caezar.vklite.libs.KeyBoard.hideKeyboard;
 import static com.caezar.vklite.libs.KeyBoard.showKeyboard;
 import static com.caezar.vklite.helpers.ToolbarHelper.setToolbarTitle;
 import static com.caezar.vklite.helpers.ToolbarHelper.showToolbarBack;
+import static com.caezar.vklite.managers.DownloadFilesManager.downloadFileFromUrl;
 
 /**
  * Created by seva on 03.04.18 in 15:40.
@@ -180,10 +188,6 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
     public boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
-    }
-
-    public void downloadFile(String url) {
-        // /storage/emulated/0/vkLite
     }
 
     private void getParticipantsChat(int chatId) {
@@ -401,18 +405,17 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             messageActionDialog.show(getActivity().getSupportFragmentManager(), MESSAGE_ACTION_FRAGMENT_TAG);
         }
 
-        public void downloadDocument(String url) {
+        public void downloadDocument(String url, String name) {
             final String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
             if (ContextCompat.checkSelfPermission(getContext(), permission) == PackageManager.PERMISSION_GRANTED) {
                 if (isExternalStorageWritable()) {
                     File externalDir = new File(Environment.getExternalStorageDirectory().toString());
                     File vkLiteFolder = new File(externalDir.getPath() + "/vkLite");
-                    System.out.println(vkLiteFolder.getAbsolutePath());
                     if (vkLiteFolder.exists() && vkLiteFolder.isDirectory()) {
-                        downloadFile(url);
+                        downloadFileFromUrl(url, vkLiteFolder.getPath() + "/" + name);
                     } else {
                         if (vkLiteFolder.mkdir()) {
-                            downloadFile(url);
+                            downloadFileFromUrl(url, vkLiteFolder.getPath() + name);
                         } else {
                             Log.d("dir", "not created");
                         }
