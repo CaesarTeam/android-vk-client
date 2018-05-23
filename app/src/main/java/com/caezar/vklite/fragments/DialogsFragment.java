@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -86,6 +87,8 @@ public class DialogsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeContainer);
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(getContext(), R.color.colorDialog));
         swipeRefreshLayout.setOnRefreshListener(() -> {
             if (refresh) {
                 refresh = false;
