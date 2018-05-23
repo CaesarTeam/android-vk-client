@@ -278,7 +278,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                     messageDocViewHolder.messageDoc.addView(messageDocView);
                 }
-                
+
                 if (side) {
                     messageDocViewHolder.container.setBackgroundResource(R.drawable.message_text_from_me_container);
                 } else {

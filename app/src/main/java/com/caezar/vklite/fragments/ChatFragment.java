@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +37,7 @@ import com.caezar.vklite.models.network.MessageAction;
 import com.caezar.vklite.models.network.User;
 import com.caezar.vklite.models.network.DialogMessage;
 
+import java.io.File;
 import java.util.List;
 
 import static android.widget.LinearLayout.VERTICAL;
@@ -163,7 +166,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
                 for (int i = 0; i < permissions.length; i++) {
                     if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permissions[i])
                             && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        System.out.println("good boy");
+                        // todo: call callback
                         break;
                     }
                 }
@@ -174,8 +177,13 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         }
     }
 
-    private void requestPermissions(final String[] permissions) {
-        requestPermissions(permissions, REQUEST_PERMISSIONS);
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
+    }
+
+    public void downloadFile(String url) {
+        // /storage/emulated/0/vkLite
     }
 
     private void getParticipantsChat(int chatId) {
@@ -396,9 +404,22 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         public void downloadDocument(String url) {
             final String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
             if (ContextCompat.checkSelfPermission(getContext(), permission) == PackageManager.PERMISSION_GRANTED) {
-                System.out.println("okay");
+                if (isExternalStorageWritable()) {
+                    File externalDir = new File(Environment.getExternalStorageDirectory().toString());
+                    File vkLiteFolder = new File(externalDir.getPath() + "/vkLite");
+                    System.out.println(vkLiteFolder.getAbsolutePath());
+                    if (vkLiteFolder.exists() && vkLiteFolder.isDirectory()) {
+                        downloadFile(url);
+                    } else {
+                        if (vkLiteFolder.mkdir()) {
+                            downloadFile(url);
+                        } else {
+                            Log.d("dir", "not created");
+                        }
+                    }
+                }
             } else {
-                requestPermissions(new String[]{permission});
+                requestPermissions(new String[]{permission}, REQUEST_PERMISSIONS);
             }
         }
 
