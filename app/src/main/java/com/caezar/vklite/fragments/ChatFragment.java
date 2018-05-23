@@ -36,19 +36,13 @@ import com.caezar.vklite.instanceState.ChatInstanceState;
 import com.caezar.vklite.models.network.MessageAction;
 import com.caezar.vklite.models.network.User;
 import com.caezar.vklite.models.network.DialogMessage;
-import com.tonyodev.fetch2.Download;
-import com.tonyodev.fetch2.Error;
-import com.tonyodev.fetch2.Fetch;
-import com.tonyodev.fetch2.Func;
-import com.tonyodev.fetch2.NetworkType;
-import com.tonyodev.fetch2.Priority;
-import com.tonyodev.fetch2.Request;
 
 import java.io.File;
 import java.util.List;
 
 import static android.widget.LinearLayout.VERTICAL;
 import static com.caezar.vklite.Config.countItemsToRequestChat;
+import static com.caezar.vklite.Config.getApplicationDownloadDir;
 import static com.caezar.vklite.fragments.DialogsFragment.BROADCAST_CLOSE_CHAT;
 import static com.caezar.vklite.fragments.DialogsFragment.CHAT_FRAGMENT_TAG;
 import static com.caezar.vklite.fragments.DialogsFragment.PEER_ID;
@@ -409,15 +403,14 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             final String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
             if (ContextCompat.checkSelfPermission(getContext(), permission) == PackageManager.PERMISSION_GRANTED) {
                 if (isExternalStorageWritable()) {
-                    File externalDir = new File(Environment.getExternalStorageDirectory().toString());
-                    File vkLiteFolder = new File(externalDir.getPath() + "/vkLite");
+                    File vkLiteFolder = getApplicationDownloadDir();
                     if (vkLiteFolder.exists() && vkLiteFolder.isDirectory()) {
                         downloadFileFromUrl(url, vkLiteFolder.getPath() + "/" + name);
                     } else {
                         if (vkLiteFolder.mkdir()) {
                             downloadFileFromUrl(url, vkLiteFolder.getPath() + name);
                         } else {
-                            Log.d("dir", "not created");
+                            Log.d("dir", vkLiteFolder.getPath() + " not created");
                         }
                     }
                 }

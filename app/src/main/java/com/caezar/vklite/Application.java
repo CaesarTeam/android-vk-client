@@ -45,6 +45,7 @@ public class Application extends android.app.Application {
         Config.setToken(token);
         Config.setMyselfId(myselfId);
 
+        Config.setApplicationContext(getApplicationContext());
         DownloadFilesManager.initFetch(getApplicationContext());
         DbManager.getInstance().setContext(getApplicationContext());
         Jackson.configureInstance();

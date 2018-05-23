@@ -3,6 +3,7 @@ package com.caezar.vklite.managers;
 import android.content.Context;
 import android.util.Log;
 
+import com.caezar.vklite.R;
 import com.tonyodev.fetch2.Download;
 import com.tonyodev.fetch2.Error;
 import com.tonyodev.fetch2.Fetch;
@@ -15,20 +16,20 @@ import com.tonyodev.fetch2.RequestOptions;
  */
 
 public class DownloadFilesManager {
-    private static Fetch mainFetch;
+    private static Fetch fetch;
 
     public static void initFetch(Context context) {
-        mainFetch = new Fetch.Builder(context, "vkLite")
+        fetch = new Fetch.Builder(context, context.getString(R.string.app_name))
                 .setDownloadConcurrentLimit(10)
                 .enableLogging(true)
                 .addRequestOptions(RequestOptions.ADD_AUTO_INCREMENT_TO_FILE_ON_ENQUEUE)
                 .build();
     }
 
-    public static void downloadFileFromUrl(String url, String name) {
-        final Request request = new Request(url, name);
+    public static void downloadFileFromUrl(String url, String path) {
+        final Request request = new Request(url, path);
         Func<Download> func1 = download -> Log.d("func1", "call " + download.getUrl());
         Func<Error> func2 = error -> Log.d("func2", "call " + error.name());
-        mainFetch.enqueue(request, func1, func2);
+        fetch.enqueue(request, func1, func2);
     }
 }
