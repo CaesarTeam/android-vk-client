@@ -263,7 +263,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 messageDocViewHolder.messageDocSize.setText(getDocSize(item.getAttachments()[0].getDoc().getSize(), context));
                 messageDocViewHolder.messageDocTime.setText(time);
                 messageDocViewHolder.messageDocTime.bringToFront();
-
+                messageDocViewHolder.messageDocDownload.setOnClickListener((View v) -> chatCallbacks.downloadDocument(item.getAttachments()[0].getDoc().getUrl()));
+                // todo GRID few documents
                 if (side) {
                     messageDocViewHolder.container.setBackgroundResource(R.drawable.message_text_from_me_container);
                 } else {

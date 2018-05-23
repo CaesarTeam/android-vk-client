@@ -27,7 +27,7 @@ import static com.caezar.vklite.libs.Jackson.parseBody;
 public class MainActivity extends AppCompatActivity {
     public static final String PREFS_NAME = "Vk";
     public static final String TOKEN = "token";
-    private static final String MYSELF_ID = "myselfId";
+    public static final String MYSELF_ID = "myselfId";
     public static final String DIALOG_FRAGMENT_TAG = "dialogFragmentTag";
 
     @Nullable private OnBackPressedListener onBackPressedListener = null;
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         final String token = settings.getString(TOKEN, null);
         final int myselfId = settings.getInt(MYSELF_ID, -1);
 
-        if (!checkAuth(token, myselfId)) {
+        if (token == null || myselfId == -1) {
             logIn();
         } else {
             initMetaInfo(token, myselfId);
@@ -69,10 +69,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void setOnBackPressedListener(@Nullable OnBackPressedListener onBackPressedListener) {
         this.onBackPressedListener = onBackPressedListener;
-    }
-
-    private boolean checkAuth(String token, int myselfId) {
-        return !(token == null || myselfId == -1);
     }
 
     private void logIn() {
@@ -105,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onResult(VKAccessToken res) {
             final String token = res.accessToken;
-
             final String url = UrlBuilder.constructGetMyselfId();
             NetworkManager.getInstance().get(url, new OnLogInComplete(token));
         }
@@ -142,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
             int myselfId = usersByIdResponse.getUsers()[0].getId();
-
             initMetaInfo(token, myselfId);
 
             SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);

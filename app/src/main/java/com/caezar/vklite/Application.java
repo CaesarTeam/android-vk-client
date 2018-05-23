@@ -9,6 +9,7 @@ import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
 import com.vk.sdk.VKSdk;
 
+import static com.caezar.vklite.MainActivity.MYSELF_ID;
 import static com.caezar.vklite.MainActivity.PREFS_NAME;
 import static com.caezar.vklite.MainActivity.TOKEN;
 
@@ -37,6 +38,11 @@ public class Application extends android.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        final String token = settings.getString(TOKEN, null);
+        final int myselfId = settings.getInt(MYSELF_ID, -1);
+        Config.setToken(token);
+        Config.setMyselfId(myselfId);
 
         DbManager.getInstance().setContext(getApplicationContext());
         Jackson.configureInstance();

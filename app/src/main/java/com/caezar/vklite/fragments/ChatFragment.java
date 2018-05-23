@@ -1,11 +1,14 @@
 package com.caezar.vklite.fragments;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
@@ -149,6 +152,30 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         if (adapter.getPhotoUsersSize() != 0) {
             ChatInstanceState.getInstance().setPhotoUsers(adapter.getPhotoUsers());
         }
+    }
+
+    private final static int REQUEST_PERMISSIONS = 123;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_PERMISSIONS:
+                for (int i = 0; i < permissions.length; i++) {
+                    if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permissions[i])
+                            && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        System.out.println("good boy");
+                        break;
+                    }
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                break;
+        }
+    }
+
+    private void requestPermissions(final String[] permissions) {
+        requestPermissions(permissions, REQUEST_PERMISSIONS);
     }
 
     private void getParticipantsChat(int chatId) {
@@ -364,6 +391,15 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             messageActionDialog.setTargetFragment(ChatFragment.this, 0);
             messageActionDialog.setArguments(bundle);
             messageActionDialog.show(getActivity().getSupportFragmentManager(), MESSAGE_ACTION_FRAGMENT_TAG);
+        }
+
+        public void downloadDocument(String url) {
+            final String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+            if (ContextCompat.checkSelfPermission(getContext(), permission) == PackageManager.PERMISSION_GRANTED) {
+                System.out.println("okay");
+            } else {
+                requestPermissions(new String[]{permission});
+            }
         }
 
         public void scrollToPosition(int position) {
