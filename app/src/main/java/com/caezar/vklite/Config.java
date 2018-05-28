@@ -21,6 +21,12 @@ public class Config {
     private static int myselfId;
     private static String token;
     private static Context applicationContext;
+
+    private static String key;
+    private static String server;
+    private static int ts;
+    private static int pts;
+
     public static int getMyselfId() {
         return myselfId;
     }
@@ -49,6 +55,38 @@ public class Config {
         String externalStorageDirectory = Environment.getExternalStorageDirectory().toString();
         String appName = applicationContext.getString(R.string.app_name);
         return new File( externalStorageDirectory + "/" + appName);
+    }
+
+    public static String getKey() {
+        return key;
+    }
+
+    public static void setKey(String key) {
+        Config.key = key;
+    }
+
+    public static String getServer() {
+        return server;
+    }
+
+    public static void setServer(String server) {
+        Config.server = server;
+    }
+
+    public static int getTs() {
+        return ts;
+    }
+
+    public static void setTs(int ts) {
+        Config.ts = ts;
+    }
+
+    public static int getPts() {
+        return pts;
+    }
+
+    public static void setPts(int pts) {
+        Config.pts = pts;
     }
 
     public Config() {

@@ -18,13 +18,13 @@ import static com.caezar.vklite.MainActivity.TOKEN;
  */
 
 public class Application extends android.app.Application {
-
     private final VKAccessTokenTracker vkAccessTokenTracker = new VKAccessTokenTracker() {
         @Override
         public void onVKAccessTokenChanged(VKAccessToken oldToken, VKAccessToken newToken) {
             if (newToken == null) {
                 // todo:
             } else {
+
                 SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString(TOKEN, newToken.accessToken);
@@ -38,18 +38,22 @@ public class Application extends android.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        VKSdk.initialize(this);
+        vkAccessTokenTracker.startTracking();
+
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         final String token = settings.getString(TOKEN, null);
         final int myselfId = settings.getInt(MYSELF_ID, -1);
-        Config.setToken(token);
-        Config.setMyselfId(myselfId);
+        if (token != null || myselfId != -1) {
+            Config.setToken(token);
+            Config.setMyselfId(myselfId);
+        }
+
         Config.setApplicationContext(getApplicationContext());
         DownloadFilesManager.initFetch(getApplicationContext());
         DbManager.getInstance().setContext(getApplicationContext());
         Jackson.configureInstance();
-        vkAccessTokenTracker.startTracking();
-        VKSdk.initialize(this);
-
     }
 }
 /*

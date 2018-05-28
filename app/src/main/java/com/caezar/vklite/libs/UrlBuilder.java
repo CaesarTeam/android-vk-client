@@ -45,6 +45,10 @@ public class UrlBuilder {
         return constructGetUrl(Method.MESSAGES_DELETE, deleteMessageRequest.toString());
     }
 
+    public static String constructGetLongPollServer() {
+        return constructGetUrl(Method.MESSAGES_GET_LONG_POLL_SERVER,"&need_pts=1&lp_version=3");
+    }
+
     public static String constructGetMyselfId() {
         return constructGetUrl(Method.USERS_GET, "");
     }
@@ -65,6 +69,7 @@ public class UrlBuilder {
         MESSAGES_GET_HISTORY("messages.getHistory"),
         MESSAGES_GET_DIALOGS("messages.getDialogs"),
         MESSAGES_GET_CHAT("messages.getChat"),
+        MESSAGES_GET_LONG_POLL_SERVER("messages.getLongPollServer"),
         USERS_GET("users.get");
 
         private final String method;

@@ -7,10 +7,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import com.caezar.vklite.managers.NetworkManager;
 import com.caezar.vklite.fragments.DialogsFragment;
 import com.caezar.vklite.instanceState.DialogsInstanceState;
+import com.caezar.vklite.models.network.response.LongPollServer;
 import com.caezar.vklite.models.network.response.UsersByIdResponse;
 import com.caezar.vklite.libs.UrlBuilder;
 
@@ -29,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
     public static final String TOKEN = "token";
     public static final String MYSELF_ID = "myselfId";
     public static final String DIALOG_FRAGMENT_TAG = "dialogFragmentTag";
+
+    private String token;
+    private int myselfId;
 
     @Nullable private OnBackPressedListener onBackPressedListener = null;
 
@@ -49,20 +54,24 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         toolbar.findViewById(R.id.toolbarBack).setOnClickListener((view) -> onBackPressed());
+
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        token = settings.getString(TOKEN, null);
+        myselfId = settings.getInt(MYSELF_ID, -1);
+
+        if (token == null || myselfId == -1) {
+            VKSdk.login(this, VKScope.MESSAGES, VKScope.OFFLINE);
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        final String token = settings.getString(TOKEN, null);
-        final int myselfId = settings.getInt(MYSELF_ID, -1);
-
-        if (token == null || myselfId == -1) {
-            logIn();
-        } else {
-            initMetaInfo(token, myselfId);
+        if (token != null || myselfId != -1) {
+            initMetaInfo();
+            final String url = UrlBuilder.constructGetLongPollServer();
+            NetworkManager.getInstance().get(url, new OnGetLongPollServer());
             openDialogs();
         }
     }
@@ -71,12 +80,7 @@ public class MainActivity extends AppCompatActivity {
         this.onBackPressedListener = onBackPressedListener;
     }
 
-    private void logIn() {
-        final String[] scope = new String[] {VKScope.MESSAGES, VKScope.OFFLINE};
-        VKSdk.login(this, scope);
-    }
-
-    private void initMetaInfo(String token, int myselfId) {
+    private void initMetaInfo() {
         Config.setToken(token);
         Config.setMyselfId(myselfId);
     }
@@ -100,21 +104,20 @@ public class MainActivity extends AppCompatActivity {
     private final VKCallback<VKAccessToken> vkAccessTokenVKCallback = new VKCallback<VKAccessToken>() {
         @Override
         public void onResult(VKAccessToken res) {
-            final String token = res.accessToken;
+            token = res.accessToken;
             final String url = UrlBuilder.constructGetMyselfId();
-            NetworkManager.getInstance().get(url, new OnLogInComplete(token));
+            NetworkManager.getInstance().get(url, new OnLogInComplete());
         }
         @Override
         public void onError(VKError error) {
+            Log.d("MainActivity", "Error with vkAccessTokenVKCallback");
             // todo:
         }
     };
 
     private class OnLogInComplete implements NetworkManager.OnRequestCompleteListener {
-        private final String token;
+        OnLogInComplete() {
 
-        OnLogInComplete(String token) {
-            this.token = token;
         }
 
         @Override
@@ -124,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onErrorCode(int code) {
-
         }
 
         @Override
@@ -136,8 +138,8 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            int myselfId = usersByIdResponse.getUsers()[0].getId();
-            initMetaInfo(token, myselfId);
+            myselfId = usersByIdResponse.getUsers()[0].getId();
+            initMetaInfo();
 
             SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
             SharedPreferences.Editor editor = settings.edit();
@@ -145,7 +147,43 @@ public class MainActivity extends AppCompatActivity {
             editor.putString(TOKEN, token);
             editor.apply();
 
+            final String url = UrlBuilder.constructGetLongPollServer();
+            NetworkManager.getInstance().get(url, new OnGetLongPollServer());
+
             runOnUiThread(MainActivity.this::openDialogs);
         }
     }
+
+    private class OnGetLongPollServer implements NetworkManager.OnRequestCompleteListener {
+        OnGetLongPollServer() {
+
+        }
+
+        @Override
+        public void onError(String body) {
+            createErrorInternetToast(MainActivity.this);
+        }
+
+        @Override
+        public void onErrorCode(int code) {
+        }
+
+        @Override
+        public void onResponse(final String body) {
+            LongPollServer longPollServer = parseBody(LongPollServer.class, body);
+
+            if (longPollServer.getResponse() == null) {
+                makeToastError(body, MainActivity.this);
+                return;
+            }
+
+            Config.setKey(longPollServer.getResponse().getKey());
+            Config.setServer(longPollServer.getResponse().getServer());
+            Config.setTs(longPollServer.getResponse().getTs());
+            Config.setPts(longPollServer.getResponse().getPts());
+
+            new LongPolling().execute();
+        }
+    }
+
 }
