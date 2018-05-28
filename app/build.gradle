@@ -56,7 +56,5 @@ dependencies {
     implementation 'com.google.guava:guava:24.1-android'
     implementation 'it.sephiroth.android.library.imagezoom:imagezoom:2.3.0'
     implementation "com.tonyodev.fetch2:fetch2:2.0.0-RC21"
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
-    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.0' // http://192.168.1.68:8080 to see db
 }

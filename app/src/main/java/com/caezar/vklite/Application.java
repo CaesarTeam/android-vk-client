@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import com.caezar.vklite.libs.Jackson;
 import com.caezar.vklite.managers.DbManager;
 import com.caezar.vklite.managers.DownloadFilesManager;
-import com.squareup.leakcanary.LeakCanary;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
 import com.vk.sdk.VKSdk;
@@ -44,17 +43,13 @@ public class Application extends android.app.Application {
         final int myselfId = settings.getInt(MYSELF_ID, -1);
         Config.setToken(token);
         Config.setMyselfId(myselfId);
-
         Config.setApplicationContext(getApplicationContext());
         DownloadFilesManager.initFetch(getApplicationContext());
         DbManager.getInstance().setContext(getApplicationContext());
         Jackson.configureInstance();
         vkAccessTokenTracker.startTracking();
         VKSdk.initialize(this);
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return;
-        }
-        LeakCanary.install(this);
+
     }
 }
 /*
