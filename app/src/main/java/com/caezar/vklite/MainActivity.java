@@ -22,6 +22,7 @@ import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
 
+import static com.caezar.vklite.Config.LONG_POLLING_ENABLE;
 import static com.caezar.vklite.helpers.ErrorHelper.createErrorInternetToast;
 import static com.caezar.vklite.helpers.ErrorHelper.makeToastError;
 import static com.caezar.vklite.libs.Jackson.parseBody;
@@ -70,8 +71,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (token != null || myselfId != -1) {
             initMetaInfo();
-            final String url = UrlBuilder.constructGetLongPollServer();
-            NetworkManager.getInstance().get(url, new OnGetLongPollServer());
+            if (LONG_POLLING_ENABLE) {
+                final String url = UrlBuilder.constructGetLongPollServer();
+                NetworkManager.getInstance().get(url, new OnGetLongPollServer());
+            }
+
             openDialogs();
         }
     }
@@ -147,8 +151,10 @@ public class MainActivity extends AppCompatActivity {
             editor.putString(TOKEN, token);
             editor.apply();
 
-            final String url = UrlBuilder.constructGetLongPollServer();
-            NetworkManager.getInstance().get(url, new OnGetLongPollServer());
+            if (LONG_POLLING_ENABLE) {
+                final String url = UrlBuilder.constructGetLongPollServer();
+                NetworkManager.getInstance().get(url, new OnGetLongPollServer());
+            }
 
             runOnUiThread(MainActivity.this::openDialogs);
         }

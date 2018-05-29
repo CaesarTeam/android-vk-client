@@ -17,6 +17,7 @@ public class Config {
     public static final int minItemsToRequestChat = countItemsToRequestChat / 2;
     public static final boolean LOG_ENABLE = false;
     public static final boolean ONLINE_MODE = true;
+    public static final boolean LONG_POLLING_ENABLE = true;
 
     private static int myselfId;
     private static String token;

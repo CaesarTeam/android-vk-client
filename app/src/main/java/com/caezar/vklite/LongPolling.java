@@ -1,6 +1,9 @@
 package com.caezar.vklite;
 
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Parcelable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.caezar.vklite.models.network.response.LongPollingResponse;
@@ -8,7 +11,6 @@ import com.caezar.vklite.models.network.response.PollingNewMessage;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -17,6 +19,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+import static com.caezar.vklite.fragments.ChatFragment.BROADCAST_NEW_MESSAGE;
+import static com.caezar.vklite.fragments.ChatFragment.NEW_MESSAGE;
 import static com.caezar.vklite.helpers.LongPollingHelper.constructMessage;
 import static com.caezar.vklite.helpers.LongPollingHelper.getLongPollingUrl;
 import static com.caezar.vklite.libs.Jackson.parseBody;
@@ -63,11 +67,13 @@ public class LongPolling extends AsyncTask<String, Void, Void> {
     private void getResponse(String body) {
         Log.d("response", body);
 
-        LongPollingResponse longPollingResponse =  parseBody(LongPollingResponse.class, body);
+        LongPollingResponse longPollingResponse = parseBody(LongPollingResponse.class, body);
 
         if (longPollingResponse == null) {
             return;
         }
+
+        Config.setTs(longPollingResponse.getTs());
 
         List<PollingNewMessage> newMessageList = new ArrayList<>();
 
@@ -89,10 +95,10 @@ public class LongPolling extends AsyncTask<String, Void, Void> {
             }
         }
 
-        for (PollingNewMessage pollingNewMessage : newMessageList) {
-            System.out.println(pollingNewMessage);
+        Intent intent = new Intent(BROADCAST_NEW_MESSAGE);
+        intent.putParcelableArrayListExtra(NEW_MESSAGE, (ArrayList<? extends Parcelable>) newMessageList);
+        if (Config.getApplicationContext() != null) {
+            LocalBroadcastManager.getInstance(Config.getApplicationContext()).sendBroadcast(intent);
         }
-
-        Config.setTs(longPollingResponse.getTs());
     }
 }

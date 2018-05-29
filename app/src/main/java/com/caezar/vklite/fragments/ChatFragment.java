@@ -1,7 +1,10 @@
 package com.caezar.vklite.fragments;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -36,6 +39,7 @@ import com.caezar.vklite.instanceState.ChatInstanceState;
 import com.caezar.vklite.models.network.MessageAction;
 import com.caezar.vklite.models.network.User;
 import com.caezar.vklite.models.network.DialogMessage;
+import com.caezar.vklite.models.network.response.PollingNewMessage;
 
 import java.io.File;
 import java.util.List;
@@ -66,6 +70,8 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
     public static final String PHOTO_URL = "photoUrl";
     public static final String DIALOG_MESSAGE = "dialogMessage";
     public static final String IS_MYSELF_MESSAGE = "isMyselfMessage";
+    public static final String BROADCAST_NEW_MESSAGE = "broadcastNewMessage";
+    public static final String NEW_MESSAGE = "newMessage";
 
     private RecyclerView recyclerView;
     private ChatAdapter adapter;
@@ -79,6 +85,17 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
     private boolean isChatRequest = true;
 
     @NonNull private final EditMessageListener editMessageListener = new EditMessageListener();
+
+    private final BroadcastReceiver newMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            System.out.println("onReceive");
+            List<PollingNewMessage> newMessageList = intent.getParcelableArrayListExtra(NEW_MESSAGE);
+            for (PollingNewMessage pollingNewMessage : newMessageList) {
+                System.out.println(pollingNewMessage);
+            }
+        }
+    };
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -130,6 +147,10 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
 
         if (ChatInstanceState.getInstance().getPhotoUsers() != null) {
             setAvatarsToAdapter(ChatInstanceState.getInstance().getPhotoUsers());
+        }
+
+        if (getContext() != null) {
+            LocalBroadcastManager.getInstance(getContext()).registerReceiver(newMessageReceiver, new IntentFilter(BROADCAST_NEW_MESSAGE));
         }
     }
 
