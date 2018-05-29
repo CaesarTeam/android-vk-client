@@ -69,7 +69,7 @@ public class LongPolling extends AsyncTask<String, Void, Void> {
 
         LongPollingResponse longPollingResponse = parseBody(LongPollingResponse.class, body);
 
-        if (longPollingResponse == null) {
+        if (longPollingResponse == null || longPollingResponse.getUpdates() == null) {
             return;
         }
 

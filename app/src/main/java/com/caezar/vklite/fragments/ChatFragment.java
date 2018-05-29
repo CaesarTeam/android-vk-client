@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -55,9 +56,11 @@ import static com.caezar.vklite.fragments.DialogsFragment.PEER_ID;
 import static com.caezar.vklite.fragments.DialogsFragment.TITLE;
 import static com.caezar.vklite.fragments.ImageMessageFullScreenFragment.IMAGE_FULL_FRAGMENT_TAG;
 import static com.caezar.vklite.fragments.MessageActionDialog.MESSAGE_ACTION_FRAGMENT_TAG;
+import static com.caezar.vklite.helpers.ChatHelper.markOtherMessagesRead;
 import static com.caezar.vklite.helpers.ChatHelper.swapButtonsVisibility;
 import static com.caezar.vklite.helpers.DialogsHelper.getChatIdFromPeerId;
-import static com.caezar.vklite.libs.Guava.findIndexMessage;
+import static com.caezar.vklite.helpers.LongPollingHelper.removeUnnecessaryPollingMessagesNew;
+import static com.caezar.vklite.helpers.LongPollingHelper.transformDialogMessageFromPollingMessagesNew;
 import static com.caezar.vklite.libs.KeyBoard.copyToClipBoard;
 import static com.caezar.vklite.libs.KeyBoard.hideKeyboard;
 import static com.caezar.vklite.libs.KeyBoard.showKeyboard;
@@ -92,23 +95,14 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
     private final BroadcastReceiver newMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            System.out.println("onReceive");
+            Log.d("response", "onReceive");
             List<PollingNewMessage> newMessageList = intent.getParcelableArrayListExtra(NEW_MESSAGE);
-            List<DialogMessage> dialogMessages = new ArrayList<>();
             List<Message> messages = new ArrayList<>(adapter.getItems());
+            // System.out.println(newMessageList.get(0));
+            removeUnnecessaryPollingMessagesNew(newMessageList, messages, peer_id);
+            // System.out.println("removeUnnecessaryPollingMessagesNew " + newMessageList.size());
 
-            for (PollingNewMessage pollingNewMessage : newMessageList) {
-                if (pollingNewMessage.getPeerId() != peer_id || findIndexMessage(messages, pollingNewMessage.getMessageId()) != -1) {
-                    continue;
-                }
-//                private int flags; todo: parse code, add set filds for this code
-                DialogMessage dialogMessage = new DialogMessage();
-                dialogMessage.setId(pollingNewMessage.getMessageId());
-                dialogMessage.setDate(pollingNewMessage.getTimestamp());
-                dialogMessage.setBody(pollingNewMessage.getMessage());
-                dialogMessage.setFrom_id(pollingNewMessage.getFromId());
-                dialogMessages.add(dialogMessage);
-            }
+            List<DialogMessage> dialogMessages = transformDialogMessageFromPollingMessagesNew(newMessageList);
 
             if (dialogMessages.size() > 0) {
                 adapter.addItemsToEnd(dialogMessages);
@@ -197,6 +191,10 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         if (adapter.getPhotoUsersSize() != 0) {
             ChatInstanceState.getInstance().setPhotoUsers(adapter.getPhotoUsers());
         }
+
+        if (getContext() != null) {
+            LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(newMessageReceiver);
+        }
     }
 
     private final static int REQUEST_PERMISSIONS = 123;
@@ -234,10 +232,6 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             isChatRequest = false;
             ChatManager.getInstance().getChat(offset, peer_id, countItemsToRequestChat, new GetMessages(), getContext());
         }
-    }
-
-    private void addMessageToAdapterEnd(DialogMessage dialogMessage) {
-        getActivity().runOnUiThread(() -> adapter.addItemToEnd(dialogMessage));
     }
 
     private void setChatSize(int size) {
@@ -332,6 +326,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
     private class MessageSent implements ChatManager.MessageActionDone {
         @Override
         public void callback(int messageId) {
+            markOtherMessagesRead(adapter.getItems()); // todo: response from long polling serser
         }
 
         MessageSent() {

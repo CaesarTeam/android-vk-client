@@ -125,17 +125,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    public void addItemToEnd(@NonNull DialogMessage dialogMessage) {
-        items.add(0, dialogMessage);
-        markOtherMessagesRead(items);
-
-        cleanItemsFromMessagesService(items);
-        sizeWithoutServiceMessage = items.size();
-        addMessagesServiceTime();
-
-        notifyDataSetChanged();
-    }
-
     public void addItemsToEnd(@NonNull List<DialogMessage> itemList) {
         items.addAll(0, itemList);
 
