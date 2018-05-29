@@ -36,12 +36,14 @@ import com.caezar.vklite.managers.UserManager;
 import com.caezar.vklite.adapters.ChatAdapter;
 import com.caezar.vklite.Config;
 import com.caezar.vklite.instanceState.ChatInstanceState;
+import com.caezar.vklite.models.network.Message;
 import com.caezar.vklite.models.network.MessageAction;
 import com.caezar.vklite.models.network.User;
 import com.caezar.vklite.models.network.DialogMessage;
 import com.caezar.vklite.models.network.response.PollingNewMessage;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.widget.LinearLayout.VERTICAL;
@@ -55,6 +57,7 @@ import static com.caezar.vklite.fragments.ImageMessageFullScreenFragment.IMAGE_F
 import static com.caezar.vklite.fragments.MessageActionDialog.MESSAGE_ACTION_FRAGMENT_TAG;
 import static com.caezar.vklite.helpers.ChatHelper.swapButtonsVisibility;
 import static com.caezar.vklite.helpers.DialogsHelper.getChatIdFromPeerId;
+import static com.caezar.vklite.libs.Guava.findIndexMessage;
 import static com.caezar.vklite.libs.KeyBoard.copyToClipBoard;
 import static com.caezar.vklite.libs.KeyBoard.hideKeyboard;
 import static com.caezar.vklite.libs.KeyBoard.showKeyboard;
@@ -91,8 +94,24 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         public void onReceive(Context context, Intent intent) {
             System.out.println("onReceive");
             List<PollingNewMessage> newMessageList = intent.getParcelableArrayListExtra(NEW_MESSAGE);
+            List<DialogMessage> dialogMessages = new ArrayList<>();
+            List<Message> messages = new ArrayList<>(adapter.getItems());
+
             for (PollingNewMessage pollingNewMessage : newMessageList) {
-                System.out.println(pollingNewMessage);
+                if (pollingNewMessage.getPeerId() != peer_id || findIndexMessage(messages, pollingNewMessage.getMessageId()) != -1) {
+                    continue;
+                }
+//                private int flags; todo: parse code, add set filds for this code
+                DialogMessage dialogMessage = new DialogMessage();
+                dialogMessage.setId(pollingNewMessage.getMessageId());
+                dialogMessage.setDate(pollingNewMessage.getTimestamp());
+                dialogMessage.setBody(pollingNewMessage.getMessage());
+                dialogMessage.setFrom_id(pollingNewMessage.getFromId());
+                dialogMessages.add(dialogMessage);
+            }
+
+            if (dialogMessages.size() > 0) {
+                adapter.addItemsToEnd(dialogMessages);
             }
         }
     };
@@ -313,20 +332,9 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
     private class MessageSent implements ChatManager.MessageActionDone {
         @Override
         public void callback(int messageId) {
-            ChatManager.getInstance().getChat(0, peer_id, 1, new GetLastMessage(), getContext());
         }
 
         MessageSent() {
-        }
-    }
-
-    private class GetLastMessage implements ChatManager.GetLastMessage {
-        @Override
-        public void callback(DialogMessage message) {
-            addMessageToAdapterEnd(message);
-        }
-
-        GetLastMessage() {
         }
     }
 

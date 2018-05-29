@@ -95,10 +95,13 @@ public class LongPolling extends AsyncTask<String, Void, Void> {
             }
         }
 
-        Intent intent = new Intent(BROADCAST_NEW_MESSAGE);
-        intent.putParcelableArrayListExtra(NEW_MESSAGE, (ArrayList<? extends Parcelable>) newMessageList);
-        if (Config.getApplicationContext() != null) {
-            LocalBroadcastManager.getInstance(Config.getApplicationContext()).sendBroadcast(intent);
+        if (newMessageList.size() > 0) {
+            Intent intent = new Intent(BROADCAST_NEW_MESSAGE);
+            intent.putParcelableArrayListExtra(NEW_MESSAGE, (ArrayList<? extends Parcelable>) newMessageList);
+            if (Config.getApplicationContext() != null) {
+                LocalBroadcastManager.getInstance(Config.getApplicationContext()).sendBroadcast(intent);
+            }
         }
+
     }
 }
