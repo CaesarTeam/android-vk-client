@@ -7,11 +7,7 @@ package com.caezar.vklite.models.network.response;
 public class LongPollingResponse {
     private int ts;
     private int pts;
-    private Updates[] updates;
-
-    private static class Updates {
-
-    }
+    private Object[][] updates;
 
     public int getTs() {
         return ts;
@@ -27,6 +23,14 @@ public class LongPollingResponse {
 
     public void setPts(int pts) {
         this.pts = pts;
+    }
+
+    public Object[][] getUpdates() {
+        return updates;
+    }
+
+    public void setUpdates(Object[][] updates) {
+        this.updates = updates;
     }
 
     public LongPollingResponse() {

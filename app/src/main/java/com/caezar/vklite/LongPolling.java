@@ -4,8 +4,12 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.caezar.vklite.models.network.response.LongPollingResponse;
+import com.caezar.vklite.models.network.response.PollingNewMessage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -13,6 +17,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+import static com.caezar.vklite.helpers.LongPollingHelper.constructMessage;
 import static com.caezar.vklite.helpers.LongPollingHelper.getLongPollingUrl;
 import static com.caezar.vklite.libs.Jackson.parseBody;
 
@@ -39,7 +44,6 @@ public class LongPolling extends AsyncTask<String, Void, Void> {
             try (ResponseBody body = response.body()) {
                 if (body != null) {
                     String responseString = body.string();
-                    Log.d("response", responseString);
                     getResponse(responseString);
                 }
             } catch (IOException e) {
@@ -57,10 +61,36 @@ public class LongPolling extends AsyncTask<String, Void, Void> {
     }
 
     private void getResponse(String body) {
+        Log.d("response", body);
+
         LongPollingResponse longPollingResponse =  parseBody(LongPollingResponse.class, body);
 
         if (longPollingResponse == null) {
             return;
+        }
+
+        List<PollingNewMessage> newMessageList = new ArrayList<>();
+
+        for (Object[] objects : longPollingResponse.getUpdates()) {
+            if (objects.length < 1) {
+                break;
+            }
+
+            try {
+                int code = (int) objects[0];
+                switch (code) {
+                    case 4:
+                        newMessageList.add(constructMessage(objects));
+                        break;
+                }
+
+            } catch (ClassCastException | ArrayIndexOutOfBoundsException e) {
+                e.printStackTrace();
+            }
+        }
+
+        for (PollingNewMessage pollingNewMessage : newMessageList) {
+            System.out.println(pollingNewMessage);
         }
 
         Config.setTs(longPollingResponse.getTs());
