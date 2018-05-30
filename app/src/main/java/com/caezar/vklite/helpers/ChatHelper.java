@@ -90,15 +90,15 @@ public class ChatHelper {
         container.setLayoutParams(params);
     }
 
-    public static void setAlignParentEnd(TextView readState) {
+    public static void setAlignTextViewRight(TextView readState) {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) readState.getLayoutParams();
-        params.addRule(RelativeLayout.ALIGN_PARENT_END);
+        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         readState.setLayoutParams(params);
     }
 
-    public static void unsetAlignParentEnd(TextView readState) {
+    public static void unsetAlignTextViewRight(TextView readState) {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) readState.getLayoutParams();
-        params.removeRule(RelativeLayout.ALIGN_PARENT_END);
+        params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         readState.setLayoutParams(params);
     }
 

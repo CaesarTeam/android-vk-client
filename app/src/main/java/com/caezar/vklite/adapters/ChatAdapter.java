@@ -33,11 +33,11 @@ import static com.caezar.vklite.helpers.ChatHelper.getMessageImageUrl;
 import static com.caezar.vklite.helpers.ChatHelper.getMessageStickerUrl;
 import static com.caezar.vklite.helpers.ChatHelper.getPositionToScrollChat;
 import static com.caezar.vklite.helpers.ChatHelper.isNonDuplicatesAvatar;
-import static com.caezar.vklite.helpers.ChatHelper.setAlignParentEnd;
+import static com.caezar.vklite.helpers.ChatHelper.setAlignTextViewRight;
 import static com.caezar.vklite.helpers.ChatHelper.unsetAlignLayoutRight;
 import static com.caezar.vklite.helpers.ChatHelper.setAlignLayoutRight;
 import static com.caezar.vklite.helpers.ChatHelper.setAvatar;
-import static com.caezar.vklite.helpers.ChatHelper.unsetAlignParentEnd;
+import static com.caezar.vklite.helpers.ChatHelper.unsetAlignTextViewRight;
 import static com.caezar.vklite.helpers.ChatHelper.unsetAvatar;
 import static com.caezar.vklite.libs.Guava.findIndexMessage;
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
@@ -216,7 +216,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 messageTextViewHolder.position = position;
                 messageTextViewHolder.messageText.setText(item.getBody());
                 messageTextViewHolder.messageTextTime.setText(time);
-
+                
                 if (side) {
                     messageTextViewHolder.container.setBackgroundResource(R.drawable.message_text_from_me_container);
                 } else {
@@ -325,9 +325,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         } else {
             chatViewHolder.messageReadState.setVisibility(View.VISIBLE);
             if (side) {
-                unsetAlignParentEnd(chatViewHolder.messageReadState);
+                unsetAlignTextViewRight(chatViewHolder.messageReadState);
             } else {
-                setAlignParentEnd(chatViewHolder.messageReadState);
+                setAlignTextViewRight(chatViewHolder.messageReadState);
             }
         }
 
