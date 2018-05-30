@@ -18,6 +18,7 @@ import com.caezar.vklite.models.network.DialogItem;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.caezar.vklite.Config.minItemsToRequestDialogs;
@@ -31,6 +32,8 @@ import static com.caezar.vklite.helpers.DialogsHelper.setUnreadCount;
 import static com.caezar.vklite.helpers.DialogsHelper.unsetAvatarDialogOnline;
 import static com.caezar.vklite.helpers.DialogsHelper.unsetReadState;
 import static com.caezar.vklite.helpers.DialogsHelper.unsetUnreadCount;
+import static com.caezar.vklite.libs.Guava.findIndexDialog;
+import static com.caezar.vklite.libs.Guava.sortDialogItem;
 import static com.caezar.vklite.libs.ImageLoader.asyncImageLoad;
 import static com.caezar.vklite.libs.ImageLoader.getUrlForResource;
 import static com.caezar.vklite.libs.Time.getDateTimeForDialog;
@@ -57,6 +60,18 @@ public class DialogsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             items.addAll(dialogItems);
             notifyDataSetChanged();
         }
+    }
+
+    public void changeItems(@NonNull List<DialogItem> dialogItems) {
+        for (DialogItem dialogItem: dialogItems) {
+            int index = findIndexDialog(items, dialogItem.getPeerId());
+            if (index != -1) {
+                items.get(index).getMessage().setBody(dialogItem.getMessage().getBody());
+                items.get(index).getMessage().setDate(dialogItem.getMessage().getDate());
+            }
+        }
+        sortDialogItem(items);
+        notifyDataSetChanged();
     }
 
     public void setItems(List<DialogItem> dialogItems) {

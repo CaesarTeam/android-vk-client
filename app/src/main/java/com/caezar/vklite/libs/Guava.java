@@ -14,6 +14,8 @@ import com.google.common.collect.Collections2;
 import com.google.common.primitives.Ints;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.caezar.vklite.helpers.DialogsHelper.getPeerId;
@@ -31,6 +33,10 @@ public class Guava {
 
     public static int findIndexDialog(List<DialogItem> dialogs, int peerId) {
         return Iterables.indexOf(dialogs, dialog -> getPeerId(dialog) == peerId);
+    }
+
+    public static void sortDialogItem(List<DialogItem> dialogs) {
+        Collections.sort(dialogs, (o1, o2) -> o2.getMessage().getDate() - o1.getMessage().getDate());
     }
 
     public static User findUser(List<User> users, int userId) {

@@ -1,6 +1,7 @@
 package com.caezar.vklite.helpers;
 
 import com.caezar.vklite.Config;
+import com.caezar.vklite.models.network.DialogItem;
 import com.caezar.vklite.models.network.DialogMessage;
 import com.caezar.vklite.models.network.Message;
 import com.caezar.vklite.models.network.PollingMessageFlags;
@@ -12,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static com.caezar.vklite.helpers.DialogsHelper.checkIsChat;
+import static com.caezar.vklite.helpers.DialogsHelper.getChatIdFromPeerId;
 import static com.caezar.vklite.libs.Guava.findIndexMessage;
 
 /**
@@ -67,7 +69,7 @@ public class LongPollingHelper {
         return pollingMessageFlags;
     }
 
-    public static List<DialogMessage> transformDialogMessageFromPollingMessagesNew(List<PollingMessageNewEdit> newMessageList) {
+    public static List<DialogMessage> constructDialogMessageFromPollingMessagesNew(List<PollingMessageNewEdit> newMessageList) {
         List<DialogMessage> dialogMessages = new ArrayList<>();
         for (PollingMessageNewEdit pollingMessageNewEdit: newMessageList) {
             List<PollingMessageFlags> flagsPollingMessagesNew = getFlagsPollingMessagesNew(pollingMessageNewEdit.getFlags());
@@ -77,14 +79,17 @@ public class LongPollingHelper {
             dialogMessage.setDate(pollingMessageNewEdit.getTimestamp());
             dialogMessage.setBody(pollingMessageNewEdit.getMessage());
 
+            if (flagsPollingMessagesNew.contains(PollingMessageFlags.OUTBOX)) {
+                dialogMessage.setOut(true);
+                dialogMessage.setFrom_id(Config.getMyselfId());
+            } else {
+                dialogMessage.setOut(false);
+                dialogMessage.setFrom_id(pollingMessageNewEdit.getPeerId());
+            }
+
             if (checkIsChat(pollingMessageNewEdit.getPeerId())) {
                 dialogMessage.setFrom_id(pollingMessageNewEdit.getFromId());
-            } else {
-                if (flagsPollingMessagesNew.contains(PollingMessageFlags.OUTBOX)) {
-                    dialogMessage.setFrom_id(Config.getMyselfId());
-                } else {
-                    dialogMessage.setFrom_id(pollingMessageNewEdit.getPeerId());
-                }
+                dialogMessage.setChat_id(getChatIdFromPeerId(pollingMessageNewEdit.getPeerId()));
             }
 
             if (flagsPollingMessagesNew.contains(PollingMessageFlags.UNREAD)) {
@@ -147,5 +152,17 @@ public class LongPollingHelper {
                 i--;
             }
         }
+    }
+
+    public static List<DialogItem> constructDialogItemFromPollingMessagesNew(List<PollingMessageNewEdit> newMessageList) {
+        List<DialogItem> dialogItems = new ArrayList<>();
+        List<DialogMessage> dialogMessages = constructDialogMessageFromPollingMessagesNew(newMessageList);
+        for (int i = 0; i < newMessageList.size() && i < dialogMessages.size(); i++) {
+            DialogItem dialogItem = new DialogItem();
+            dialogItem.setMessage(dialogMessages.get(i));
+            dialogItem.setPeerId(newMessageList.get(i).getPeerId());
+            dialogItems.add(dialogItem);
+        }
+        return dialogItems;
     }
 }

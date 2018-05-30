@@ -95,6 +95,7 @@ public class LongPolling extends AsyncTask<String, Void, Void> {
                 switch (code) {
                     case 2:
                         setFlagsMessageList.add(constructSetFlagsMessage(objects));
+                        break;
                     case 4:
                         newMessageList.add(constructMessage(objects));
                         break;

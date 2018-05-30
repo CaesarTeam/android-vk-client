@@ -14,6 +14,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +34,13 @@ import com.caezar.vklite.instanceState.ChatInstanceState;
 import com.caezar.vklite.instanceState.DialogsInstanceState;
 import com.caezar.vklite.models.network.DialogItem;
 import com.caezar.vklite.models.network.User;
+import com.caezar.vklite.models.network.response.PollingMessageNewEdit;
 
 import static com.caezar.vklite.MainActivity.DIALOG_FRAGMENT_TAG;
+import static com.caezar.vklite.fragments.ChatFragment.BROADCAST_EDIT_MESSAGE;
+import static com.caezar.vklite.fragments.ChatFragment.BROADCAST_NEW_MESSAGE;
+import static com.caezar.vklite.fragments.ChatFragment.NEW_MESSAGE;
+import static com.caezar.vklite.helpers.LongPollingHelper.constructDialogItemFromPollingMessagesNew;
 import static com.caezar.vklite.libs.Db.insertDialogs;
 import static com.caezar.vklite.helpers.DialogsHelper.addDataToDialogsList;
 import static com.caezar.vklite.helpers.DialogsHelper.getUsersIdFromPrivateDialogs;
@@ -65,6 +71,15 @@ public class DialogsFragment extends Fragment {
             int position = findIndexDialog(adapter.getItems(), peerId);
             adapter.animateClosedChat(recyclerView.findViewHolderForAdapterPosition(position));
             setToolbarProperty();
+        }
+    };
+
+    private final BroadcastReceiver newMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            List<PollingMessageNewEdit> newMessageList = intent.getParcelableArrayListExtra(NEW_MESSAGE);
+            List<DialogItem> dialogItems = constructDialogItemFromPollingMessagesNew(newMessageList);
+            adapter.changeItems(dialogItems);
         }
     };
 
@@ -103,6 +118,7 @@ public class DialogsFragment extends Fragment {
 
         if (getContext() != null) {
             LocalBroadcastManager.getInstance(getContext()).registerReceiver(closeChatReceiver, new IntentFilter(BROADCAST_CLOSE_CHAT));
+            LocalBroadcastManager.getInstance(getContext()).registerReceiver(newMessageReceiver, new IntentFilter(BROADCAST_NEW_MESSAGE));
         }
 
         setToolbarProperty();
@@ -127,6 +143,7 @@ public class DialogsFragment extends Fragment {
 
         if (getContext() != null) {
             LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(closeChatReceiver);
+            LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(newMessageReceiver);
         }
     }
 

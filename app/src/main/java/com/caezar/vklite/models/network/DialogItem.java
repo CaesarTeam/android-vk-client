@@ -10,7 +10,16 @@ public class DialogItem {
     private int in_read;
     private int out_read;
     private boolean online;
+    private int peerId;
     private DialogMessage message;
+
+    public int getPeerId() {
+        return peerId;
+    }
+
+    public void setPeerId(int peerId) {
+        this.peerId = peerId;
+    }
 
     public boolean isOnline() {
         return online;

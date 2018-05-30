@@ -216,7 +216,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 messageTextViewHolder.position = position;
                 messageTextViewHolder.messageText.setText(item.getBody());
                 messageTextViewHolder.messageTextTime.setText(time);
-                
+
                 if (side) {
                     messageTextViewHolder.container.setBackgroundResource(R.drawable.message_text_from_me_container);
                 } else {

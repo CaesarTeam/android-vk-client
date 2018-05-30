@@ -61,7 +61,7 @@ import static com.caezar.vklite.helpers.DialogsHelper.getChatIdFromPeerId;
 import static com.caezar.vklite.helpers.LongPollingHelper.getMessageIdsForDeletedMessages;
 import static com.caezar.vklite.helpers.LongPollingHelper.removePollingMessagesEditFromAnotherChat;
 import static com.caezar.vklite.helpers.LongPollingHelper.removeUnnecessaryPollingMessagesNew;
-import static com.caezar.vklite.helpers.LongPollingHelper.transformDialogMessageFromPollingMessagesNew;
+import static com.caezar.vklite.helpers.LongPollingHelper.constructDialogMessageFromPollingMessagesNew;
 import static com.caezar.vklite.libs.KeyBoard.copyToClipBoard;
 import static com.caezar.vklite.libs.KeyBoard.hideKeyboard;
 import static com.caezar.vklite.libs.KeyBoard.showKeyboard;
@@ -103,7 +103,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             List<PollingMessageNewEdit> newMessageList = intent.getParcelableArrayListExtra(NEW_MESSAGE);
             List<Message> messages = new ArrayList<>(adapter.getItems());
             removeUnnecessaryPollingMessagesNew(newMessageList, messages, peer_id);
-            List<DialogMessage> dialogMessages = transformDialogMessageFromPollingMessagesNew(newMessageList);
+            List<DialogMessage> dialogMessages = constructDialogMessageFromPollingMessagesNew(newMessageList);
 
             if (dialogMessages.size() > 0) {
                 adapter.addItemsToEnd(dialogMessages);
@@ -116,7 +116,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         public void onReceive(Context context, Intent intent) {
             List<PollingMessageNewEdit> newMessageList = intent.getParcelableArrayListExtra(EDIT_MESSAGE);
             removePollingMessagesEditFromAnotherChat(newMessageList, peer_id);
-            List<DialogMessage> dialogMessages = transformDialogMessageFromPollingMessagesNew(newMessageList);
+            List<DialogMessage> dialogMessages = constructDialogMessageFromPollingMessagesNew(newMessageList);
             if (dialogMessages.size() > 0) {
                 changeMessages(dialogMessages);
             }
