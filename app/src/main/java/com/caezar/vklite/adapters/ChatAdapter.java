@@ -110,14 +110,21 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void changeItems(@NonNull List<DialogMessage> dialogMessages) {
         for (DialogMessage dialogMessage: dialogMessages) {
             int index = findIndexMessage(new ArrayList<>(items), dialogMessage.getId());
-            items.get(index).setBody(dialogMessage.getBody());
+            if (index != -1) {
+                items.get(index).setBody(dialogMessage.getBody());
+            }
         }
         notifyDataSetChanged();
     }
 
-    public void deleteItem(int messageId) {
-        int index = findIndexMessage(new ArrayList<>(items), messageId);
-        items.remove(index);
+    public void deleteItem(@NonNull List<Integer> messageIds) {
+        for (Integer messageId : messageIds) {
+            int index = findIndexMessage(new ArrayList<>(items), messageId);
+            if (index != -1) {
+                items.remove(index);
+
+            }
+        }
 
         cleanItemsFromMessagesService(items);
         sizeWithoutServiceMessage = items.size();

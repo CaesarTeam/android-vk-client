@@ -40,6 +40,7 @@ import com.caezar.vklite.models.network.Message;
 import com.caezar.vklite.models.network.MessageAction;
 import com.caezar.vklite.models.network.User;
 import com.caezar.vklite.models.network.DialogMessage;
+import com.caezar.vklite.models.network.response.PollingMessageBase;
 import com.caezar.vklite.models.network.response.PollingMessageNewEdit;
 
 import java.io.File;
@@ -57,6 +58,7 @@ import static com.caezar.vklite.fragments.ImageMessageFullScreenFragment.IMAGE_F
 import static com.caezar.vklite.fragments.MessageActionDialog.MESSAGE_ACTION_FRAGMENT_TAG;
 import static com.caezar.vklite.helpers.ChatHelper.swapButtonsVisibility;
 import static com.caezar.vklite.helpers.DialogsHelper.getChatIdFromPeerId;
+import static com.caezar.vklite.helpers.LongPollingHelper.getMessageIdsFromPollingMessageBase;
 import static com.caezar.vklite.helpers.LongPollingHelper.removePollingMessagesEditFromAnotherChat;
 import static com.caezar.vklite.helpers.LongPollingHelper.removeUnnecessaryPollingMessagesNew;
 import static com.caezar.vklite.helpers.LongPollingHelper.transformDialogMessageFromPollingMessagesNew;
@@ -77,8 +79,10 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
     public static final String IS_MYSELF_MESSAGE = "isMyselfMessage";
     public static final String BROADCAST_NEW_MESSAGE = "broadcastNewMessage";
     public static final String BROADCAST_EDIT_MESSAGE = "broadcastEditMessage";
+    public static final String BROADCAST_SET_FLAGS_MESSAGE = "broadcastSetFlagsMessage";
     public static final String NEW_MESSAGE = "newMessage";
     public static final String EDIT_MESSAGE = "editMessage";
+    public static final String SET_FLAGS_MESSAGE = "setFlagsMessage";
 
     private RecyclerView recyclerView;
     private ChatAdapter adapter;
@@ -113,7 +117,21 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             List<PollingMessageNewEdit> newMessageList = intent.getParcelableArrayListExtra(EDIT_MESSAGE);
             removePollingMessagesEditFromAnotherChat(newMessageList, peer_id);
             List<DialogMessage> dialogMessages = transformDialogMessageFromPollingMessagesNew(newMessageList);
-            changeMessages(dialogMessages);
+            if (dialogMessages.size() > 0) {
+                changeMessages(dialogMessages);
+            }
+        }
+    };
+
+    private final BroadcastReceiver setFlagsMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            List<PollingMessageBase> pollingMessageBases = intent.getParcelableArrayListExtra(SET_FLAGS_MESSAGE);
+            removePollingMessagesEditFromAnotherChat(pollingMessageBases, peer_id);
+            List<Integer> messageIds = getMessageIdsFromPollingMessageBase(pollingMessageBases);
+            if (messageIds.size() > 0) {
+                deleteMessage(messageIds);
+            }
         }
     };
 
@@ -172,6 +190,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         if (getContext() != null) {
             LocalBroadcastManager.getInstance(getContext()).registerReceiver(newMessageReceiver, new IntentFilter(BROADCAST_NEW_MESSAGE));
             LocalBroadcastManager.getInstance(getContext()).registerReceiver(editMessageReceiver, new IntentFilter(BROADCAST_EDIT_MESSAGE));
+            LocalBroadcastManager.getInstance(getContext()).registerReceiver(setFlagsMessageReceiver, new IntentFilter(BROADCAST_SET_FLAGS_MESSAGE));
         }
     }
 
@@ -203,6 +222,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         if (getContext() != null) {
             LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(newMessageReceiver);
             LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(editMessageReceiver);
+            LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(setFlagsMessageReceiver);
         }
     }
 
@@ -253,9 +273,9 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         }
     }
 
-    private void deleteMessage(int messageId) {
+    private void deleteMessage(List<Integer> messageIds) {
         if (getActivity() != null) {
-            getActivity().runOnUiThread(() -> adapter.deleteItem(messageId));
+            getActivity().runOnUiThread(() -> adapter.deleteItem(messageIds));
         }
     }
 
@@ -354,7 +374,6 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
     private class MessageDeleted implements ChatManager.MessageActionDone {
         @Override
         public void callback() {
-            //deleteMessage(messageId);
         }
 
         MessageDeleted() {

@@ -3,7 +3,8 @@ package com.caezar.vklite.helpers;
 import com.caezar.vklite.Config;
 import com.caezar.vklite.models.network.DialogMessage;
 import com.caezar.vklite.models.network.Message;
-import com.caezar.vklite.models.network.PollingMessageNewFlags;
+import com.caezar.vklite.models.network.PollingMessageFlags;
+import com.caezar.vklite.models.network.response.PollingMessageBase;
 import com.caezar.vklite.models.network.response.PollingMessageNewEdit;
 
 import java.util.ArrayList;
@@ -46,23 +47,30 @@ public class LongPollingHelper {
         return new PollingMessageNewEdit(messageId, flags, peerId, timestamp, message, fromId);
     }
 
-    private static List<PollingMessageNewFlags> getFlagsPollingMessagesNew(int flag) {
-        List<PollingMessageNewFlags> pollingMessageNewFlags = new ArrayList<>();
-        PollingMessageNewFlags[] flags = PollingMessageNewFlags.values();
+    public static PollingMessageBase constructSetFlagsMessage(Object[] objects) {
+        int messageId = (int) objects[1];
+        int flags = (int) objects[2];
+        int peerId = (int) objects[3];
+        return new PollingMessageBase(messageId, flags, peerId);
+    }
+
+    private static List<PollingMessageFlags> getFlagsPollingMessagesNew(int flag) {
+        List<PollingMessageFlags> pollingMessageFlags = new ArrayList<>();
+        PollingMessageFlags[] flags = PollingMessageFlags.values();
         for (int i = flags.length - 1; i >= 0; i--) {
             int flagValue = flags[i].getFlag();
             if (flag - flagValue >= 0) {
                 flag -= flagValue;
-                pollingMessageNewFlags.add(flags[i]);
+                pollingMessageFlags.add(flags[i]);
             }
         }
-        return pollingMessageNewFlags;
+        return pollingMessageFlags;
     }
 
     public static List<DialogMessage> transformDialogMessageFromPollingMessagesNew(List<PollingMessageNewEdit> newMessageList) {
         List<DialogMessage> dialogMessages = new ArrayList<>();
         for (PollingMessageNewEdit pollingMessageNewEdit: newMessageList) {
-            List<PollingMessageNewFlags> flagsPollingMessagesNew = getFlagsPollingMessagesNew(pollingMessageNewEdit.getFlags());
+            List<PollingMessageFlags> flagsPollingMessagesNew = getFlagsPollingMessagesNew(pollingMessageNewEdit.getFlags());
 
             DialogMessage dialogMessage = new DialogMessage();
             dialogMessage.setId(pollingMessageNewEdit.getMessageId());
@@ -72,14 +80,14 @@ public class LongPollingHelper {
             if (checkIsChat(pollingMessageNewEdit.getPeerId())) {
                 dialogMessage.setFrom_id(pollingMessageNewEdit.getFromId());
             } else {
-                if (flagsPollingMessagesNew.contains(PollingMessageNewFlags.OUTBOX)) {
+                if (flagsPollingMessagesNew.contains(PollingMessageFlags.OUTBOX)) {
                     dialogMessage.setFrom_id(Config.getMyselfId());
                 } else {
                     dialogMessage.setFrom_id(pollingMessageNewEdit.getPeerId());
                 }
             }
 
-            if (flagsPollingMessagesNew.contains(PollingMessageNewFlags.UNREAD)) {
+            if (flagsPollingMessagesNew.contains(PollingMessageFlags.UNREAD)) {
                 dialogMessage.setRead_state(false);
             } else {
                 dialogMessage.setRead_state(true);
@@ -88,6 +96,14 @@ public class LongPollingHelper {
             dialogMessages.add(dialogMessage);
         }
         return dialogMessages;
+    }
+
+    public static <T extends PollingMessageBase> List<Integer> getMessageIdsFromPollingMessageBase(List<T> messagesList) {
+        List<Integer> messageIds = new ArrayList<>();
+        for (T t: messagesList) {
+            messageIds.add(t.getMessageId());
+        }
+        return messageIds;
     }
 
     /**
@@ -103,11 +119,11 @@ public class LongPollingHelper {
         }
     }
 
-    public static void removePollingMessagesEditFromAnotherChat(List<PollingMessageNewEdit> pollingMessagesNewEdit, int peer_id) {
-        for (int i = 0; i < pollingMessagesNewEdit.size(); i++) {
-            PollingMessageNewEdit pollingMessageNewEdit = pollingMessagesNewEdit.get(i);
-            if (pollingMessageNewEdit.getPeerId() != peer_id) {
-                pollingMessagesNewEdit.remove(i);
+    public static <T extends PollingMessageBase> void removePollingMessagesEditFromAnotherChat(List<T> pollingMessageBases, int peer_id) {
+        for (int i = 0; i < pollingMessageBases.size(); i++) {
+            PollingMessageBase pollingMessageBase = pollingMessageBases.get(i);
+            if (pollingMessageBase.getPeerId() != peer_id) {
+                pollingMessageBases.remove(i);
                 i--;
             }
         }

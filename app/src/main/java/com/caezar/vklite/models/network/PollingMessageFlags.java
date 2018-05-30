@@ -4,7 +4,7 @@ package com.caezar.vklite.models.network;
  * Created by seva on 29.05.18 in 21:03.
  */
 
-public enum PollingMessageNewFlags {
+public enum PollingMessageFlags {
     UNREAD(1),
     OUTBOX(2),
     REPLIED(4),
@@ -20,7 +20,7 @@ public enum PollingMessageNewFlags {
 
     private final int flag;
 
-    PollingMessageNewFlags(int flag) {
+    PollingMessageFlags(int flag) {
         this.flag = flag;
     }
 

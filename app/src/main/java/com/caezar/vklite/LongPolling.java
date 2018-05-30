@@ -7,6 +7,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.caezar.vklite.models.network.response.LongPollingResponse;
+import com.caezar.vklite.models.network.response.PollingMessageBase;
 import com.caezar.vklite.models.network.response.PollingMessageNewEdit;
 
 import java.io.IOException;
@@ -21,9 +22,12 @@ import okhttp3.ResponseBody;
 
 import static com.caezar.vklite.fragments.ChatFragment.BROADCAST_EDIT_MESSAGE;
 import static com.caezar.vklite.fragments.ChatFragment.BROADCAST_NEW_MESSAGE;
+import static com.caezar.vklite.fragments.ChatFragment.BROADCAST_SET_FLAGS_MESSAGE;
 import static com.caezar.vklite.fragments.ChatFragment.EDIT_MESSAGE;
 import static com.caezar.vklite.fragments.ChatFragment.NEW_MESSAGE;
+import static com.caezar.vklite.fragments.ChatFragment.SET_FLAGS_MESSAGE;
 import static com.caezar.vklite.helpers.LongPollingHelper.constructMessage;
+import static com.caezar.vklite.helpers.LongPollingHelper.constructSetFlagsMessage;
 import static com.caezar.vklite.helpers.LongPollingHelper.getLongPollingUrl;
 import static com.caezar.vklite.libs.Jackson.parseBody;
 
@@ -79,6 +83,7 @@ public class LongPolling extends AsyncTask<String, Void, Void> {
 
         List<PollingMessageNewEdit> newMessageList = new ArrayList<>();
         List<PollingMessageNewEdit> editMessageList = new ArrayList<>();
+        List<PollingMessageBase> setFlagsMessageList = new ArrayList<>();
 
         for (Object[] objects : longPollingResponse.getUpdates()) {
             if (objects.length < 1) {
@@ -88,6 +93,8 @@ public class LongPolling extends AsyncTask<String, Void, Void> {
             try {
                 int code = (int) objects[0];
                 switch (code) {
+                    case 2:
+                        setFlagsMessageList.add(constructSetFlagsMessage(objects));
                     case 4:
                         newMessageList.add(constructMessage(objects));
                         break;
@@ -118,5 +125,12 @@ public class LongPolling extends AsyncTask<String, Void, Void> {
             }
         }
 
+        if (setFlagsMessageList.size() > 0) {
+            Intent intent = new Intent(BROADCAST_SET_FLAGS_MESSAGE);
+            intent.putParcelableArrayListExtra(SET_FLAGS_MESSAGE, (ArrayList<? extends Parcelable>) setFlagsMessageList);
+            if (Config.getApplicationContext() != null) {
+                LocalBroadcastManager.getInstance(Config.getApplicationContext()).sendBroadcast(intent);
+            }
+        }
     }
 }
