@@ -58,7 +58,7 @@ import static com.caezar.vklite.fragments.ImageMessageFullScreenFragment.IMAGE_F
 import static com.caezar.vklite.fragments.MessageActionDialog.MESSAGE_ACTION_FRAGMENT_TAG;
 import static com.caezar.vklite.helpers.ChatHelper.swapButtonsVisibility;
 import static com.caezar.vklite.helpers.DialogsHelper.getChatIdFromPeerId;
-import static com.caezar.vklite.helpers.LongPollingHelper.getMessageIdsFromPollingMessageBase;
+import static com.caezar.vklite.helpers.LongPollingHelper.getMessageIdsForDeletedMessages;
 import static com.caezar.vklite.helpers.LongPollingHelper.removePollingMessagesEditFromAnotherChat;
 import static com.caezar.vklite.helpers.LongPollingHelper.removeUnnecessaryPollingMessagesNew;
 import static com.caezar.vklite.helpers.LongPollingHelper.transformDialogMessageFromPollingMessagesNew;
@@ -128,7 +128,8 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         public void onReceive(Context context, Intent intent) {
             List<PollingMessageBase> pollingMessageBases = intent.getParcelableArrayListExtra(SET_FLAGS_MESSAGE);
             removePollingMessagesEditFromAnotherChat(pollingMessageBases, peer_id);
-            List<Integer> messageIds = getMessageIdsFromPollingMessageBase(pollingMessageBases);
+
+            List<Integer> messageIds = getMessageIdsForDeletedMessages(pollingMessageBases);
             if (messageIds.size() > 0) {
                 deleteMessage(messageIds);
             }

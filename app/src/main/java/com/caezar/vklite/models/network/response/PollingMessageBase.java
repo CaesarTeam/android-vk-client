@@ -30,6 +30,15 @@ public class PollingMessageBase implements Parcelable {
         this.peerId = peerId;
     }
 
+    public PollingMessageBase clone(){
+        PollingMessageBase pollingMessageBase = new PollingMessageBase();
+        pollingMessageBase.messageId = this.messageId;
+        pollingMessageBase.flags = this.flags;
+        pollingMessageBase.peerId = this.peerId;
+
+        return pollingMessageBase;
+    }
+
     public PollingMessageBase() {
 
     }

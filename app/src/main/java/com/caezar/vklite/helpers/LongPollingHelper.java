@@ -98,12 +98,21 @@ public class LongPollingHelper {
         return dialogMessages;
     }
 
-    public static <T extends PollingMessageBase> List<Integer> getMessageIdsFromPollingMessageBase(List<T> messagesList) {
+    private static <T extends PollingMessageBase> List<Integer> getMessageIdsFromPollingMessageBase(List<T> messagesList) {
         List<Integer> messageIds = new ArrayList<>();
         for (T t: messagesList) {
             messageIds.add(t.getMessageId());
         }
         return messageIds;
+    }
+
+    public static <T extends PollingMessageBase> List<Integer> getMessageIdsForDeletedMessages(List<T> messagesList) {
+        List<PollingMessageBase> candidatesToDelete = new ArrayList<>();
+        for (PollingMessageBase pollingMessageBase: messagesList) {
+            candidatesToDelete.add(pollingMessageBase.clone());
+        }
+        removePollingMessagesNonDeleted(candidatesToDelete);
+        return getMessageIdsFromPollingMessageBase(candidatesToDelete);
     }
 
     /**
@@ -123,6 +132,17 @@ public class LongPollingHelper {
         for (int i = 0; i < pollingMessageBases.size(); i++) {
             PollingMessageBase pollingMessageBase = pollingMessageBases.get(i);
             if (pollingMessageBase.getPeerId() != peer_id) {
+                pollingMessageBases.remove(i);
+                i--;
+            }
+        }
+    }
+
+    private static <T extends PollingMessageBase> void removePollingMessagesNonDeleted(List<T> pollingMessageBases) {
+        for (int i = 0; i < pollingMessageBases.size(); i++) {
+            PollingMessageBase pollingMessageBase = pollingMessageBases.get(i);
+            List<PollingMessageFlags> flagsPollingMessagesNew = getFlagsPollingMessagesNew(pollingMessageBase.getFlags());
+            if (!flagsPollingMessagesNew.contains(PollingMessageFlags.DELETED_FOR_ALL)) {
                 pollingMessageBases.remove(i);
                 i--;
             }
