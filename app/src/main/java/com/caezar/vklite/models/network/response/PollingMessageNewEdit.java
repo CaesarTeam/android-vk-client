@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Created by seva on 29.05.18 in 15:46.
  */
 
-public class PollingNewMessage implements Parcelable {
+public class PollingMessageNewEdit implements Parcelable {
     private int messageId;
     private int flags;
     private int peerId;
@@ -39,7 +39,7 @@ public class PollingNewMessage implements Parcelable {
         return fromId;
     }
 
-    public PollingNewMessage(int messageId, int flags, int peerId, int timestamp, String message, int fromId) {
+    public PollingMessageNewEdit(int messageId, int flags, int peerId, int timestamp, String message, int fromId) {
         this.messageId = messageId;
         this.flags = flags;
         this.peerId = peerId;
@@ -48,13 +48,13 @@ public class PollingNewMessage implements Parcelable {
         this.fromId = fromId;
     }
 
-    public PollingNewMessage() {
+    public PollingMessageNewEdit() {
 
     }
 
     @Override
     public String toString() {
-        return "PollingNewMessage{" +
+        return "PollingMessageNewEdit{" +
                 "messageId=" + messageId +
                 ", flags=" + flags +
                 ", peerId=" + peerId +
@@ -64,7 +64,7 @@ public class PollingNewMessage implements Parcelable {
                 '}';
     }
 
-    protected PollingNewMessage(Parcel in) {
+    protected PollingMessageNewEdit(Parcel in) {
         messageId = in.readInt();
         flags = in.readInt();
         peerId = in.readInt();
@@ -88,15 +88,15 @@ public class PollingNewMessage implements Parcelable {
         return 0;
     }
 
-    public static final Creator<PollingNewMessage> CREATOR = new Creator<PollingNewMessage>() {
+    public static final Creator<PollingMessageNewEdit> CREATOR = new Creator<PollingMessageNewEdit>() {
         @Override
-        public PollingNewMessage createFromParcel(Parcel in) {
-            return new PollingNewMessage(in);
+        public PollingMessageNewEdit createFromParcel(Parcel in) {
+            return new PollingMessageNewEdit(in);
         }
 
         @Override
-        public PollingNewMessage[] newArray(int size) {
-            return new PollingNewMessage[size];
+        public PollingMessageNewEdit[] newArray(int size) {
+            return new PollingMessageNewEdit[size];
         }
     };
 }

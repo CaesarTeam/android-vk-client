@@ -7,7 +7,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.caezar.vklite.models.network.response.LongPollingResponse;
-import com.caezar.vklite.models.network.response.PollingNewMessage;
+import com.caezar.vklite.models.network.response.PollingMessageNewEdit;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,7 +19,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+import static com.caezar.vklite.fragments.ChatFragment.BROADCAST_EDIT_MESSAGE;
 import static com.caezar.vklite.fragments.ChatFragment.BROADCAST_NEW_MESSAGE;
+import static com.caezar.vklite.fragments.ChatFragment.EDIT_MESSAGE;
 import static com.caezar.vklite.fragments.ChatFragment.NEW_MESSAGE;
 import static com.caezar.vklite.helpers.LongPollingHelper.constructMessage;
 import static com.caezar.vklite.helpers.LongPollingHelper.getLongPollingUrl;
@@ -75,7 +77,8 @@ public class LongPolling extends AsyncTask<String, Void, Void> {
 
         Config.setTs(longPollingResponse.getTs());
 
-        List<PollingNewMessage> newMessageList = new ArrayList<>();
+        List<PollingMessageNewEdit> newMessageList = new ArrayList<>();
+        List<PollingMessageNewEdit> editMessageList = new ArrayList<>();
 
         for (Object[] objects : longPollingResponse.getUpdates()) {
             if (objects.length < 1) {
@@ -88,6 +91,10 @@ public class LongPolling extends AsyncTask<String, Void, Void> {
                     case 4:
                         newMessageList.add(constructMessage(objects));
                         break;
+                    case 5:
+                        editMessageList.add(constructMessage(objects));
+                        break;
+
                 }
 
             } catch (ClassCastException | ArrayIndexOutOfBoundsException e) {
@@ -98,6 +105,14 @@ public class LongPolling extends AsyncTask<String, Void, Void> {
         if (newMessageList.size() > 0) {
             Intent intent = new Intent(BROADCAST_NEW_MESSAGE);
             intent.putParcelableArrayListExtra(NEW_MESSAGE, (ArrayList<? extends Parcelable>) newMessageList);
+            if (Config.getApplicationContext() != null) {
+                LocalBroadcastManager.getInstance(Config.getApplicationContext()).sendBroadcast(intent);
+            }
+        }
+
+        if (editMessageList.size() > 0) {
+            Intent intent = new Intent(BROADCAST_EDIT_MESSAGE);
+            intent.putParcelableArrayListExtra(EDIT_MESSAGE, (ArrayList<? extends Parcelable>) editMessageList);
             if (Config.getApplicationContext() != null) {
                 LocalBroadcastManager.getInstance(Config.getApplicationContext()).sendBroadcast(intent);
             }

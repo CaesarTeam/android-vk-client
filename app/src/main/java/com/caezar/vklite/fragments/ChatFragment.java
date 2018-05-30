@@ -40,7 +40,7 @@ import com.caezar.vklite.models.network.Message;
 import com.caezar.vklite.models.network.MessageAction;
 import com.caezar.vklite.models.network.User;
 import com.caezar.vklite.models.network.DialogMessage;
-import com.caezar.vklite.models.network.response.PollingNewMessage;
+import com.caezar.vklite.models.network.response.PollingMessageNewEdit;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,9 +55,9 @@ import static com.caezar.vklite.fragments.DialogsFragment.PEER_ID;
 import static com.caezar.vklite.fragments.DialogsFragment.TITLE;
 import static com.caezar.vklite.fragments.ImageMessageFullScreenFragment.IMAGE_FULL_FRAGMENT_TAG;
 import static com.caezar.vklite.fragments.MessageActionDialog.MESSAGE_ACTION_FRAGMENT_TAG;
-import static com.caezar.vklite.helpers.ChatHelper.markIncomingMessagesRead;
 import static com.caezar.vklite.helpers.ChatHelper.swapButtonsVisibility;
 import static com.caezar.vklite.helpers.DialogsHelper.getChatIdFromPeerId;
+import static com.caezar.vklite.helpers.LongPollingHelper.removePollingMessagesEditFromAnotherChat;
 import static com.caezar.vklite.helpers.LongPollingHelper.removeUnnecessaryPollingMessagesNew;
 import static com.caezar.vklite.helpers.LongPollingHelper.transformDialogMessageFromPollingMessagesNew;
 import static com.caezar.vklite.libs.KeyBoard.copyToClipBoard;
@@ -76,7 +76,9 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
     public static final String DIALOG_MESSAGE = "dialogMessage";
     public static final String IS_MYSELF_MESSAGE = "isMyselfMessage";
     public static final String BROADCAST_NEW_MESSAGE = "broadcastNewMessage";
+    public static final String BROADCAST_EDIT_MESSAGE = "broadcastEditMessage";
     public static final String NEW_MESSAGE = "newMessage";
+    public static final String EDIT_MESSAGE = "editMessage";
 
     private RecyclerView recyclerView;
     private ChatAdapter adapter;
@@ -94,7 +96,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
     private final BroadcastReceiver newMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            List<PollingNewMessage> newMessageList = intent.getParcelableArrayListExtra(NEW_MESSAGE);
+            List<PollingMessageNewEdit> newMessageList = intent.getParcelableArrayListExtra(NEW_MESSAGE);
             List<Message> messages = new ArrayList<>(adapter.getItems());
             removeUnnecessaryPollingMessagesNew(newMessageList, messages, peer_id);
             List<DialogMessage> dialogMessages = transformDialogMessageFromPollingMessagesNew(newMessageList);
@@ -102,6 +104,16 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
             if (dialogMessages.size() > 0) {
                 adapter.addItemsToEnd(dialogMessages);
             }
+        }
+    };
+
+    private final BroadcastReceiver editMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            List<PollingMessageNewEdit> newMessageList = intent.getParcelableArrayListExtra(EDIT_MESSAGE);
+            removePollingMessagesEditFromAnotherChat(newMessageList, peer_id);
+            List<DialogMessage> dialogMessages = transformDialogMessageFromPollingMessagesNew(newMessageList);
+            changeMessages(dialogMessages);
         }
     };
 
@@ -159,6 +171,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
 
         if (getContext() != null) {
             LocalBroadcastManager.getInstance(getContext()).registerReceiver(newMessageReceiver, new IntentFilter(BROADCAST_NEW_MESSAGE));
+            LocalBroadcastManager.getInstance(getContext()).registerReceiver(editMessageReceiver, new IntentFilter(BROADCAST_EDIT_MESSAGE));
         }
     }
 
@@ -189,6 +202,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
 
         if (getContext() != null) {
             LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(newMessageReceiver);
+            LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(editMessageReceiver);
         }
     }
 
@@ -233,9 +247,9 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
         adapter.setCountMessagesChat(size);
     }
 
-    private void changeMessage(DialogMessage dialogMessage) {
+    private void changeMessages(List<DialogMessage> dialogMessages) {
         if (getActivity() != null) {
-            getActivity().runOnUiThread(() -> adapter.changeItem(dialogMessage));
+            getActivity().runOnUiThread(() -> adapter.changeItems(dialogMessages));
         }
     }
 
@@ -320,8 +334,8 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
 
     private class MessageSent implements ChatManager.MessageActionDone {
         @Override
-        public void callback(int messageId) {
-            markIncomingMessagesRead(adapter.getItems(), messageId);
+        public void callback() {
+//            markIncomingMessagesRead(adapter.getItems(), messageId);
         }
 
         MessageSent() {
@@ -330,8 +344,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
 
     private class MessageEdited implements ChatManager.MessageActionDone {
         @Override
-        public void callback(int messageId) {
-            ChatManager.getInstance().getMessage(peer_id, messageId, new GetMessageById(), getContext());
+        public void callback() {
         }
 
         MessageEdited() {
@@ -340,21 +353,11 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
 
     private class MessageDeleted implements ChatManager.MessageActionDone {
         @Override
-        public void callback(int messageId) {
-            deleteMessage(messageId);
+        public void callback() {
+            //deleteMessage(messageId);
         }
 
         MessageDeleted() {
-        }
-    }
-
-    private class GetMessageById implements ChatManager.GetMessageById {
-        @Override
-        public void callback(DialogMessage message) {
-            changeMessage(message);
-        }
-
-        GetMessageById() {
         }
     }
 

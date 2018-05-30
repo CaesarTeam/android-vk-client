@@ -12,9 +12,11 @@ import com.caezar.vklite.models.network.request.DeleteMessageRequest;
 import com.caezar.vklite.models.network.request.EditMessageRequest;
 import com.caezar.vklite.models.network.request.SendMessageRequest;
 import com.caezar.vklite.models.network.response.ChatResponse;
+import com.caezar.vklite.models.network.response.MessageActionMapResponse;
 import com.caezar.vklite.models.network.response.MessageActionResponse;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static com.caezar.vklite.Config.ONLINE_MODE;
@@ -56,9 +58,7 @@ public class ChatManager {
             editMessageRequest.setPeer_id(peer_id);
             editMessageRequest.setMessage_id(message_id);
             final String url = UrlBuilder.constructEditMessage(editMessageRequest);
-            OnMessageActionComplete onMessageActionComplete = new OnMessageActionComplete(MessageAction.EDIT, (MessageActionDone)listener, context);
-            onMessageActionComplete.setMessageId(message_id);
-            NetworkManager.getInstance().get(url, onMessageActionComplete);
+            NetworkManager.getInstance().get(url, new OnMessageActionComplete(MessageAction.EDIT, (MessageActionDone)listener, context));
         } else {
             // todo: save to store to edit message
         }
@@ -71,9 +71,7 @@ public class ChatManager {
             messageIds[0] = message_id;
             deleteMessageRequest.setMessage_ids(messageIds);
             final String url = UrlBuilder.constructDeleteMessage(deleteMessageRequest);
-            OnMessageActionComplete onMessageActionComplete = new OnMessageActionComplete(MessageAction.DELETE, (MessageActionDone)listener, context);
-            onMessageActionComplete.setMessageId(message_id);
-            NetworkManager.getInstance().get(url, onMessageActionComplete);
+            NetworkManager.getInstance().get(url, new OnMessageActionComplete(MessageAction.DELETE, (MessageActionDone)listener, context));
         } else {
             // todo: save to store to edit message
         }
@@ -149,7 +147,6 @@ public class ChatManager {
         private final MessageActionDone listenerCallback;
         private final Context context;
         private final MessageAction messageAction;
-        private int messageId;
 
         OnMessageActionComplete(MessageAction messageAction, MessageActionDone listenerCallback, Context context) {
             this.messageAction = messageAction;
@@ -168,27 +165,18 @@ public class ChatManager {
 
         @Override
         public void onResponse(final String body) {
-            //todo: do parsing error if parse make toast else everything is all right
             MessageActionResponse messageActionResponse = parseBody(MessageActionResponse.class, body);
 
             if (messageActionResponse == null || messageActionResponse.getResponse() == 0) {
-                makeToastError(body, context);
-                return;
+                MessageActionMapResponse messageActionMapResponse = parseBody(MessageActionMapResponse.class, body);
+
+                if (messageActionMapResponse == null || messageActionMapResponse.getResponse() == null) {
+                    makeToastError(body, context);
+                    return;
+                }
             }
 
-            switch (messageAction) {
-                case EDIT:
-                case DELETE:
-                    listenerCallback.callback(messageId);
-                    break;
-                case SEND:
-                    listenerCallback.callback(messageActionResponse.getResponse());
-                    break;
-            }
-        }
-
-        void setMessageId(int messageId) {
-            this.messageId = messageId;
+            listenerCallback.callback();
         }
     }
 
@@ -207,6 +195,6 @@ public class ChatManager {
     }
 
     public interface MessageActionDone extends Listener {
-        void callback(int messageId);
+        void callback();
     }
 }
