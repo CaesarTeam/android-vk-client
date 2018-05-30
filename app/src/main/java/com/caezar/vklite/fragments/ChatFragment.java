@@ -11,7 +11,6 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -56,7 +55,7 @@ import static com.caezar.vklite.fragments.DialogsFragment.PEER_ID;
 import static com.caezar.vklite.fragments.DialogsFragment.TITLE;
 import static com.caezar.vklite.fragments.ImageMessageFullScreenFragment.IMAGE_FULL_FRAGMENT_TAG;
 import static com.caezar.vklite.fragments.MessageActionDialog.MESSAGE_ACTION_FRAGMENT_TAG;
-import static com.caezar.vklite.helpers.ChatHelper.markOtherMessagesRead;
+import static com.caezar.vklite.helpers.ChatHelper.markIncomingMessagesRead;
 import static com.caezar.vklite.helpers.ChatHelper.swapButtonsVisibility;
 import static com.caezar.vklite.helpers.DialogsHelper.getChatIdFromPeerId;
 import static com.caezar.vklite.helpers.LongPollingHelper.removeUnnecessaryPollingMessagesNew;
@@ -95,13 +94,9 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
     private final BroadcastReceiver newMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("response", "onReceive");
             List<PollingNewMessage> newMessageList = intent.getParcelableArrayListExtra(NEW_MESSAGE);
             List<Message> messages = new ArrayList<>(adapter.getItems());
-            // System.out.println(newMessageList.get(0));
             removeUnnecessaryPollingMessagesNew(newMessageList, messages, peer_id);
-            // System.out.println("removeUnnecessaryPollingMessagesNew " + newMessageList.size());
-
             List<DialogMessage> dialogMessages = transformDialogMessageFromPollingMessagesNew(newMessageList);
 
             if (dialogMessages.size() > 0) {
@@ -326,7 +321,7 @@ public class ChatFragment extends Fragment implements ChooseMessageTypeListener 
     private class MessageSent implements ChatManager.MessageActionDone {
         @Override
         public void callback(int messageId) {
-            markOtherMessagesRead(adapter.getItems()); // todo: response from long polling serser
+            markIncomingMessagesRead(adapter.getItems(), messageId);
         }
 
         MessageSent() {

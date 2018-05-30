@@ -44,10 +44,18 @@ public class ChatHelper {
         return -1;
     }
 
-    public static void markOtherMessagesRead(List<DialogMessage> items) {
-        for (DialogMessage item : items) {
-            if (!item.isOut()) {
-                item.setRead_state(true);
+    public static void markIncomingMessagesRead(List<DialogMessage> items, int lastReadMessage) {
+        for (DialogMessage dialogMessage: items) {
+            if (!dialogMessage.isOut() && dialogMessage.getId() < lastReadMessage) {
+                dialogMessage.setRead_state(true);
+            }
+        }
+    }
+
+    public static void markOutgoingMessagesRead(List<DialogMessage> items, int lastReadMessage) {
+        for (DialogMessage dialogMessage: items) {
+            if (dialogMessage.isOut() && dialogMessage.getId() < lastReadMessage) {
+                dialogMessage.setRead_state(true);
             }
         }
     }

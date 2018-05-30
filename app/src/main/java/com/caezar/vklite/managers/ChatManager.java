@@ -12,6 +12,7 @@ import com.caezar.vklite.models.network.request.DeleteMessageRequest;
 import com.caezar.vklite.models.network.request.EditMessageRequest;
 import com.caezar.vklite.models.network.request.SendMessageRequest;
 import com.caezar.vklite.models.network.response.ChatResponse;
+import com.caezar.vklite.models.network.response.MessageActionResponse;
 
 import java.util.Arrays;
 import java.util.List;
@@ -168,12 +169,12 @@ public class ChatManager {
         @Override
         public void onResponse(final String body) {
             //todo: do parsing error if parse make toast else everything is all right
-//            MessageActionResponse messageActionResponse = parseBody(MessageActionResponse.class, body);
-//
-//            if (messageActionResponse.getResponse() == 0) {
-//                makeToastError(body, context);
-//                return;
-//            }
+            MessageActionResponse messageActionResponse = parseBody(MessageActionResponse.class, body);
+
+            if (messageActionResponse == null || messageActionResponse.getResponse() == 0) {
+                makeToastError(body, context);
+                return;
+            }
 
             switch (messageAction) {
                 case EDIT:
@@ -181,7 +182,7 @@ public class ChatManager {
                     listenerCallback.callback(messageId);
                     break;
                 case SEND:
-                    listenerCallback.callback(0);
+                    listenerCallback.callback(messageActionResponse.getResponse());
                     break;
             }
         }

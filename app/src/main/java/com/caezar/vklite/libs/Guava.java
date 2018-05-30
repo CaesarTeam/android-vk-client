@@ -3,6 +3,7 @@ package com.caezar.vklite.libs;
 import android.text.TextUtils;
 
 import com.caezar.vklite.models.network.DialogItem;
+import com.caezar.vklite.models.network.DialogMessage;
 import com.caezar.vklite.models.network.Message;
 import com.caezar.vklite.models.network.User;
 

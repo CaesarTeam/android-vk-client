@@ -33,7 +33,6 @@ import static com.caezar.vklite.helpers.ChatHelper.getMessageImageUrl;
 import static com.caezar.vklite.helpers.ChatHelper.getMessageStickerUrl;
 import static com.caezar.vklite.helpers.ChatHelper.getPositionToScrollChat;
 import static com.caezar.vklite.helpers.ChatHelper.isNonDuplicatesAvatar;
-import static com.caezar.vklite.helpers.ChatHelper.markOtherMessagesRead;
 import static com.caezar.vklite.helpers.ChatHelper.setAlignParentEnd;
 import static com.caezar.vklite.helpers.ChatHelper.unsetAlignLayoutRight;
 import static com.caezar.vklite.helpers.ChatHelper.setAlignLayoutRight;
